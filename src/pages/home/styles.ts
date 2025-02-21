@@ -16,7 +16,6 @@ export const Tabs = styled(TabsMui)(({ theme }) => ({
 		backgroundColor: theme.palette.juicy.primary.c60,
 	},
 	width: '100%',
-	borderBottom: `1px solid ${theme.palette.juicy.neutral.c30}`,
 	'& .Mui-selected': {
 		borderBottom: `1px solid ${theme.palette.juicy.primary.c60}`,
 	},

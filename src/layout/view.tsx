@@ -28,7 +28,9 @@ const ViewContainer: FC<Props> = ({ children, ...attrs }) => {
 			component="main"
 			sx={{
 				minWidth: '100%',
-			  }}
+				flexGrow: 1,
+				height: '100%', 
+			}}
 			{...attrs}
 		>
 			{children}

@@ -73,8 +73,9 @@ const TestPage: React.FC = () => {
         <PageLayout title="Prova">
             <Box
                 sx={{
-                    maxHeight: '80vh',
+                    maxHeight: '100vh',
                     overflowY: 'auto',
+                    overflowX: 'auto',
                     pr: 2,
                     "&::-webkit-scrollbar": {
                         width: theme.spacing(1)

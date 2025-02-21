@@ -72,7 +72,7 @@ export const theme = createTheme({
 					fontSize: '12px',
 					fontWeight: FONT_WEIGHTS.medium,
 					padding: '8px 16px',
-					color: `${JUICY_COLORS.primary.c10}`,
+					color: `${JUICY_COLORS.neutral.c10}`,
 					backgroundColor: `${JUICY_COLORS.primary.c60}`,
 					transition: 'all .2s',
 					borderRadius: 0,
@@ -121,7 +121,7 @@ export const theme = createTheme({
 						color: `${JUICY_COLORS.primary.c60}`,
 						backgroundColor: 'transparent',
 						'&:hover': {
-							backgroundColor: `${JUICY_COLORS.primary.c10}`,
+							backgroundColor: `${JUICY_COLORS.neutral.c10}`,
 						},
 					},
 				},

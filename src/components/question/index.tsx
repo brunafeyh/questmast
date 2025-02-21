@@ -39,8 +39,8 @@ export const Questao: React.FC<QuestaoProps> = ({
     return (
         <Box
             sx={{
-                mb: 3,
-                border: `1px solid ${JUICY_COLORS.neutral.c30}`,
+                border: `1px solid ${JUICY_COLORS.neutral.c20}`,
+                overflowX: 'auto'
             }}
         >
             <Box
@@ -50,7 +50,8 @@ export const Questao: React.FC<QuestaoProps> = ({
                     flexWrap: "wrap",
                     mb: 1,
                     p: 2,
-                    backgroundColor: theme.palette.juicy.neutral.c30,
+                    overflowX: 'auto',
+                    backgroundColor: theme.palette.juicy.neutral.c20,
                 }}
             >
                 <Typography fontSize={theme.spacing(1.75)}>
