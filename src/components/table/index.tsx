@@ -257,7 +257,7 @@ const Table: FC<TableProps> = ({ columns, data, totalRows, renderData, isLoading
 							backgroundColor: isDescActive
 								? theme.palette.juicy.neutral.c30
 								: theme.palette.juicy.neutral.c10,
-							color: isDescActive ? theme.palette.juicy.primary.c60 : theme.palette.juicy.neutral.c60,
+							color: isDescActive ? theme.palette.juicy.primary.c60 : theme.palette.juicy.neutral.c100,
 						})}
 					>
 						<ArrowUpwardIcon

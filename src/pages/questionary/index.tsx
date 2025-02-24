@@ -74,7 +74,7 @@ export default function Questionary() {
 		<PageLayout title="Questionário">
 			<Grid container spacing={3} sx={{ height: "90vh", width: "100%" }}>
 				<Grid item xs={12} md={4}>
-					<Paper elevation={3} sx={{ p: 3, width: 450 }}>
+					<Paper elevation={3} sx={{ p: 3, width: 410, mr: 74 }}>
 						<PagesHeader
 							title="Questionário"
 							rightSideComponent={
@@ -234,10 +234,10 @@ export default function Questionary() {
 						</Box>
 					</Paper>
 				</Grid>
-				<Grid item xs={12} md={8}>
+				<Grid item xs={12} md={7}>
 					<Box
 						sx={{
-							height: "90vh",
+							height: "85vh",
 							overflowY: "auto",
 							pr: 2,
 							"&::-webkit-scrollbar": {
@@ -263,7 +263,7 @@ export default function Questionary() {
 									alignItems: "center",
 									justifyContent: "center",
 									height: "100%",
-									ml: 40
+									ml: 10
 								}}
 							>
 								<CircularProgress size={40} />

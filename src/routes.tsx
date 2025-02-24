@@ -6,6 +6,7 @@ import SelectionProcess from './pages/selection-process'
 import Performance from './pages/performance'
 import TestsPage from './pages/tests'
 import TestPage from './pages/questions'
+import { RegisterPage } from './pages/register'
 
 export const router = createBrowserRouter([
     {
@@ -22,6 +23,10 @@ export const router = createBrowserRouter([
             {
                 path: 'performance',
                 element: <Performance />,
+            },
+            {
+                path: 'register',
+                element: <RegisterPage />,
             },
             {
                 path: 'selection-process',
