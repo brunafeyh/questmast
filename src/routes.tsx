@@ -2,11 +2,13 @@ import { createBrowserRouter } from 'react-router-dom'
 import HomePage from './pages/home'
 import ErrorPage from './pages/error'
 import Questionary from './pages/questionary'
-import SelectionProcess from './pages/selection-process'
 import Performance from './pages/performance'
 import TestsPage from './pages/tests'
 import TestPage from './pages/questions'
 import { RegisterPage } from './pages/register'
+import LoginPage from './pages/login'
+import { SelectionProcess } from './pages/selection-process'
+import AdicionarProvas from './pages/add-seletion-process/rascunho'
 
 export const router = createBrowserRouter([
     {
@@ -23,6 +25,14 @@ export const router = createBrowserRouter([
             {
                 path: 'performance',
                 element: <Performance />,
+            },
+            {
+                path: 'add-selection-process',
+                element: <AdicionarProvas />,
+            },
+            {
+                path: 'login',
+                element: <LoginPage />,
             },
             {
                 path: 'register',

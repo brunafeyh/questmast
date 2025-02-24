@@ -1,6 +1,6 @@
 import { FC, JSX, useState } from 'react'
 import { ChevronDown, ChevronUp } from '@carbon/icons-react'
-import { Box, Collapse, Drawer, ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material'
+import { Box, Collapse, Stack, ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material'
 import { useAtom } from 'jotai'
 import { useLocation, useNavigate } from 'react-router-dom'
 import ConditionalTooltip from '../tooltip'
@@ -37,29 +37,20 @@ const Sidebar: FC<SidebarProps> = ({ menuItems }) => {
 	}
 
 	return (
-		<Drawer
-			variant="temporary"
-			open={true}
-			ModalProps={{ keepMounted: true }}
+		<Stack
 			sx={{
-				pointerEvents: 'none',
-				['& .MuiDrawer-paper']: {
-					pointerEvents: 'auto',
-					position: 'fixed',
-					top: theme.spacing(8),
-					left: theme.spacing(0),
-					width: isCollapsed ? theme.spacing(8.5) : theme.spacing(31.375),
-					height: '100vh',
-					backgroundColor: theme.palette.juicy.neutral.c90,
-					display: 'flex',
-					flexDirection: 'column',
-					justifyContent: 'space-between',
-					transition: 'width 0.3s ease-in-out',
-					boxShadow: 'none',
-				},
-				['& .MuiBackdrop-root']: {
-					display: 'none',
-				},
+				position: 'fixed',
+				top: theme.spacing(8),
+				left: theme.spacing(0),
+				width: isCollapsed ? theme.spacing(8.5) : theme.spacing(31.375),
+				height: '100vh',
+				backgroundColor: theme.palette.juicy.neutral.c90,
+				display: 'flex',
+				flexDirection: 'column',
+				justifyContent: 'space-between',
+				transition: 'width 0.3s ease-in-out',
+				boxShadow: 'none',
+				zIndex: theme.zIndex.drawer - 1,
 			}}
 		>
 			<Box sx={{ flexGrow: 1, width: '100%' }}>
@@ -116,8 +107,10 @@ const Sidebar: FC<SidebarProps> = ({ menuItems }) => {
 														key={child.text}
 														value={child.route || child.text}
 														onClick={() => navigate(child.route!)}
-														sx={{ justifyContent: 'flex-start', width: '100%' 
-															, fontWeight: 'light',}}
+														sx={{
+															justifyContent: 'flex-start', width: '100%'
+															, fontWeight: 'light',
+														}}
 													>
 														<Typography
 															fontSize={
@@ -143,7 +136,7 @@ const Sidebar: FC<SidebarProps> = ({ menuItems }) => {
 					</ToggleButtonGroup>
 				</Box>
 			</Box>
-		</Drawer>
+		</Stack>
 	)
 }
 

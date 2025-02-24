@@ -1,0 +1,1 @@
+export const registersteps = ["Dados Pessoais", "Endereço"];

@@ -27,7 +27,7 @@ const Performance: FC = () => {
                     height: '90vh',
                     display: 'flex',
                     flexDirection: 'column',
-                    overflow: 'hidden',
+                    flexGrow: 1
                 }}
             >
                 <Typography

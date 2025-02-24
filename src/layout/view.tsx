@@ -23,12 +23,9 @@ const ViewContainer: FC<Props> = ({ children, ...attrs }) => {
 			paddingTop={theme.spacing(11)}
 			paddingBottom={8}
 			marginLeft={marginLeft}
-			marginRight={theme.spacing(10)}
-			paddingRight={theme.spacing(37)}
+			marginRight={4}
 			component="main"
 			sx={{
-				minWidth: '100%',
-				flexGrow: 1,
 				height: '100%', 
 			}}
 			{...attrs}

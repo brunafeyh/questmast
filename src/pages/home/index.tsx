@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom'
 
 const TITLE = 'HomePage'
 
-const columns: ColumnDef<any, any>[] = [
+export const columns: ColumnDef<any, any>[] = [
 	{
 		accessorKey: 'title',
 		header: 'Título',
