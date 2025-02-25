@@ -2,13 +2,13 @@ import { FC, PropsWithChildren, ReactNode } from 'react'
 import { IconButton, Stack } from '@mui/material'
 import ViewContainer from './view'
 import { Activity, Home, LicenseDraft, Trophy } from '@carbon/icons-react'
-import { faker } from '@faker-js/faker'
 import { useSetTitle } from '../hooks/use-title'
 import { Popover, usePopover } from '../components/popover'
 import Header from '../components/header'
 import AvatarProfile from '../components/avatar-profile'
 import Sidebar from '../components/sidebar'
 import Profile from '../components/profile'
+import { useAuth } from '../hooks/use-auth'
 
 interface Props {
 	title: string
@@ -31,9 +31,7 @@ const menuItems = [
 ]
 
 export const PageLayout: FC<PropsWithChildren<Props>> = ({ title, children }) => {
-	const fakeUser = {
-		name: faker.person.fullName(),
-	}
+	const {user } = useAuth()
 	const popover = usePopover()
 	useSetTitle(title)
 	return (
@@ -43,10 +41,10 @@ export const PageLayout: FC<PropsWithChildren<Props>> = ({ title, children }) =>
 				projectName='Sistema de Preparação de Processos Seletivos'
 				rightComponents={[
 					<IconButton
-						key={fakeUser.name}
+						key={user?.name}
 						onClick={(event) => popover.current?.openPopover(event.currentTarget)}
 					>
-						<AvatarProfile name={fakeUser.name} />
+						<AvatarProfile name={user?.name} />
 					</IconButton>,
 				]}
 			/>

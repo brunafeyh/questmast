@@ -17,7 +17,7 @@ import { FONT_WEIGHTS } from "../../utils/constants/theme";
 import { projectAbbreviation } from "../register";
 import { TextField } from "../../components/table/styles";
 import { useNavigate } from "react-router-dom";
-
+import { useAuth } from "../../hooks/use-auth";
 
 export default function LoginPage() {
     const {
@@ -28,18 +28,23 @@ export default function LoginPage() {
         resolver: zodResolver(credentialsAuthSchema),
     })
 
+    const { login } = useAuth()
+
     const navigate = useNavigate()
     const theme = useTheme()
+
+    const onSubmit = async (data: AuthCredentials) => {
+        const success = await login(data);
+        if (success) {
+            navigate('/')
+        } else {
+            console.log('erro ao fazer login')
+        }
+    }
 
     const [showPassword, setShowPassword] = React.useState(false);
 
     const handleClickShowPassword = () => setShowPassword((prev) => !prev);
-
-    const onSubmit = (data: AuthCredentials) => {
-        console.log("Login Data:", data)
-        navigate('/')
-
-    };
 
     return (
         <Box display="flex" height="100vh" width={'100%'}>
@@ -54,7 +59,7 @@ export default function LoginPage() {
                 sx={{
                     width: 770,
                     '@media screen and (min-width: 2000px)': {
-                       width: 920
+                        width: 920
                     },
                 }}
             >
@@ -88,7 +93,7 @@ export default function LoginPage() {
                 sx={{
                     width: 766,
                     '@media screen and (min-width: 2000px)': {
-                       width: 1000
+                        width: 1000
                     },
                 }}
             >

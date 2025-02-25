@@ -4,7 +4,7 @@ import { AvatarIcon } from './styles'
 import { generateAvatarAcronym } from '../../utils/generate-avatar-acronym'
 
 type AvatarProfileProps = {
-	name: string
+	name?: string
 }
 
 export const AvatarProfile: FC<AvatarProfileProps> = ({ name }) => {

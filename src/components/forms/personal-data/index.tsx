@@ -90,7 +90,31 @@ const PersonalDataForm: FC = () => {
             </Grid>
             <Grid item xs={12}>
                 {fields.map((field, index) => (
-                    <Box key={field.id} display="flex" alignItems="center" gap={1} mb={1}>
+                    <Box
+                        key={field.id}
+                        display="flex"
+                        alignItems="center"
+                        gap={1}
+                        mb={1}
+                    >
+                        <TextField
+                            label="DDI"
+                            type="number"
+                            {...register(`phoneList.${index}.ddiNumber`, { valueAsNumber: true })}
+                            variant="filled"
+                            error={!!errors.phoneList?.[index]?.ddiNumber}
+                            helperText={errors.phoneList?.[index]?.ddiNumber?.message}
+                            sx={{ width: 80 }}
+                        />
+                        <TextField
+                            label="DDD"
+                            type="number"
+                            {...register(`phoneList.${index}.dddNumber`, { valueAsNumber: true })}
+                            variant="filled"
+                            error={!!errors.phoneList?.[index]?.dddNumber}
+                            helperText={errors.phoneList?.[index]?.dddNumber?.message}
+                            sx={{ width: 80 }}
+                        />
                         <TextField
                             fullWidth
                             label={`Telefone ${index + 1}`}
@@ -99,7 +123,10 @@ const PersonalDataForm: FC = () => {
                             error={!!errors.phoneList?.[index]?.number}
                             helperText={errors.phoneList?.[index]?.number?.message}
                         />
-                        <IconButton sx={{ color: theme.palette.juicy.primary.c60 }} onClick={() => remove(index)}>
+                        <IconButton
+                            sx={{ color: theme.palette.juicy.primary.c60 }}
+                            onClick={() => remove(index)}
+                        >
                             <TrashCan size={24} />
                         </IconButton>
                     </Box>

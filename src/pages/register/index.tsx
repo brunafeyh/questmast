@@ -8,12 +8,14 @@ import { PERSON_DEFAULT } from "../../utils/constants/default";
 import PersonalDataForm from "../../components/forms/personal-data";
 import { Tab, Tabs } from "../home/styles";
 import { registersteps } from "../../utils/constants";
+import { useAuth } from "../../hooks/use-auth";
 
 export const projectAbbreviation = 'QuestMast'
 
 export const RegisterPage: FC = () => {
     const [activeStep, setActiveStep] = useState(0)
     const theme = useTheme()
+    const {register} = useAuth()
 
     const methods = useForm<PersonRegisterType>({
         resolver: zodResolver(personRegisterSchema),
@@ -30,8 +32,8 @@ export const RegisterPage: FC = () => {
 
     const handleBack = () => setActiveStep((prev) => prev - 1)
 
-    const handleFormSubmit = (data: PersonRegisterType) => {
-        console.log("Dados enviados:", data);
+    const handleFormSubmit = async (data: PersonRegisterType) => {
+        await register(data)
     }
 
     return (
