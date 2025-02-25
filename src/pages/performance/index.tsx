@@ -31,6 +31,9 @@ const Performance: FC = () => {
                 elevation={0}
                 sx={{
                     minWidth: 1220,
+                    '@media screen and (min-width: 1800px)': {
+                        width: 1610
+                    },
                     height: '90vh',
                     display: 'flex',
                     flexDirection: 'column',

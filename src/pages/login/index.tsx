@@ -58,8 +58,8 @@ export default function LoginPage() {
                 padding={4}
                 sx={{
                     width: 770,
-                    '@media screen and (min-width: 2000px)': {
-                        width: 920
+                    '@media screen and (min-width: 1800px)': {
+                        width: 953
                     },
                 }}
             >
@@ -92,8 +92,8 @@ export default function LoginPage() {
                 padding={4}
                 sx={{
                     width: 766,
-                    '@media screen and (min-width: 2000px)': {
-                        width: 1000
+                   '@media screen and (min-width: 1800px)': {
+                        width: 966
                     },
                 }}
             >

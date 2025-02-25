@@ -8,7 +8,7 @@ import TestPage from './pages/questions'
 import { RegisterPage } from './pages/register'
 import LoginPage from './pages/login'
 import { SelectionProcess } from './pages/selection-process'
-import AdicionarProvas from './pages/add-seletion-process/rascunho'
+import AddSelectionProcess from './pages/add-seletion-process'
 
 export const router = createBrowserRouter([
     {
@@ -28,7 +28,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'add-selection-process',
-                element: <AdicionarProvas />,
+                element: <AddSelectionProcess />,
             },
             {
                 path: 'login',
