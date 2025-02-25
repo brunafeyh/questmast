@@ -38,7 +38,7 @@ export const RegisterPage: FC = () => {
         <FormProvider {...methods}>
             <Stack maxWidth="md" sx={{
                 height: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
-                ml: 30,
+                ml: 40,
                 '@media (min-width: 1600px)': {
                     ml: 58,
                 },

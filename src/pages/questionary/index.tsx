@@ -72,9 +72,9 @@ export default function Questionary() {
 
 	return (
 		<PageLayout title="Questionário">
-			<Grid container spacing={3} sx={{ height: "90vh", width: "100%" }}>
-				<Grid item xs={12} md={4}>
-					<Paper elevation={3} sx={{ p: 3, width: 410, mr: 74 }}>
+			<Grid container spacing={4} sx={{ height: "90vh", width: "100%", gap: 12 }}>
+				<Grid item xs={12} md={3}>
+					<Paper elevation={3} sx={{ p: 3, minWidth: 365 }}>
 						<PagesHeader
 							title="Questionário"
 							rightSideComponent={
@@ -172,7 +172,7 @@ export default function Questionary() {
 									key={field.id}
 									sx={{ alignItems: "center" }}
 								>
-									<Grid item xs={12} sm={5}>
+									<Grid item xs={12} sm={4}>
 										<TextField
 											fullWidth
 											label="Disciplina"
@@ -194,7 +194,7 @@ export default function Questionary() {
 											<MenuItem value="Difícil">Difícil</MenuItem>
 										</TextField>
 									</Grid>
-									<Grid item xs={12} sm={2}>
+									<Grid item xs={12} sm={3}>
 										<TextField
 											fullWidth
 											label="Qtd."
@@ -234,12 +234,14 @@ export default function Questionary() {
 						</Box>
 					</Paper>
 				</Grid>
-				<Grid item xs={12} md={7}>
+
+
+				<Grid item xs={12} md={8}>
 					<Box
 						sx={{
 							height: "85vh",
 							overflowY: "auto",
-							pr: 2,
+							pr: 6,
 							"&::-webkit-scrollbar": {
 								width: theme.spacing(1)
 							},
@@ -257,19 +259,11 @@ export default function Questionary() {
 						}}
 					>
 						{loading && (
-							<Box
-								sx={{
-									display: "flex",
-									alignItems: "center",
-									justifyContent: "center",
-									height: "100%",
-									ml: 10
-								}}
-							>
-								<CircularProgress size={40} />
-							</Box>
-						)}
+							<Paper elevation={0} sx={{ width: 150, ml: 58, mt: 30 }}>
+								<CircularProgress />
+							</Paper>
 
+						)}
 						{showQuestions && !loading && (
 							<QuestionaryForm />
 						)}

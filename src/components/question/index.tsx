@@ -40,7 +40,7 @@ export const Questao: React.FC<QuestaoProps> = ({
         <Box
             sx={{
                 border: `1px solid ${JUICY_COLORS.neutral.c20}`,
-                overflowX: 'auto'
+                overflowX: 'auto',
             }}
         >
             <Box

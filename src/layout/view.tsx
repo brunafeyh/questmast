@@ -18,15 +18,15 @@ const ViewContainer: FC<Props> = ({ children, ...attrs }) => {
 
 	return (
 		<Grid
+			direction="column"
 			columnSpacing={4}
-			rowGap={2}
 			paddingTop={theme.spacing(11)}
 			paddingBottom={8}
 			marginLeft={marginLeft}
 			marginRight={4}
 			component="main"
 			sx={{
-				height: '100%', 
+				height: '100vh',
 			}}
 			{...attrs}
 		>

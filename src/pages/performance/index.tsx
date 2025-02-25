@@ -1,4 +1,4 @@
-import { FC, SyntheticEvent, useState } from 'react';
+import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { Box, Paper, Typography, useTheme } from '@mui/material';
 import { PageLayout } from '../../layout';
 import { FONT_WEIGHTS } from '../../utils/constants/theme';
@@ -16,14 +16,21 @@ const Performance: FC = () => {
 
     const handleChange = (_: SyntheticEvent, newValue: number) => {
         setValue(newValue);
-    };
+    }
+
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, []);
 
     return (
         <PageLayout title={TITLE}>
             <Paper
                 elevation={0}
                 sx={{
-                    width: '100%',
+                    minWidth: 1220,
                     height: '90vh',
                     display: 'flex',
                     flexDirection: 'column',

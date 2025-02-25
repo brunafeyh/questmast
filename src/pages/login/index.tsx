@@ -52,8 +52,8 @@ export default function LoginPage() {
                 alignItems="center"
                 padding={4}
                 sx={{
-                    width: 700,
-                    '@media screen and (min-width: 1367px)': {
+                    width: 770,
+                    '@media screen and (min-width: 2000px)': {
                        width: 920
                     },
                 }}
@@ -86,8 +86,8 @@ export default function LoginPage() {
                 alignItems="center"
                 padding={4}
                 sx={{
-                    width: 666,
-                    '@media screen and (min-width: 1367px)': {
+                    width: 766,
+                    '@media screen and (min-width: 2000px)': {
                        width: 1000
                     },
                 }}

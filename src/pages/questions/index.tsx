@@ -67,16 +67,18 @@ const TestPage: React.FC = () => {
         setFoiSubmetido(true);
     }
 
+   
+
     const respostasSelecionadas = watch("respostas");
 
     return (
         <PageLayout title="Prova">
             <Box
                 sx={{
-                    maxHeight: '100vh',
+                    maxHeight: '85vh',
                     overflowY: 'auto',
                     overflowX: 'auto',
-                    pr: 2,
+                    pr: 8,
                     "&::-webkit-scrollbar": {
                         width: theme.spacing(1)
                     },
@@ -93,13 +95,14 @@ const TestPage: React.FC = () => {
                     },
                 }}
             >
-                <Typography sx={{ mb: 2 }} >
+                <Typography sx={{ mb: 4 }} >
                     Prova "blablablab" Nº 007
                 </Typography>
 
                 {foiSubmetido && acertos !== null && (
                     <Chip sx={{ mb: 2 }} label={` Você acertou ${acertos} de ${questoesFicticias.length} questões.`} color="primary" variant="outlined" />
                 )}
+                <Box ml={10}>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
                     {questoesFicticias.map((questao, i) => {
@@ -126,6 +129,7 @@ const TestPage: React.FC = () => {
                         </Button>
                     </Box>
                 </form>
+                </Box>
             </Box>
         </PageLayout>
 

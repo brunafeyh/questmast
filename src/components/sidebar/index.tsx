@@ -1,6 +1,6 @@
 import { FC, JSX, useState } from 'react'
 import { ChevronDown, ChevronUp } from '@carbon/icons-react'
-import { Box, Collapse, Stack, ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material'
+import { Drawer, Box, Collapse, ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material'
 import { useAtom } from 'jotai'
 import { useLocation, useNavigate } from 'react-router-dom'
 import ConditionalTooltip from '../tooltip'
@@ -32,29 +32,32 @@ const Sidebar: FC<SidebarProps> = ({ menuItems }) => {
 		}))
 	}
 
-	const isParentActive = (children?: SidebarItem[]) => {
-		return children?.some((child) => location.pathname.startsWith(child.route || ''))
-	}
+	const isParentActive = (children?: SidebarItem[]) =>
+		children?.some((child) => location.pathname.startsWith(child.route || ''))
 
 	return (
-		<Stack
+		<Drawer
+			variant="permanent"
 			sx={{
-				position: 'fixed',
-				top: theme.spacing(8),
-				left: theme.spacing(0),
 				width: isCollapsed ? theme.spacing(8.5) : theme.spacing(31.375),
-				height: '100vh',
-				backgroundColor: theme.palette.juicy.neutral.c90,
-				display: 'flex',
-				flexDirection: 'column',
-				justifyContent: 'space-between',
-				transition: 'width 0.3s ease-in-out',
-				boxShadow: 'none',
-				zIndex: theme.zIndex.drawer - 1,
+				flexShrink: 0,
+				'& .MuiDrawer-paper': {
+					width: isCollapsed ? theme.spacing(8.5) : theme.spacing(31.375),
+					boxSizing: 'border-box',
+					backgroundColor: theme.palette.juicy.neutral.c90,
+					top: theme.spacing(8),
+				},
 			}}
 		>
-			<Box sx={{ flexGrow: 1, width: '100%' }}>
-				<Box sx={{ marginTop: theme.spacing(3), width: '100%' }}>
+			<Box
+				sx={{
+					height: '100%',
+					display: 'flex',
+					flexDirection: 'column',
+					justifyContent: 'space-between',
+				}}
+			>
+				<Box sx={{ marginTop: theme.spacing(3) }}>
 					<ToggleButtonGroup
 						orientation="vertical"
 						value={location.pathname}
@@ -80,13 +83,11 @@ const Sidebar: FC<SidebarProps> = ({ menuItems }) => {
 											}}
 										>
 											{item.icon}
-											{isCollapsed ? null : item.text}
+											{!isCollapsed && item.text}
 											{item.children && (
 												<Box
 													sx={{
-														marginLeft: isCollapsed
-															? theme.spacing(-1.5)
-															: theme.spacing(2),
+														marginLeft: isCollapsed ? theme.spacing(-1.5) : theme.spacing(2),
 													}}
 												>
 													{shouldExpand ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -108,8 +109,9 @@ const Sidebar: FC<SidebarProps> = ({ menuItems }) => {
 														value={child.route || child.text}
 														onClick={() => navigate(child.route!)}
 														sx={{
-															justifyContent: 'flex-start', width: '100%'
-															, fontWeight: 'light',
+															justifyContent: 'flex-start',
+															width: '100%',
+															fontWeight: 'light',
 														}}
 													>
 														<Typography
@@ -119,10 +121,9 @@ const Sidebar: FC<SidebarProps> = ({ menuItems }) => {
 															color={theme.palette.juicy.neutral.c40}
 															sx={{
 																pl: isCollapsed ? theme.spacing(0) : theme.spacing(4.5),
-																fontWeight: FONT_WEIGHTS.light
+																fontWeight: FONT_WEIGHTS.light,
 															}}
 														>
-															{' '}
 															{child.icon} {child.text}
 														</Typography>
 													</ToggleButton>
@@ -136,7 +137,7 @@ const Sidebar: FC<SidebarProps> = ({ menuItems }) => {
 					</ToggleButtonGroup>
 				</Box>
 			</Box>
-		</Stack>
+		</Drawer>
 	)
 }
 

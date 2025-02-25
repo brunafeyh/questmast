@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import {
     Box,
     Button,
-    CircularProgress,
     Grid,
     Typography,
     Paper,
@@ -71,7 +70,6 @@ export default function QuestionaryForm() {
 
     return (
         <Paper elevation={0} sx={{ width: "100%" }}>
-
             {!loading && (
                 <>
                     <Typography fontWeight={FONT_WEIGHTS.regular} sx={{ mb: 3 }}>
@@ -105,10 +103,6 @@ export default function QuestionaryForm() {
                         </Grid>
                     </Box>
                 </>
-            )}
-
-            {loading && (
-                <CircularProgress sx={{mt: 30, ml: 60}}/>
             )}
 
             {foiSubmetido && !loading && (
