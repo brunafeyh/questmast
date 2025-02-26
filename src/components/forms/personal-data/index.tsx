@@ -13,6 +13,7 @@ const PersonalDataForm: FC = () => {
         control,
         formState: { errors },
     } = useFormContext<PersonRegisterType>()
+    
     const theme = useTheme()
 
     const { ddds } = useDDD()
@@ -99,7 +100,7 @@ const PersonalDataForm: FC = () => {
                         key={field.id}
                         display="flex"
                         alignItems="center"
-                        gap={1}
+                        gap={2}
                         mb={1}
                     >
                         <TextField
@@ -109,7 +110,7 @@ const PersonalDataForm: FC = () => {
                             variant="filled"
                             error={!!errors.phoneList?.[index]?.ddiNumber}
                             helperText={errors.phoneList?.[index]?.ddiNumber?.message}
-                            sx={{ width: 80 }}
+                            sx={{ width: 120 }}
                         >
                             {ddis?.map((ddi) => (
                                 <MenuItem key={ddi.ddi} value={ddi.ddi}>
@@ -124,7 +125,7 @@ const PersonalDataForm: FC = () => {
                             variant="filled"
                             error={!!errors.phoneList?.[index]?.dddNumber}
                             helperText={errors.phoneList?.[index]?.dddNumber?.message}
-                            sx={{ width: 80 }}
+                            sx={{ width: 120 }}
                         >
                             {ddds?.map((ddd) => (
                                 <MenuItem key={ddd?.ddd} value={ddd?.ddd}>

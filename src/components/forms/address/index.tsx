@@ -1,5 +1,5 @@
 import { useFormContext } from "react-hook-form";
-import { Grid, IconButton, InputAdornment, MenuItem } from "@mui/material";
+import { CircularProgress, Grid, IconButton, InputAdornment, MenuItem } from "@mui/material";
 import { PersonRegisterType } from "../../../types/person-register";
 import { TextField } from "../../table/styles";
 import { useEffect } from "react";
@@ -19,7 +19,7 @@ const AddressForm = () => {
 
     const { streetType } = useStreetType();
 
-    const { adress, refetch } = useExternAddressByCep(cepValue, { enabled: false });
+    const { adress, refetch, isLoading } = useExternAddressByCep(cepValue, { enabled: false });
 
     const handleCepSearch = async () => {
         if (cepValue) {
@@ -55,7 +55,7 @@ const AddressForm = () => {
                         endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton onClick={handleCepSearch}>
-                                    <Search />
+                                    {isLoading ? <CircularProgress/> : <Search />}
                                 </IconButton>
                             </InputAdornment>
                         ),

@@ -7,12 +7,15 @@ import PerformanceGeralData from '../../components/performance-data';
 import QuestionsAnsweredChart from '../../components/charts/questions-aswered';
 import AccuracyPercentageChart from '../../components/charts/hits-per-month';
 import { QuestionaryTable } from '../../components/questionary-list';
+import { useAtom } from 'jotai';
+import { isCollapsedAtom } from '../../contexts/is-sidebar-collapsed';
 
 const TITLE = 'Desempenho';
 
 const Performance: FC = () => {
     const theme = useTheme()
-    const [value, setValue] = useState(0);
+    const [value, setValue] = useState(0)
+    const [isCollapsed] = useAtom(isCollapsedAtom)
 
     const handleChange = (_: SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -30,9 +33,9 @@ const Performance: FC = () => {
             <Paper
                 elevation={0}
                 sx={{
-                    minWidth: 1220,
+                    minWidth: isCollapsed ? 1405 : 1220,
                     '@media screen and (min-width: 1800px)': {
-                        width: 1610
+                        width: isCollapsed ? 1795 : 1610
                     },
                     height: '90vh',
                     display: 'flex',

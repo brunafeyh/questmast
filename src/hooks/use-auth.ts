@@ -4,13 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { RESET } from 'jotai/utils';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useMutation } from '@tanstack/react-query';
 import { AuthorizationRole, PersonRegisterType } from '../types/person-register';
 import { AuthCredentials } from '../types/auth';
 import { accessTokenAtom, refreshTokenAtom } from '../contexts/auth';
-import { getExpirationTime, getUserFromToken } from '../utils/auth'
+import { getExpirationTime, getUserFromToken } from '../utils/auth';
 import AuthService from '../services/auth';
 
-const authService = new AuthService()
+const authService = new AuthService();
 
 export const useAuth = () => {
   const [accessToken, setAccessToken] = useAtom(accessTokenAtom);
@@ -25,32 +26,37 @@ export const useAuth = () => {
     axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
   };
 
-  const login = useCallback(async (credentials: AuthCredentials) => {
-    try {
-      const token = authService.login(credentials)
-      const response = (await token).toString()
+  const loginMutation = useMutation<string, Error, AuthCredentials>({
+    mutationFn: async (credentials: AuthCredentials) => {
+      const token = await authService.login(credentials);
+      const response = token.toString();
       updateTokens(response, response);
+      return response;
+    },
+    onSuccess: () => {
       toast.success('Login successful!');
-      return true;
-    } catch (error) {
+      navigate('/')
+    },
+    onError: (error) => {
       toast.error('Error logging in. Please check your credentials.');
       console.error('Error logging in:', error);
-      return false;
-    }
-  }, []);
+    },
+  })
 
-  const register = useCallback(async (credentials: PersonRegisterType) => {
-    try {
-      await authService.register(credentials)
-      toast.success('Registration successful!')
-      navigate('/login')
-      return true
-    } catch (error) {
+  const registerMutation = useMutation<boolean, Error, PersonRegisterType>({
+    mutationFn: async (credentials: PersonRegisterType) => {
+      await authService.register(credentials);
+      return true;
+    },
+    onSuccess: () => {
+      toast.success('Registration successful!');
+      navigate('/login');
+    },
+    onError: (error) => {
       toast.error('Error registering user. Please check your details.');
       console.error('Error registering user:', error);
-      return false
-    }
-  }, [])
+    },
+  });
 
   const logout = useCallback(async () => {
     try {
@@ -71,24 +77,25 @@ export const useAuth = () => {
     },
     [user]
   );
+
   const isAccessTokenExpired = useCallback(() => {
     return Date.now() > expirationTime;
   }, [expirationTime]);
 
   const isAuthenticated = useCallback(() => {
     return accessToken && !isAccessTokenExpired();
-  }, [accessToken]);
+  }, [accessToken, isAccessTokenExpired]);
 
   return {
     token: accessToken,
     accessToken,
     refreshToken,
     user,
-    login,
-    register,
+    loginMutation, 
+    registerMutation,  
     logout,
     isAuthenticated,
     hasSomeRole,
-    isAccessTokenExpired
-  }
-}
+    isAccessTokenExpired,
+  };
+};

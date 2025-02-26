@@ -89,5 +89,5 @@ export const QuestionItem = ({
                 Adicionar Alternativa
             </Button>
         </Box>
-    );
-};
+    )
+}

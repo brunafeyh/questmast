@@ -16,8 +16,9 @@ import { AuthCredentials, credentialsAuthSchema } from "../../types/auth";
 import { FONT_WEIGHTS } from "../../utils/constants/theme";
 import { projectAbbreviation } from "../register";
 import { TextField } from "../../components/table/styles";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/use-auth";
+import Loading from "../../components/loading";
 
 export default function LoginPage() {
     const {
@@ -28,23 +29,19 @@ export default function LoginPage() {
         resolver: zodResolver(credentialsAuthSchema),
     })
 
-    const { login } = useAuth()
+    const { loginMutation } = useAuth()
 
-    const navigate = useNavigate()
     const theme = useTheme()
 
     const onSubmit = async (data: AuthCredentials) => {
-        const success = await login(data);
-        if (success) {
-            navigate('/')
-        } else {
-            console.log('erro ao fazer login')
-        }
+        loginMutation.mutate(data)
     }
 
     const [showPassword, setShowPassword] = React.useState(false);
 
-    const handleClickShowPassword = () => setShowPassword((prev) => !prev);
+    const handleClickShowPassword = () => setShowPassword((prev) => !prev)
+
+    if(loginMutation.isPending) return <Loading/>
 
     return (
         <Box display="flex" height="100vh" width={'100%'}>
@@ -92,7 +89,7 @@ export default function LoginPage() {
                 padding={4}
                 sx={{
                     width: 766,
-                   '@media screen and (min-width: 1800px)': {
+                    '@media screen and (min-width: 1800px)': {
                         width: 966
                     },
                 }}
@@ -135,6 +132,7 @@ export default function LoginPage() {
                             Entrar
                         </Button>
                     </Stack>
+                    <Link to={'/register'} style={{ color: theme.palette.juicy.primary.c50, fontSize: theme.spacing(1.75) }} >Não tem acesso? Registre-se aqui!</Link>
                 </Box>
             </Box>
         </Box>

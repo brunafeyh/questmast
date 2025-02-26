@@ -5,109 +5,111 @@ import { NivelChip } from "../chips/nivel-chip";
 import { RadioIcons } from "./radio-icons";
 
 type Opcao = {
-    texto: string;
+  texto: string;
 };
 
 export type QuestaoTipo = {
-    id: string;
-    ano: number;
-    banca: string;
-    orgao: string;
-    nivel: string;
-    categoria: string;
-    enunciado: string;
-    opcoes: Opcao[];
-    correta: number;
+  id: string;
+  ano: number;
+  banca: string;
+  orgao: string;
+  nivel: string;
+  categoria: string;
+  enunciado: string;
+  opcoes: Opcao[];
+  correta: number;
 };
 
 type QuestaoProps = {
-    questao: QuestaoTipo;
-    index: number;
-    register: any;
-    respostaSelecionada?: number;
-    foiSubmetido?: boolean;
+  questao: QuestaoTipo;
+  index: number;
+  register: any;
+  respostaSelecionada?: number;
+  foiSubmetido?: boolean;
 };
 
 export const Questao: React.FC<QuestaoProps> = ({
-    questao,
-    index,
-    register,
-    respostaSelecionada,
-    foiSubmetido,
+  questao,
+  index,
+  register,
+  respostaSelecionada,
+  foiSubmetido,
 }) => {
-    const theme = useTheme();
-    return (
-        <Box
-            sx={{
-                border: `1px solid ${JUICY_COLORS.neutral.c20}`,
-                overflowX: 'auto',
-            }}
-        >
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap",
-                    mb: 1,
-                    p: 2,
-                    overflowX: 'auto',
-                    backgroundColor: theme.palette.juicy.neutral.c20,
-                }}
-            >
-                <Typography fontSize={theme.spacing(1.75)}>
-                    <span style={{ fontWeight: FONT_WEIGHTS.medium }}>Ano:</span>{" "}
-                    {questao.ano}
-                </Typography>
-                <Typography fontSize={theme.spacing(1.75)}>
-                    <span style={{ fontWeight: FONT_WEIGHTS.medium }}>Banca:</span>{" "}
-                    {questao.banca}
-                </Typography>
-                <Typography fontSize={theme.spacing(1.75)}>
-                    <span style={{ fontWeight: FONT_WEIGHTS.medium }}>Órgão:</span>{" "}
-                    {questao.orgao}
-                </Typography>
-                <Typography fontSize={theme.spacing(1.75)}>
-                    <span style={{ fontWeight: FONT_WEIGHTS.medium }}>Nível:</span>{" "}
-                    <NivelChip nivel={questao.nivel} />
-                </Typography>
-                <Typography fontSize={theme.spacing(1.75)}>
-                    <span style={{ fontWeight: FONT_WEIGHTS.medium }}>Categoria:</span>{" "}
-                    {questao.categoria}
-                </Typography>
-            </Box>
+  const theme = useTheme();
 
-            <Typography sx={{ fontWeight: 500, p: 2 }}>
-                {questao.enunciado}
-            </Typography>
+  return (
+    <Box
+      sx={{
+        width: '100%', 
+        border: `1px solid ${JUICY_COLORS.neutral.c20}`,
+        overflowX: 'auto',
+        mb: 0, 
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          mb: 1,
+          p: 2,
+          overflowX: 'auto',
+          backgroundColor: theme.palette.juicy.neutral.c20,
+        }}
+      >
+        <Typography fontSize={theme.spacing(1.75)}>
+          <span style={{ fontWeight: FONT_WEIGHTS.medium }}>Ano:</span>{" "}
+          {questao.ano}
+        </Typography>
+        <Typography fontSize={theme.spacing(1.75)}>
+          <span style={{ fontWeight: FONT_WEIGHTS.medium }}>Banca:</span>{" "}
+          {questao.banca}
+        </Typography>
+        <Typography fontSize={theme.spacing(1.75)}>
+          <span style={{ fontWeight: FONT_WEIGHTS.medium }}>Órgão:</span>{" "}
+          {questao.orgao}
+        </Typography>
+        <Typography fontSize={theme.spacing(1.75)}>
+          <span style={{ fontWeight: FONT_WEIGHTS.medium }}>Nível:</span>{" "}
+          <NivelChip nivel={questao.nivel} />
+        </Typography>
+        <Typography fontSize={theme.spacing(1.75)}>
+          <span style={{ fontWeight: FONT_WEIGHTS.medium }}>Categoria:</span>{" "}
+          {questao.categoria}
+        </Typography>
+      </Box>
 
-            <RadioGroup sx={{ p: 2 }}>
-                {questao.opcoes.map((op, opIndex) => {
-                    const isCorreta = opIndex === questao.correta;
-                    const isSelecionada = opIndex === Number(respostaSelecionada);
+      <Typography sx={{ fontWeight: 500, p: 2 }}>
+        {questao.enunciado}
+      </Typography>
 
-                    const { icon, checkedIcon } = RadioIcons(
-                        foiSubmetido,
-                        isCorreta,
-                        isSelecionada
-                    );
+      <RadioGroup sx={{ p: 2 }}>
+        {questao.opcoes.map((op, opIndex) => {
+          const isCorreta = opIndex === questao.correta;
+          const isSelecionada = opIndex === Number(respostaSelecionada);
 
-                    return (
-                        <FormControlLabel
-                            key={opIndex}
-                            control={
-                                <Radio
-                                    {...register(`respostas.${index}`, { value: opIndex })}
-                                    value={opIndex}
-                                    icon={icon}
-                                    checkedIcon={checkedIcon}
-                                />
-                            }
-                            label={op.texto}
-                        />
-                    );
-                })}
+          const { icon, checkedIcon } = RadioIcons(
+            foiSubmetido,
+            isCorreta,
+            isSelecionada
+          );
 
-            </RadioGroup>
-        </Box>
-    );
-};
+          return (
+            <FormControlLabel
+              key={opIndex}
+              control={
+                <Radio
+                  {...register(`respostas.${index}`, { value: opIndex })}
+                  value={opIndex}
+                  icon={icon}
+                  checkedIcon={checkedIcon}
+                />
+              }
+              label={op.texto}
+            />
+          )
+        })}
+      </RadioGroup>
+    </Box>
+  )
+}

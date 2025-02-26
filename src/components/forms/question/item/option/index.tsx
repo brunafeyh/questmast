@@ -16,7 +16,7 @@ export const OptionItem = ({
     removeOption: (index: number) => void;
 }) => {
     return (
-        <Box display="flex" alignItems="center" mb={1}>
+        <Box display="flex" alignItems="center" mb={1} gap={2}>
             <TextField
                 label={`Alternativa ${opIndex + 1}`}
                 variant="filled"
@@ -28,6 +28,6 @@ export const OptionItem = ({
                 <TrashCan />
             </IconButton>
         </Box>
-    );
-};
+    )
+}
 

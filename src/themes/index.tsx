@@ -159,6 +159,11 @@ export const theme = createTheme({
 			styleOverrides: {
 				root: {
 					borderRadius: 4,
+					'&:focus, &:active': {
+						border: 'none',
+						outline: 'none',
+					},
+					border: 'none',
 				},
 			},
 			variants: [
@@ -268,6 +273,18 @@ export const theme = createTheme({
 					},
 					'&:hover': {
 						backgroundColor: JUICY_COLORS.neutral.c80,
+					},
+				},
+			},
+		},
+		MuiTabs: {
+			styleOverrides: {
+				root: {
+					'& .MuiTab-root': {
+						'&:focus, &:active': {
+							outline: 'none',
+							border: 'none',
+						},
 					},
 				},
 			},

@@ -3,14 +3,13 @@ import { useForm, useFieldArray } from "react-hook-form";
 import {
 	Box,
 	Button,
-	CircularProgress,
 	Divider,
-	Grid,
 	IconButton,
 	MenuItem,
 	Typography,
 	Paper,
 	useTheme,
+	Stack,
 } from "@mui/material";
 import { PageLayout } from "../../layout";
 import { FONT_WEIGHTS } from "../../utils/constants/theme";
@@ -19,6 +18,7 @@ import { Add, TrashCan } from "@carbon/icons-react";
 import { JUICY_COLORS } from "../../themes/colors";
 import PagesHeader from "../../components/pages-header";
 import QuestionaryForm from "../../components/forms/questionary";
+import Loading from "../../components/loading";
 
 type QuestionData = {
 	disciplina: string;
@@ -36,7 +36,7 @@ type FormInputs = {
 };
 
 export default function Questionary() {
-	const theme = useTheme()
+	const theme = useTheme();
 	const [loading, setLoading] = useState(false);
 	const [showQuestions, setShowQuestions] = useState(false);
 
@@ -68,13 +68,31 @@ export default function Questionary() {
 			setLoading(false);
 			setShowQuestions(true);
 		}, 1000);
-	}
+	};
+
+	if (loading) return <Loading />;
 
 	return (
 		<PageLayout title="Questionário">
-			<Grid container spacing={4} sx={{ height: "90vh", width: "100%", gap: 12 }}>
-				<Grid item xs={12} md={3}>
-					<Paper elevation={3} sx={{ p: 3, minWidth: 365 }}>
+			<Box
+				sx={{
+					display: "flex",
+					flexDirection: { xs: "column", md: "row" },
+					gap: 4,
+					height: "90vh",
+					width: "100%",
+					boxSizing: "border-box",
+				}}
+			>
+				<Paper
+					elevation={3}
+					sx={{
+						p: 3,
+						height: 470,
+						width: 405
+					}}
+				>
+					<Stack spacing={2}>
 						<PagesHeader
 							title="Questionário"
 							rightSideComponent={
@@ -86,16 +104,22 @@ export default function Questionary() {
 								</Button>
 							}
 						/>
-
-						<Divider sx={{ my: 2 }} />
-
+						<Divider />
 						<Box
 							component="form"
 							onSubmit={handleSubmit(onSubmit)}
-							sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+							sx={{
+								display: "flex",
+								flexDirection: "column",
+								gap: 2,
+							}}
 						>
-							<Grid container spacing={2}>
-								<Grid item xs={12} sm={6}>
+							<Stack spacing={1}>
+								<Box sx={{
+									display: "flex",
+									flexDirection: "row",
+									gap: 1,
+								}}>
 									<TextField
 										fullWidth
 										select
@@ -109,9 +133,7 @@ export default function Questionary() {
 										<MenuItem value="Concurso A">Concurso A</MenuItem>
 										<MenuItem value="Concurso B">Concurso B</MenuItem>
 									</TextField>
-								</Grid>
 
-								<Grid item xs={12} sm={6}>
 									<TextField
 										fullWidth
 										select
@@ -125,9 +147,13 @@ export default function Questionary() {
 										<MenuItem value="Banca X">Banca X</MenuItem>
 										<MenuItem value="Banca Y">Banca Y</MenuItem>
 									</TextField>
-								</Grid>
+								</Box>
 
-								<Grid item xs={12} sm={6}>
+								<Box sx={{
+									display: "flex",
+									flexDirection: "row",
+									gap: 1,
+								}}>
 									<TextField
 										fullWidth
 										select
@@ -141,9 +167,7 @@ export default function Questionary() {
 										<MenuItem value="Analista">Analista</MenuItem>
 										<MenuItem value="Técnico">Técnico</MenuItem>
 									</TextField>
-								</Grid>
 
-								<Grid item xs={12} sm={6}>
 									<TextField
 										fullWidth
 										select
@@ -158,34 +182,37 @@ export default function Questionary() {
 										<MenuItem value="Médio">Médio</MenuItem>
 										<MenuItem value="Difícil">Difícil</MenuItem>
 									</TextField>
-								</Grid>
-							</Grid>
+								</Box>
+							</Stack>
 
-							<Typography sx={{ mt: 3, fontWeight: FONT_WEIGHTS.medium }}>
+							<Typography sx={{ mt: 2, fontWeight: FONT_WEIGHTS.medium }}>
 								Questões
 							</Typography>
 
-							{fields.map((field, index) => (
-								<Grid
-									container
-									spacing={2}
-									key={field.id}
-									sx={{ alignItems: "center" }}
-								>
-									<Grid item xs={12} sm={4}>
+							<Stack spacing={2}>
+								{fields.map((field, index) => (
+									<Box
+										key={field.id}
+										sx={{
+											display: "flex",
+											flexDirection: { xs: "column", sm: "row" },
+											alignItems: "center",
+											gap: 1,
+										}}
+									>
 										<TextField
 											fullWidth
 											label="Disciplina"
 											variant="filled"
 											{...register(`questoes.${index}.disciplina`)}
+											sx={{ width: 120 }}
 										/>
-									</Grid>
-									<Grid item xs={12} sm={4}>
 										<TextField
 											fullWidth
 											select
 											label="Dificuldade"
 											variant="filled"
+											sx={{ width: 130 }}
 											{...register(`questoes.${index}.dificuldade`)}
 										>
 											<MenuItem value="">Selecione...</MenuItem>
@@ -193,8 +220,6 @@ export default function Questionary() {
 											<MenuItem value="Médio">Médio</MenuItem>
 											<MenuItem value="Difícil">Difícil</MenuItem>
 										</TextField>
-									</Grid>
-									<Grid item xs={12} sm={3}>
 										<TextField
 											fullWidth
 											label="Qtd."
@@ -203,15 +228,14 @@ export default function Questionary() {
 											{...register(`questoes.${index}.numeroQuestoes`, {
 												valueAsNumber: true,
 											})}
+											sx={{ width: 70 }}
 										/>
-									</Grid>
-									<Grid item xs={12} sm={1} sx={{ textAlign: "center" }}>
 										<IconButton onClick={() => remove(index)}>
 											<TrashCan color={JUICY_COLORS.error.c50} />
 										</IconButton>
-									</Grid>
-								</Grid>
-							))}
+									</Box>
+								))}
+							</Stack>
 
 							<Button
 								variant="text"
@@ -232,44 +256,36 @@ export default function Questionary() {
 								Gerar questionário
 							</Button>
 						</Box>
-					</Paper>
-				</Grid>
-
-
-				<Grid item xs={12} md={8}>
-					<Box
-						sx={{
-							height: "85vh",
-							overflowY: "auto",
-							pr: 6,
-							"&::-webkit-scrollbar": {
-								width: theme.spacing(1)
-							},
-							"&::-webkit-scrollbar-track": {
-								backgroundColor: theme.palette.juicy.neutral.c30,
-								borderRadius: theme.spacing(0.5),
-							},
-							"&::-webkit-scrollbar-thumb": {
-								backgroundColor: theme.palette.juicy.neutral.c50,
-								borderRadius: theme.spacing(0.5),
-							},
-							"&::-webkit-scrollbar-thumb:hover": {
-								backgroundColor: theme.palette.juicy.neutral.c60,
-							},
-						}}
-					>
-						{loading && (
-							<Paper elevation={0} sx={{ width: 150, ml: 58, mt: 30 }}>
-								<CircularProgress />
-							</Paper>
-
-						)}
-						{showQuestions && !loading && (
-							<QuestionaryForm />
-						)}
-					</Box>
-				</Grid>
-			</Grid>
+					</Stack>
+				</Paper>
+				<Box
+					sx={{
+						flex: 1,
+						height: "85vh",
+						overflowY: "auto",
+						'@media screen and (min-width:1800px)': {
+							width: 1152,
+						},
+						pr: 2,
+						"&::-webkit-scrollbar": {
+							width: theme.spacing(1),
+						},
+						"&::-webkit-scrollbar-track": {
+							backgroundColor: theme.palette.juicy.neutral.c30,
+							borderRadius: theme.spacing(0.5),
+						},
+						"&::-webkit-scrollbar-thumb": {
+							backgroundColor: theme.palette.juicy.neutral.c50,
+							borderRadius: theme.spacing(0.5),
+						},
+						"&::-webkit-scrollbar-thumb:hover": {
+							backgroundColor: theme.palette.juicy.neutral.c60,
+						},
+					}}
+				>
+					{showQuestions && <QuestionaryForm />}
+				</Box>
+			</Box>
 		</PageLayout>
 	);
 }

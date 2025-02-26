@@ -41,6 +41,7 @@ export const ExamForm = ({
                                 }}
                             />
                         }
+                        sx={(theme) =>({color: theme.palette.juicy.error.c50})}
                         onClick={() => removeExam(nestIndex)}
                     >
                         Remover Prova

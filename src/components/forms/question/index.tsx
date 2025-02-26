@@ -48,5 +48,5 @@ export const QuestionForm = ({
                 </Button>
             </Box>
         </Paper>
-    );
-};
+    )
+}

@@ -14,9 +14,12 @@ import { PageLayout } from '../../layout';
 import { FormValues } from '../../types/test';
 import { ExamForm } from '../../components/forms/exam';
 import { FC } from 'react';
+import { useAtom } from 'jotai';
+import { isCollapsedAtom } from '../../contexts/is-sidebar-collapsed';
 
 const AddSelectionProcess: FC = () => {
     const theme = useTheme()
+    const [isCollapsed] = useAtom(isCollapsedAtom)
     const { register, control, handleSubmit } = useForm<FormValues>({
         defaultValues: {
             title: '',
@@ -44,7 +47,7 @@ const AddSelectionProcess: FC = () => {
                 sx={{
                     height: '90vh',
                     overflowY: 'auto',
-                    width:1205,
+                    width: isCollapsed ? 1393: 1205,
                     '@media screen and (min-width:1800px)': {
                         width: 1600,
                     },

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Box, Button, Chip, Typography, useTheme } from "@mui/material";
 import { Questao, QuestaoTipo } from "../../components/question";
@@ -45,7 +45,7 @@ const questoesFicticias: QuestaoTipo[] = [
     },
 ]
 
-const TestPage: React.FC = () => {
+const TestPage: FC = () => {
     const theme = useTheme()
     const [foiSubmetido, setFoiSubmetido] = useState(false);
     const [acertos, setAcertos] = useState<number | null>(null);
@@ -67,8 +67,6 @@ const TestPage: React.FC = () => {
         setFoiSubmetido(true);
     }
 
-   
-
     const respostasSelecionadas = watch("respostas");
 
     return (
@@ -77,8 +75,7 @@ const TestPage: React.FC = () => {
                 sx={{
                     maxHeight: '85vh',
                     overflowY: 'auto',
-                    overflowX: 'auto',
-                    pr: 8,
+                    width: 1600,
                     "&::-webkit-scrollbar": {
                         width: theme.spacing(1)
                     },
@@ -102,7 +99,7 @@ const TestPage: React.FC = () => {
                 {foiSubmetido && acertos !== null && (
                     <Chip sx={{ mb: 2 }} label={` Você acertou ${acertos} de ${questoesFicticias.length} questões.`} color="primary" variant="outlined" />
                 )}
-                <Box ml={10}>
+
 
                 <form onSubmit={handleSubmit(onSubmit)}>
                     {questoesFicticias.map((questao, i) => {
@@ -120,7 +117,7 @@ const TestPage: React.FC = () => {
                         );
                     })}
 
-                    <Box sx={{ display: "flex", gap: 2 }}>
+                    <Box sx={{ display: "flex", gap: 2, mt: 2, justifyContent: 'flex-end' }}>
                         <Button variant="outlined" type="button" onClick={() => console.log("Cancelar")}>
                             Cancelar
                         </Button>
@@ -129,10 +126,8 @@ const TestPage: React.FC = () => {
                         </Button>
                     </Box>
                 </form>
-                </Box>
             </Box>
         </PageLayout>
-
     )
 }
 
