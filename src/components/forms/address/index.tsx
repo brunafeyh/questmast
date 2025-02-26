@@ -1,10 +1,11 @@
 import { useFormContext } from "react-hook-form";
-import { Grid, IconButton, InputAdornment } from "@mui/material";
+import { Grid, IconButton, InputAdornment, MenuItem } from "@mui/material";
 import { PersonRegisterType } from "../../../types/person-register";
 import { TextField } from "../../table/styles";
 import { useEffect } from "react";
 import { Search } from "@mui/icons-material";
 import { useExternAddressByCep } from "../../../hooks/use-extern-address-by-cep";
+import { useStreetType } from "../../../hooks/use-street-type";
 
 const AddressForm = () => {
     const {
@@ -16,13 +17,15 @@ const AddressForm = () => {
 
     const cepValue = watch("specificAddressFormDTO.cep");
 
+    const { streetType } = useStreetType();
+
     const { adress, refetch } = useExternAddressByCep(cepValue, { enabled: false });
 
     const handleCepSearch = async () => {
         if (cepValue) {
             await refetch();
         }
-    }
+    };
 
     useEffect(() => {
         if (adress) {
@@ -30,7 +33,7 @@ const AddressForm = () => {
             setValue("specificAddressFormDTO.streetType", adress.streetType);
             setValue("specificAddressFormDTO.neighborhood", adress.neighborhood);
             setValue("specificAddressFormDTO.city", adress.city);
-            setValue("specificAddressFormDTO.federalUnit", adress.federateUnit);
+            setValue("specificAddressFormDTO.federateUnit", adress.federateUnit);
         }
     }, [adress, setValue]);
 
@@ -55,7 +58,7 @@ const AddressForm = () => {
                                     <Search />
                                 </IconButton>
                             </InputAdornment>
-                        )
+                        ),
                     }}
                 />
             </Grid>
@@ -87,6 +90,7 @@ const AddressForm = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
                 <TextField
+                    select
                     fullWidth
                     label="Tipo de Logradouro"
                     InputLabelProps={{
@@ -96,7 +100,13 @@ const AddressForm = () => {
                     variant="filled"
                     error={!!errors.specificAddressFormDTO?.streetType}
                     helperText={errors.specificAddressFormDTO?.streetType?.message}
-                />
+                >
+                    {streetType?.map((option) => (
+                        <MenuItem key={option.name} value={option.name}>
+                            {option.name}
+                        </MenuItem>
+                    ))}
+                </TextField>
             </Grid>
             <Grid item xs={12} sm={6}>
                 <TextField
@@ -144,14 +154,14 @@ const AddressForm = () => {
                     InputLabelProps={{
                         shrink: true,
                     }}
-                    {...register("specificAddressFormDTO.federalUnit")}
+                    {...register("specificAddressFormDTO.federateUnit")}
                     variant="filled"
-                    error={!!errors.specificAddressFormDTO?.federalUnit}
-                    helperText={errors.specificAddressFormDTO?.federalUnit?.message}
+                    error={!!errors.specificAddressFormDTO?.federateUnit}
+                    helperText={errors.specificAddressFormDTO?.federateUnit?.message}
                 />
             </Grid>
         </Grid>
-    )
-}
+    );
+};
 
-export default AddressForm
+export default AddressForm;

@@ -8,7 +8,14 @@ export const AdressSchema = z.object({
     streetType: z.string().min(1, "O Tipo de Logradouro é obrigatório"),
     neighborhood: z.string().min(1, "O Bairro é obrigatório"),
     city: z.string().min(1, "A cidade é obrigatória"),
-    federalUnit: z.string().min(1, "O Estado é obrigatório"),
+    federateUnit: z.string().min(1, "O Estado é obrigatório"),
 })
 
 export type AdressTyoe = z.infer<typeof AdressSchema>
+
+export const streetTypeSchema = z.object({
+    name: z.string(),
+    acronym: z.string()
+})
+
+export type StreetType = z.infer<typeof streetTypeSchema>

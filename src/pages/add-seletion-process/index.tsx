@@ -44,7 +44,10 @@ const AddSelectionProcess: FC = () => {
                 sx={{
                     height: '90vh',
                     overflowY: 'auto',
-                    width: 1600,
+                    width:1205,
+                    '@media screen and (min-width:1800px)': {
+                        width: 1600,
+                    },
                     overflowX: 'auto',
                     "&::-webkit-scrollbar": {
                         width: theme.spacing(1)
@@ -62,7 +65,13 @@ const AddSelectionProcess: FC = () => {
                     },
                 }}
             >
-                <Box sx={{ width: '100%', maxWidth: '1560px' }}>
+                <Box sx={{
+                    width: '100%',
+                    '@media screen and (min-width:1800px)': {
+                        maxWidth: '1560px'
+                    },
+                    maxWidth: '1200'
+                }}>
                     <Typography fontWeight={FONT_WEIGHTS.light} mb={4}>
                         Adicionar Processo Seletivo
                     </Typography>

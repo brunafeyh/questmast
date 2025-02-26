@@ -1,15 +1,10 @@
-import apiInstance from "../shared/api";
+import axios from "axios";
 import { ExternAddress } from "../types/extern-address";
+import { API_BASE_URL } from "../shared/api";
 
 class ExternAddressService {
-    private apiUrl: string;
-
-    constructor(apiUrl: string = `/address/extern`) {
-        this.apiUrl = apiUrl;
-    }
-
     async fetchExternAddress(cep: string): Promise<ExternAddress> {
-        const response = await apiInstance.get(`${this.apiUrl}/${cep}`);
+        const response = await axios.get(`${API_BASE_URL}/address/extern/${cep}`);
         return response.data
     }
 }

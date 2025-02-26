@@ -4,6 +4,8 @@ import { Box, Button, Grid, MenuItem, TextField, IconButton, useTheme } from "@m
 import { Add } from "@mui/icons-material"
 import { TrashCan } from "@carbon/icons-react"
 import { PersonRegisterType } from "../../../types/person-register"
+import { useDDI } from "../../../hooks/use-ddi"
+import { useDDD } from "../../../hooks/use-ddd"
 
 const PersonalDataForm: FC = () => {
     const {
@@ -12,6 +14,9 @@ const PersonalDataForm: FC = () => {
         formState: { errors },
     } = useFormContext<PersonRegisterType>()
     const theme = useTheme()
+
+    const { ddds } = useDDD()
+    const { ddis } = useDDI()
 
     const { fields, append, remove } = useFieldArray({
         control,
@@ -98,23 +103,35 @@ const PersonalDataForm: FC = () => {
                         mb={1}
                     >
                         <TextField
+                            select
                             label="DDI"
-                            type="number"
                             {...register(`phoneList.${index}.ddiNumber`, { valueAsNumber: true })}
                             variant="filled"
                             error={!!errors.phoneList?.[index]?.ddiNumber}
                             helperText={errors.phoneList?.[index]?.ddiNumber?.message}
                             sx={{ width: 80 }}
-                        />
+                        >
+                            {ddis?.map((ddi) => (
+                                <MenuItem key={ddi.ddi} value={ddi.ddi}>
+                                    {ddi.ddi}
+                                </MenuItem>
+                            ))}
+                        </TextField>
                         <TextField
+                            select
                             label="DDD"
-                            type="number"
                             {...register(`phoneList.${index}.dddNumber`, { valueAsNumber: true })}
                             variant="filled"
                             error={!!errors.phoneList?.[index]?.dddNumber}
                             helperText={errors.phoneList?.[index]?.dddNumber?.message}
                             sx={{ width: 80 }}
-                        />
+                        >
+                            {ddds?.map((ddd) => (
+                                <MenuItem key={ddd?.ddd} value={ddd?.ddd}>
+                                    {ddd?.ddd}
+                                </MenuItem>
+                            ))}
+                        </TextField>
                         <TextField
                             fullWidth
                             label={`Telefone ${index + 1}`}

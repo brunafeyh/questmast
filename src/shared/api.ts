@@ -2,7 +2,6 @@ export const API_BASE_URL = 'http://localhost:8080/api'
 import axios from 'axios';
 import { ACCESS_TOKEN_KEY } from '../utils/constants/auth';
 
-
 const token = localStorage.getItem(ACCESS_TOKEN_KEY);
 
 const apiInstance = axios.create({
