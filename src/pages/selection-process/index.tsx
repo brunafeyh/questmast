@@ -9,7 +9,7 @@ import { StatusChip } from '../../components/chips/status-chip'
 import Table from '../../components/table'
 import { columns } from '../home'
 import { Add, ArrowUpRight } from '@carbon/icons-react'
-import { formatSeelectionProcessTitle } from '../../utils/get-title-format'
+import { formatSelectionProcessTitle } from '../../utils/get-title-format'
 import PagesHeader from '../../components/pages-header'
 
 const inscricoesabertas = [
@@ -80,7 +80,7 @@ export const SelectionProcess: FC = () => {
     return (
         <PageLayout title="Processos Seletivos">
             <PagesHeader
-                title={`Processo Seletivos ${formatSeelectionProcessTitle(lastSegment)}`}
+                title={`${formatSelectionProcessTitle(lastSegment)}`}
                 rightSideComponent={
                     <Button startIcon={<Add />} onClick={() => navigate('/add-selection-process')}>Adicionar</Button>
                 }
