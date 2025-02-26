@@ -1,15 +1,10 @@
-import apiInstance from "../shared/api";
+import axios from "axios";
+import { API_BASE_URL } from "../shared/api";
 import { DDIList } from "../types/phone";
 
 class DDIAddressService {
-    private apiUrl: string;
-
-    constructor(apiUrl: string = `/ddi`) {
-        this.apiUrl = apiUrl;
-    }
-
     async fetchDDI(): Promise<DDIList[]> {
-        const response = await apiInstance.get(`${this.apiUrl}`);
+        const response = await axios.get(`${API_BASE_URL}/ddi`);
         return response.data
     }
 }

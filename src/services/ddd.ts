@@ -1,15 +1,10 @@
-import apiInstance from "../shared/api";
+import axios from "axios";
+import { API_BASE_URL } from "../shared/api";
 import { DDDList } from "../types/phone";
 
 class DDDAddressService {
-    private apiUrl: string;
-
-    constructor(apiUrl: string = `/ddd`) {
-        this.apiUrl = apiUrl;
-    }
-
     async fetchDDD(): Promise<DDDList[]> {
-        const response = await apiInstance.get(`${this.apiUrl}`);
+        const response = await axios.get(`${API_BASE_URL}/ddd`);
         return response.data
     }
 }
