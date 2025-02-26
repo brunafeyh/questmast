@@ -10,6 +10,8 @@ import { StatusChip } from '../../components/chips/status-chip'
 import { Button } from '@mui/material'
 import { ArrowUpRight } from '@carbon/icons-react'
 import { useNavigate } from 'react-router-dom'
+import { withAuthentication } from '../../hocs/auth'
+import { roles } from '../../utils/auth'
 
 const TITLE = 'HomePage'
 
@@ -113,4 +115,4 @@ const HomePage: FC = () => {
 	)
 }
 
-export default HomePage
+export default withAuthentication(HomePage, roles)

@@ -74,6 +74,7 @@ export const useAuth = () => {
   const isAccessTokenExpired = useCallback(() => {
     return Date.now() > expirationTime;
   }, [expirationTime]);
+
   const isAuthenticated = useCallback(() => {
     return accessToken && !isAccessTokenExpired();
   }, [accessToken]);
@@ -88,5 +89,6 @@ export const useAuth = () => {
     logout,
     isAuthenticated,
     hasSomeRole,
+    isAccessTokenExpired
   }
 }
