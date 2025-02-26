@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { Button } from '@mui/material'
 import { PageLayout } from '../../layout'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { usePaginateArray } from '../../hooks/use-paginate-array'
 import { Row } from '@tanstack/react-table'
 import { TableCellBody, TableRowBody } from '../../components/table/styles'
@@ -9,25 +9,14 @@ import { StatusChip } from '../../components/chips/status-chip'
 import Table from '../../components/table'
 import { columns } from '../home'
 import { Add, ArrowUpRight } from '@carbon/icons-react'
-import { formatSelectionProcessTitle } from '../../utils/get-title-format'
 import PagesHeader from '../../components/pages-header'
-
-const inscricoesabertas = [
-    { title: 'Cell text 1', institution: 'Institution A', year: '2023', state: 'State A', status: 'Open' },
-    { title: 'Cell text 2', institution: 'Institution B', year: '2022', state: 'State B', status: 'Due' },
-    { title: 'Cell text 3', institution: 'Institution C', year: '2021', state: 'State C', status: 'Inactive' },
-    { title: 'Cell text 4', institution: 'Institution D', year: '2023', state: 'State D', status: 'Paid' },
-]
+import { Modal, useModal } from '../../components/modal'
+import { BoxModal } from '../../components/modal/styles'
+import SelectionProcessForm from '../../components/forms/add-selection-process'
 
 
-const previstos = [
-    { title: 'Cell text X', institution: 'Institution X', year: '2023', state: 'State X', status: 'Open' },
-    { title: 'Cell text Y', institution: 'Institution Y', year: '2022', state: 'State Y', status: 'Due' },
-    { title: 'Cell text Z', institution: 'Institution Z', year: '2021', state: 'State Z', status: 'Inactive' },
-    { title: 'Cell text W', institution: 'Institution W', year: '2023', state: 'State W', status: 'Paid' },
-]
 
-const todos = [
+const data = [
     { title: 'Cell text 1', institution: 'Institution A', year: '2023', state: 'State A', status: 'Open' },
     { title: 'Cell text 2', institution: 'Institution B', year: '2022', state: 'State B', status: 'Due' },
     { title: 'Cell text 3', institution: 'Institution C', year: '2021', state: 'State C', status: 'Inactive' },
@@ -65,34 +54,36 @@ function renderData(row: Row<any>, navigate: ReturnType<typeof useNavigate>) {
 
 export const SelectionProcess: FC = () => {
     const navigate = useNavigate()
-    const { pathname } = useLocation()
-    const segments = pathname.split('/').filter(Boolean)
-    const lastSegment = segments[segments.length - 1]
+    const paginatedData = usePaginateArray(data)
 
-    const selectedData = lastSegment === 'open-registration'
-        ? inscricoesabertas
-        : lastSegment === 'in-progress'
-            ? previstos
-            : todos
+    const modal = useModal()
 
-    const paginatedData = usePaginateArray(selectedData)
+    const handleOpenModal = () => modal.current?.openModal()
+
+    const handleCloseModal = () => modal.current?.closeModal()
 
     return (
         <PageLayout title="Processos Seletivos">
             <PagesHeader
-                title={`${formatSelectionProcessTitle(lastSegment)}`}
+                title={'Processos Seletivos'}
                 rightSideComponent={
-                    <Button startIcon={<Add />} onClick={() => navigate('/add-selection-process')}>Adicionar</Button>
+                    <Button startIcon={<Add />} onClick={handleOpenModal}>Adicionar</Button>
                 }
             />
             <Table
                 columns={columns}
                 data={paginatedData}
-                totalRows={selectedData.length}
+                totalRows={data.length}
                 isLoading={false}
                 error={null}
                 renderData={(row) => renderData(row, navigate)}
             />
+
+            <Modal ref={modal}>
+                <BoxModal>
+                    <SelectionProcessForm handleCloseModal={handleCloseModal} />
+                </BoxModal>
+            </Modal>
         </PageLayout>
     )
 }

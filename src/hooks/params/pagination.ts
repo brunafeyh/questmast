@@ -8,7 +8,7 @@ export const usePaginationParams = () => {
 	const { getQueryParam, setQueryParam } = useQueryParams()
 
 	const page = Number(getQueryParam(PAGE_KEY, 0))
-	const pageSize = Number(getQueryParam(PAGE_SIZE_KEY, 10))
+	const pageSize = Number(getQueryParam(PAGE_SIZE_KEY, 5))
 
 	const changePage = useCallback((page: number) => {
 		setQueryParam(PAGE_KEY, String(page))

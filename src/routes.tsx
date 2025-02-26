@@ -40,20 +40,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'selection-process',
-                children: [
-                    {
-                        path: 'all',
-                        element: <SelectionProcess />,
-                    },
-                    {
-                        path: 'in-progress',
-                        element: <SelectionProcess />,
-                    },
-                    {
-                        path: 'open-registration',
-                        element: <SelectionProcess />,
-                    },
-                ],
+                element: <SelectionProcess />,
             },
             {
                 path: 'tests/:id',

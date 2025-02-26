@@ -17,15 +17,7 @@ interface Props {
 
 const menuItems = [
 	{ text: 'HomePage', icon: <Home size={20} />, route: '/' },
-	{
-		text: 'Processos Seletivos',
-		icon: <Trophy size={20} />,
-		children: [
-			{ text: 'Inscrições Abertas', route: '/selection-process/open-registration' },
-			{ text: 'Em andamento', route: '/selection-process/in-progress' },
-			{ text: 'Todos', route: '/selection-process/all' },
-		],
-	},
+	{ text: 'Processos Seletivos', icon: <Trophy size={20} />, route: '/selection-process' },
 	{ text: 'Questionário', icon: <LicenseDraft size={20} />, route: '/questionary' },
 	{ text: 'Desempenho', icon: <Activity size={20} />, route: '/performance' },
 ]
