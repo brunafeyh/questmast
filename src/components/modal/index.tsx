@@ -40,7 +40,7 @@ const ModalComponent: ForwardRefRenderFunction<ModalOptions, Props> = ({ childre
 
 	return (
 		<MuiModal open={isOpened} onClose={closeModal} {...otherProps}>
-			<BoxModal display="flex" justifyContent="center" alignItems="center" height="100vh">
+			<BoxModal display="flex" justifyContent="center" alignItems="center">
 				{children}
 			</BoxModal>
 		</MuiModal>

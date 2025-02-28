@@ -6,3 +6,9 @@ export const federateUnitSchema = z.object({
 })
 
 export type FederateUnit = z.infer<typeof federateUnitSchema>
+
+export const federateUnitListSchema = z.object({
+    id: z.number(),
+    name: z.string(),
+    federateUnit: federateUnitSchema
+  })

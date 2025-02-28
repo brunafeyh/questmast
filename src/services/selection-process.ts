@@ -1,5 +1,5 @@
 import apiInstance from "../shared/api"
-import { SelectionProcess } from "../types/selection-process";
+import { SelectionProcess, SelectionProcessList } from "../types/selection-process";
 
 class SelectionProcessService {
     private apiUrl: string;
@@ -10,6 +10,11 @@ class SelectionProcessService {
 
     async addSeletionProcess(form: SelectionProcess): Promise<void> {
         await apiInstance.post(`${this.apiUrl}`, form)
+    }
+
+    async listSeletionProcess(): Promise<SelectionProcessList[]> {
+        const response = await apiInstance.get(`${this.apiUrl}`)
+        return response.data
     }
 }
 

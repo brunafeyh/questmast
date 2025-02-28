@@ -39,6 +39,10 @@ export const router = createBrowserRouter([
                 element: <RegisterPage />,
             },
             {
+                path: 'register-content-moderator',
+                element: <RegisterPage />,
+            },
+            {
                 path: 'selection-process',
                 element: <SelectionProcess />,
             },

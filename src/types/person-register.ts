@@ -1,6 +1,15 @@
 import { z } from "zod";
 import { AdressSchema } from "./adress";
-import { phoneSchema } from "./phone";
+import { phoneSchema } from "./phone"
+
+export const cpfSchema = z.object({
+    cpf: z.string()
+})
+
+export const genderSchema = z.object({
+    acronym: z.string(),
+    description: z.string()
+})
 
 export const roleSchema = z.enum(['ROLE_STUDENT', 'ROLE_ADMIN', 'ROLE_CONTENT_MODERATOR'])
 

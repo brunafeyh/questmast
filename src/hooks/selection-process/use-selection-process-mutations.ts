@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import SelectionProcessService from '../services/selection-process';
-import { SelectionProcess } from '../types/selection-process';
+import SelectionProcessService from '../../services/selection-process';
+import { SelectionProcess } from '../../types/selection-process';
 
 const service = new SelectionProcessService();
 

@@ -15,32 +15,6 @@ import { roles } from '../../utils/auth'
 
 const TITLE = 'HomePage'
 
-export const columns: ColumnDef<any, any>[] = [
-	{
-		accessorKey: 'title',
-		header: 'Título',
-	},
-	{
-		accessorKey: 'institution',
-		header: 'Instituição',
-	},
-	{
-		accessorKey: 'year',
-		header: 'Ano',
-	},
-	{
-		accessorKey: 'state',
-		header: 'Estado',
-	},
-	{
-		accessorKey: 'status',
-		header: 'Status',
-	},
-	{
-		accessorKey: 'visualizarProvas',
-		header: 'Visualizar Provas',
-	},
-]
 
 const dataMaisProcurados = [
 	{ id: '1', title: 'Cell text 1', institution: 'Institution A', year: '2023', state: 'State A', status: 'Open' },
@@ -84,6 +58,34 @@ function renderData(row: Row<any>) {
 
 const HomePage: FC = () => {
 	const [value, setValue] = useState(0)
+
+
+	const columns: ColumnDef<any, any>[] = [
+		{
+			accessorKey: 'title',
+			header: 'Título',
+		},
+		{
+			accessorKey: 'institution',
+			header: 'Instituição',
+		},
+		{
+			accessorKey: 'year',
+			header: 'Ano',
+		},
+		{
+			accessorKey: 'state',
+			header: 'Estado',
+		},
+		{
+			accessorKey: 'status',
+			header: 'Status',
+		},
+		{
+			accessorKey: 'edit',
+			header: 'Visualizar Provas',
+		},
+	]
 
 	const handleChange = (_: SyntheticEvent, newValue: number) => {
 		setValue(newValue)

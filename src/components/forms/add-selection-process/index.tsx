@@ -21,7 +21,7 @@ import { useBoardExaminer } from "../../../hooks/use-board-examiner";
 import { useFederateUnit } from "../../../hooks/use-federate-unit";
 import { useCityByUF } from "../../../hooks/use-cities-by-uf";
 import Loading from "../../loading";
-import { useSelectionProcessMutations } from "../../../hooks/use-selection-process-mutations";
+import { useSelectionProcessMutations } from "../../../hooks/selection-process/use-selection-process-mutations";
 
 type SelectionProcessFormProps = {
   handleCloseModal: () => void;

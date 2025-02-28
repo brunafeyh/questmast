@@ -4,23 +4,25 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { personRegisterSchema, PersonRegisterType, validationSchemas } from "../../types/person-register";
 import AddressForm from "../../components/forms/address";
-import { PERSON_DEFAULT } from "../../utils/constants/default";
+import { PERSON_CONTENT_MODERATOR, PERSON_DEFAULT } from "../../utils/constants/default";
 import PersonalDataForm from "../../components/forms/personal-data";
 import { Tab, Tabs } from "../home/styles";
 import { registersteps } from "../../utils/constants";
 import { useAuth } from "../../hooks/use-auth";
 import Loading from "../../components/loading";
+import { useLocation } from "react-router-dom";
 
 export const projectAbbreviation = 'QuestMast'
 
 export const RegisterPage: FC = () => {
+    const location = useLocation().pathname
     const [activeStep, setActiveStep] = useState(0)
     const theme = useTheme()
     const { registerMutation } = useAuth()
 
     const methods = useForm<PersonRegisterType>({
         resolver: zodResolver(personRegisterSchema),
-        defaultValues: PERSON_DEFAULT,
+        defaultValues: location === '/register' ? PERSON_DEFAULT : PERSON_CONTENT_MODERATOR,
         mode: "onTouched",
     })
 
@@ -37,7 +39,7 @@ export const RegisterPage: FC = () => {
         registerMutation.mutate(data)
     }
 
-    if(registerMutation.isPending) return <Loading/>
+    if (registerMutation.isPending) return <Loading />
 
     return (
         <FormProvider {...methods}>
