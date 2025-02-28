@@ -13,8 +13,8 @@ export function transformSelectionProcesses(selectionProcesses: SelectionProcess
     if (!selectionProcesses) return [];
     return selectionProcesses.map(proc => {
         const year = proc.openingDate.substring(0, 4);
-
         return {
+            idSelectionProcess: proc.id,
             title: proc.name,
             year,
             institution: proc.institution.name,

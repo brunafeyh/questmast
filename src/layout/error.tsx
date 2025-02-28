@@ -13,7 +13,7 @@ const ErrorContainer: FC<Props> = ({ children, ...attrs }) => {
 			alignItems="center"
 			columnSpacing={4}
 			rowGap={2}
-			paddingLeft={75}
+			paddingLeft={55}
 			paddingBottom={8}
 			component="main"
 			columns={{ xl: 12, lg: 12, md: 8, sm: 4, xs: 4 }}

@@ -3,43 +3,44 @@ import { Button } from '@mui/material'
 import { PageLayout } from '../../layout'
 import { useNavigate } from 'react-router-dom'
 import { usePaginateArray } from '../../hooks/use-paginate-array'
-import { ColumnDef, Row } from '@tanstack/react-table'
+import { ColumnDef } from '@tanstack/react-table'
 import { TableCellBody, TableRowBody } from '../../components/table/styles'
 import { StatusChip } from '../../components/chips/status-chip'
 import Table from '../../components/table'
-import { Add, ArrowUpRight } from '@carbon/icons-react'
+import { Add } from '@carbon/icons-react'
 import PagesHeader from '../../components/pages-header'
 import { Modal, useModal } from '../../components/modal'
 import { BoxModal } from '../../components/modal/styles'
 import SelectionProcessForm from '../../components/forms/add-selection-process'
 import { useSelectionProcesses } from '../../hooks/selection-process/use-selection-process'
 import { transformSelectionProcesses } from '../../utils/selection-process-summary'
-
-function renderData(row: Row<any>, navigate: ReturnType<typeof useNavigate>) {
-    return (
-        <TableRowBody key={row.id}>
-            <TableCellBody>{row.original.title}</TableCellBody>
-            <TableCellBody>{row.original.institution}</TableCellBody>
-            <TableCellBody>{row.original.year}</TableCellBody>
-            <TableCellBody>{row.original.state}</TableCellBody>
-            <TableCellBody>
-                <StatusChip status={row.original.status} />
-            </TableCellBody>
-            <TableCellBody>
-                <Button
-                    variant="text"
-                    startIcon={<ArrowUpRight style={{ width: 18, height: 18 }} />}
-                    onClick={() => navigate(`/tests/${row.original.id}`)}
-                >
-                    Visualizar Provas
-                </Button>
-            </TableCellBody>
-        </TableRowBody>
-    )
-}
+import { useStatus } from '../../hooks/use-status'
+import { useInstitution } from '../../hooks/use-institution'
+import { useFederateUnit } from '../../hooks/use-federate-unit'
+import { YearOptions } from '../../utils/constants/year'
 
 export const SelectionProcess: FC = () => {
     const navigate = useNavigate()
+
+    const { status } = useStatus()
+    const { institutions } = useInstitution()
+    const { federateUnit: federateUnits } = useFederateUnit()
+
+    const institutionsOptions = institutions?.map(s => ({
+        value: s.name,
+        label: s.name
+    })) || []
+
+
+    const federateUnitsOptions = federateUnits?.map(s => ({
+        value: s.name,
+        label: s.name
+    })) || []
+
+    const statusOptions = status?.map(s => ({
+        value: s.description,
+        label: s.description
+    })) || []
 
     const columns: ColumnDef<any, any>[] = [
         {
@@ -49,22 +50,22 @@ export const SelectionProcess: FC = () => {
         {
             accessorKey: 'institution',
             header: 'Instituição',
+            meta: { filterVariant: 'list', options: institutionsOptions }
         },
         {
             accessorKey: 'year',
             header: 'Ano',
+            meta: { filterVariant: 'enum', options: YearOptions }
         },
         {
             accessorKey: 'state',
             header: 'Estado',
+            meta: { filterVariant: 'list', options: federateUnitsOptions }
         },
         {
             accessorKey: 'status',
             header: 'Status',
-        },
-        {
-            accessorKey: 'edit',
-            header: 'Visualizar Provas',
+            meta: { filterVariant: 'list', options: statusOptions }
         },
     ]
 
@@ -94,7 +95,16 @@ export const SelectionProcess: FC = () => {
                 totalRows={data?.length || 0}
                 isLoading={false}
                 error={null}
-                renderData={(row) => renderData(row, navigate)}
+                renderData={(row) =>
+                    <TableRowBody key={row.id} hover sx={{ cursor: 'grab' }} onClick={() => navigate(`details/${row.original.idSelectionProcess}`)}>
+                        <TableCellBody>{row.original.title}</TableCellBody>
+                        <TableCellBody>{row.original.institution}</TableCellBody>
+                        <TableCellBody>{row.original.year}</TableCellBody>
+                        <TableCellBody>{row.original.state}</TableCellBody>
+                        <TableCellBody>
+                            <StatusChip status={row.original.status} />
+                        </TableCellBody>
+                    </TableRowBody>}
             />
 
             <Modal ref={modal}>

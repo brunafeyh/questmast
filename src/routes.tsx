@@ -9,6 +9,7 @@ import { RegisterPage } from './pages/register'
 import LoginPage from './pages/login'
 import { SelectionProcess } from './pages/selection-process'
 import AddSelectionProcess from './pages/add-seletion-process'
+import { SelectionProcessDetails } from './pages/selection-process-details'
 
 export const router = createBrowserRouter([
     {
@@ -44,7 +45,11 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'selection-process',
-                element: <SelectionProcess />,
+                element: <SelectionProcess />
+            },
+            {
+                path: 'selection-process/details/:id',
+                element: <SelectionProcessDetails />,
             },
             {
                 path: 'tests/:id',
