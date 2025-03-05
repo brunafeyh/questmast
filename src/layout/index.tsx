@@ -23,7 +23,7 @@ const menuItems = [
 ]
 
 export const PageLayout: FC<PropsWithChildren<Props>> = ({ title, children }) => {
-	const {user } = useAuth()
+	const { user } = useAuth()
 	const popover = usePopover()
 	useSetTitle(title)
 	return (
@@ -31,6 +31,7 @@ export const PageLayout: FC<PropsWithChildren<Props>> = ({ title, children }) =>
 			<Header
 				projectAbbreviation="QuestMast"
 				projectName='Sistema de Preparação de Processos Seletivos'
+				sidebar={true}
 				rightComponents={[
 					<IconButton
 						key={user?.name}

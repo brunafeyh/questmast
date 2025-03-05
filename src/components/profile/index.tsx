@@ -3,6 +3,7 @@ import { Logout } from '@carbon/icons-react'
 import { Box, Button, Typography, useTheme } from '@mui/material'
 import { FONT_WEIGHTS } from '../../utils/constants/theme'
 import { useAuth } from '../../hooks/use-auth'
+import { formatRole } from '../../utils/forma-role'
 
 const Profile: FC = () => {
 	const theme = useTheme()
@@ -40,7 +41,7 @@ const Profile: FC = () => {
 				fontWeight={FONT_WEIGHTS.medium}
 				color={theme.palette.juicy.neutral.c80}
 			>
-				{user?.role}
+				{formatRole(user?.role)}
 			</Typography>
 			<Button
 				sx={{

@@ -10,9 +10,10 @@ type HeaderMenuProps = {
 	projectAbbreviation: string
 	projectName: string
 	rightComponents?: ReactNode[]
+	sidebar?: boolean
 }
 
-const Header: FC<HeaderMenuProps> = ({ projectAbbreviation, rightComponents, projectName }) => {
+const Header: FC<HeaderMenuProps> = ({ projectAbbreviation, rightComponents, projectName, sidebar }) => {
 	const theme = useTheme()
 	const [isCollapsed, setIsCollapsed] = useAtom(isCollapsedAtom)
 	const handleCollapse = () => setIsCollapsed((collapsed) => !collapsed)
@@ -21,11 +22,13 @@ const Header: FC<HeaderMenuProps> = ({ projectAbbreviation, rightComponents, pro
 		<MenuBox>
 			<Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
 				<Stack direction="row" alignItems="center" gap={2} sx={{ paddingLeft: 1 }}>
-					<Tooltip title={isCollapsed ? 'Abrir Barra Lateral' : 'Colapsar Barra Lateral'} placement="right">
-						<IconButton edge="start" color="inherit" onClick={handleCollapse}>
-							{isCollapsed ? <ChevronRight /> : <ChevronLeft />}
-						</IconButton>
-					</Tooltip>
+					{sidebar && (
+						<Tooltip title={isCollapsed ? 'Abrir Barra Lateral' : 'Colapsar Barra Lateral'} placement="right">
+							<IconButton edge="start" color="inherit" onClick={handleCollapse}>
+								{isCollapsed ? <ChevronRight /> : <ChevronLeft />}
+							</IconButton>
+						</Tooltip>
+					)}
 					<Typography
 						color={theme.palette.juicy.neutral.c10}
 						fontSize={(theme) => theme.spacing(3)}

@@ -1,17 +1,18 @@
-import { useCallback, useMemo } from 'react';
-import { useAtom } from 'jotai';
-import { useNavigate } from 'react-router-dom';
-import { RESET } from 'jotai/utils';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { useMutation } from '@tanstack/react-query';
-import { AuthorizationRole, PersonRegisterType } from '../types/person-register';
-import { AuthCredentials } from '../types/auth';
-import { accessTokenAtom, refreshTokenAtom } from '../contexts/auth';
-import { getExpirationTime, getUserFromToken } from '../utils/auth';
-import AuthService from '../services/auth';
+import { useCallback, useMemo } from 'react'
+import { useAtom } from 'jotai'
+import { useNavigate } from 'react-router-dom'
+import { RESET } from 'jotai/utils'
+import axios from 'axios'
+import { toast } from 'react-toastify'
+import { useMutation } from '@tanstack/react-query'
+import { AuthorizationRole, PersonRegisterType } from '../types/person-register'
+import { AuthCredentials } from '../types/auth'
+import { accessTokenAtom, refreshTokenAtom } from '../contexts/auth'
+import { getExpirationTime, getUserFromToken } from '../utils/auth'
+import AuthService from '../services/auth'
+import { UpdatePasswordVerificationForm } from '../types/verifiy'
 
-const authService = new AuthService();
+const authService = new AuthService()
 
 export const useAuth = () => {
   const [accessToken, setAccessToken] = useAtom(accessTokenAtom);
@@ -24,7 +25,7 @@ export const useAuth = () => {
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
     axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-  };
+  }
 
   const loginMutation = useMutation<string, Error, AuthCredentials>({
     mutationFn: async (credentials: AuthCredentials) => {
@@ -56,6 +57,62 @@ export const useAuth = () => {
       toast.error('Error registering user. Please check your details.');
       console.error('Error registering user:', error);
     },
+  })
+
+
+  const verifyEmailMutation = useMutation<void, Error, { email: string; verificationEmailCode: string }>({
+    mutationFn: async ({ email, verificationEmailCode }) => {
+      await authService.verifyEmail({ email, verificationEmailCode });
+    },
+    onSuccess: () => {
+      toast.success('Verificação de Email feita com sucesso!');
+      navigate('/login');
+    },
+    onError: (error) => {
+      toast.error('Erro ao Verificar Email de usuário');
+      console.error('Erro ao validar email:', error);
+    },
+  })
+
+  const updatePasswordMutation = useMutation({
+    mutationFn: async (form: UpdatePasswordVerificationForm) => {
+      await authService.updatePassword(form);
+    },
+    onSuccess: () => {
+      toast.success('Mudança de senha feita com sucesso!');
+      navigate('/login');
+    },
+    onError: (error) => {
+      toast.error('Erro na mudança de senha!');
+      console.error('Erro na mudança de senha!:', error);
+    },
+  })
+
+  const getEmailsMutation = useMutation({
+    mutationFn: async (cpf: string) => {
+      const result = await authService.getEmailfromCPF(cpf)
+      return result
+    },
+    onError: (error) => {
+      toast.error('Erro listar Emails de usuário');
+      console.error('Erro listar emails de usário:', error);
+    },
+  })
+
+  const changePasswordMutation = useMutation({
+    mutationFn: async (email: string) => {
+      await authService.changePassword(email);
+    },
+    onSuccess: () => {
+      toast.success('Link de mudança de senha enviado por email!');
+      setTimeout(() => {
+        navigate('/login');
+      }, 15000);
+    },
+    onError: (error) => {
+      toast.error('Erro ao solicitar mudança de senha!');
+      console.error('Erro ao solicitar mudança de senha:', error);
+    },
   });
 
   const logout = useCallback(async () => {
@@ -76,26 +133,30 @@ export const useAuth = () => {
       return user ? requiredRoles.includes(user.role) : false;
     },
     [user]
-  );
+  )
 
   const isAccessTokenExpired = useCallback(() => {
-    return Date.now() > expirationTime;
-  }, [expirationTime]);
+    return Date.now() > expirationTime
+  }, [expirationTime])
 
   const isAuthenticated = useCallback(() => {
-    return accessToken && !isAccessTokenExpired();
-  }, [accessToken, isAccessTokenExpired]);
+    return accessToken && !isAccessTokenExpired()
+  }, [accessToken, isAccessTokenExpired])
 
   return {
     token: accessToken,
     accessToken,
     refreshToken,
     user,
-    loginMutation, 
-    registerMutation,  
+    loginMutation,
+    registerMutation,
     logout,
     isAuthenticated,
     hasSomeRole,
     isAccessTokenExpired,
-  };
-};
+    verifyEmailMutation,
+    getEmailsMutation,
+    changePasswordMutation,
+    updatePasswordMutation
+  }
+}

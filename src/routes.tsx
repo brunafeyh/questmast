@@ -10,6 +10,9 @@ import LoginPage from './pages/login'
 import { SelectionProcess } from './pages/selection-process'
 import AddSelectionProcess from './pages/add-seletion-process'
 import { SelectionProcessDetails } from './pages/selection-process-details'
+import VerificationPage from './pages/register-verification'
+import RecoverPasswordPage from './pages/recover-password'
+import ResetPasswordPage from './pages/reset-password'
 
 export const router = createBrowserRouter([
     {
@@ -44,8 +47,20 @@ export const router = createBrowserRouter([
                 element: <RegisterPage />,
             },
             {
+                path: 'register-verification/:data',
+                element: <VerificationPage />,
+            },
+            {
+                path: 'reset-password/:data',
+                element: <ResetPasswordPage />,
+            },
+            {
                 path: 'selection-process',
                 element: <SelectionProcess />
+            },
+            {
+                path: 'recover-password',
+                element: <RecoverPasswordPage />
             },
             {
                 path: 'selection-process/details/:id',

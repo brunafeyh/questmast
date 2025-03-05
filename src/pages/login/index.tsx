@@ -1,4 +1,3 @@
-import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -19,6 +18,7 @@ import { TextField } from "../../components/table/styles";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/use-auth";
 import Loading from "../../components/loading";
+import { useState } from "react";
 
 export default function LoginPage() {
     const {
@@ -33,15 +33,13 @@ export default function LoginPage() {
 
     const theme = useTheme()
 
-    const onSubmit = async (data: AuthCredentials) => {
-        loginMutation.mutate(data)
-    }
-
-    const [showPassword, setShowPassword] = React.useState(false);
+    const [showPassword, setShowPassword] = useState(false)
 
     const handleClickShowPassword = () => setShowPassword((prev) => !prev)
 
-    if(loginMutation.isPending) return <Loading/>
+    const onSubmit = async (data: AuthCredentials) => loginMutation.mutate(data)
+
+    if (loginMutation.isPending) return <Loading />
 
     return (
         <Box display="flex" height="100vh" width={'100%'}>
@@ -132,9 +130,10 @@ export default function LoginPage() {
                             Entrar
                         </Button>
                     </Stack>
-                    <Link to={'/register'} style={{ color: theme.palette.juicy.primary.c50, fontSize: theme.spacing(1.75) }} >Não tem acesso? Registre-se aqui!</Link>
+                    <Link to={'/register'} style={{ color: theme.palette.juicy.primary.c50, fontSize: theme.spacing(1.75) }} >Não tem acesso? Registre-se aqui! <br /></Link>
+                    <Link to={'/recover-password'} style={{ color: theme.palette.juicy.error.c50, fontSize: theme.spacing(1.75) }} >Esqueceu a senha?</Link>
                 </Box>
             </Box>
         </Box>
-    );
+    )
 }

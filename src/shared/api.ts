@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://localhost:8080/api'
+export const API_BASE_URL = 'https://questmast.rj.r.appspot.com/api'
 import axios from 'axios';
 import { ACCESS_TOKEN_KEY } from '../utils/constants/auth';
 
