@@ -2,13 +2,13 @@ import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Checkmark, Search } from '@carbon/icons-react';
 import { Box, Button, Card, CardContent, Divider, IconButton, Radio, RadioGroup, FormControlLabel, Stack, TextField, Typography, useTheme } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import ErrorContainer from '../../layout/error';
+import { useNavigate } from 'react-router-dom'
 import { FONT_WEIGHTS } from '../../utils/constants/theme';
 import Header from '../../components/header';
 import Loading from '../../components/loading';
 import { useUserEmailsfromCPF } from '../../hooks/use-emails-from-cpf';
 import { useAuth } from '../../hooks/use-auth';
+import VerificationContainer from '../../layout/verification';
 
 type FormData = {
     cpf: string
@@ -41,7 +41,7 @@ const RecoverPasswordPage: FC = () => {
     if (isLoading || changePasswordMutation.isPending) return <Loading />
 
     return (
-        <ErrorContainer>
+        <VerificationContainer>
             <Header
                 projectAbbreviation="QuestMast"
                 projectName="Sistema de Preparação de Processos Seletivos"
@@ -148,7 +148,7 @@ const RecoverPasswordPage: FC = () => {
                     </Box>
                 </form>
             </Stack>
-        </ErrorContainer>
+        </VerificationContainer>
     )
 }
 

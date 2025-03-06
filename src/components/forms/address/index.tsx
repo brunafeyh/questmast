@@ -55,7 +55,7 @@ const AddressForm = () => {
                         endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton onClick={handleCepSearch}>
-                                    {isLoading ? <CircularProgress/> : <Search />}
+                                    {isLoading ? <CircularProgress /> : <Search />}
                                 </IconButton>
                             </InputAdornment>
                         ),
@@ -161,7 +161,7 @@ const AddressForm = () => {
                 />
             </Grid>
         </Grid>
-    );
-};
+    )
+}
 
-export default AddressForm;
+export default AddressForm

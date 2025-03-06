@@ -1,15 +1,10 @@
-import apiInstance from "../shared/api";
+import axios from "axios";
+import { API_BASE_URL } from "../shared/api";
 import { FederateUnit } from "../types/federate-unit";
 
 class FederateUnitService {
-    private apiUrl: string;
-
-    constructor(apiUrl: string = `/federate-unit`) {
-        this.apiUrl = apiUrl;
-    }
-
     async getAllFederates(): Promise<FederateUnit[]> {
-        const response = await apiInstance.get(`${this.apiUrl}`)
+        const response = await axios.get(`${API_BASE_URL}/federate-unit`)
         return response.data;
     }
 }

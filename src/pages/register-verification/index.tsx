@@ -2,13 +2,13 @@ import { FC } from 'react'
 import { Checkmark } from '@carbon/icons-react'
 import { Box, Button, Stack, Typography, useTheme } from '@mui/material'
 import { useNavigate, useParams } from 'react-router-dom'
-import ErrorContainer from '../../layout/error'
 import { FONT_WEIGHTS } from '../../utils/constants/theme'
 import Header from '../../components/header'
 import { Modal, useModal } from '../../components/modal'
 import { ConfirmationModal } from '../../components/confirmation-modal'
 import { useAuth } from '../../hooks/use-auth'
 import Loading from '../../components/loading'
+import VerificationContainer from '../../layout/verification'
 
 const VerificationPage: FC = () => {
     const navigate = useNavigate()
@@ -28,7 +28,7 @@ const VerificationPage: FC = () => {
 
     if (verifyEmailMutation.isPending) return <Loading />
     return (
-        <ErrorContainer>
+        <VerificationContainer  paddingLeft={75}>
             <Header
                 projectAbbreviation="QuestMast"
                 projectName='Sistema de Preparação de Processos Seletivos' />
@@ -67,7 +67,7 @@ const VerificationPage: FC = () => {
             <Modal ref={modal}>
                 <ConfirmationModal text='Tem certeza? Sem confirmação não há como entrar no sistema!' onCancel={handleCloseModal} onConfirm={() => navigate('/login')} />
             </Modal>
-        </ErrorContainer>
+        </VerificationContainer>
     )
 }
 

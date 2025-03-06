@@ -1,4 +1,5 @@
-import apiInstance from "../shared/api"
+import axios from "axios";
+import { API_BASE_URL } from "../shared/api"
 import { Institution } from "../types/institution";
 
 class InstitutionService {
@@ -9,7 +10,7 @@ class InstitutionService {
     }
 
     async getAllInstitutions(): Promise<Institution[]> {
-        const response = await apiInstance.get(`${this.apiUrl}`)
+        const response = await axios.get(`${API_BASE_URL}${this.apiUrl}`)
         return response.data;
     }
 }

@@ -1,5 +1,5 @@
 import axios from "axios";
-import apiInstance, { API_BASE_URL } from "../shared/api";
+import { API_BASE_URL } from "../shared/api";
 import { AuthCredentials } from "../types/auth";
 import { PersonRegisterType } from "../types/person-register";
 import { UpdatePasswordVerificationForm, VerificationForm } from "../types/verifiy";
@@ -28,7 +28,7 @@ class AuthService {
     }
 
     async verifyEmail(form: VerificationForm): Promise<void> {
-        await apiInstance.post(`/authentication/verify-email/${form.email}`, null, {
+        await axios.post(`${API_BASE_URL}/authentication/verify-email/${form.email}`, null, {
             params: {
                 verificationEmailCode: form.verificationEmailCode
             }

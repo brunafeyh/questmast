@@ -1,4 +1,5 @@
-import apiInstance from "../shared/api";
+import axios from "axios";
+import { API_BASE_URL } from "../shared/api";
 import { SelectionProcessStatus } from "../types/status";
 
 class SelectionProcessStatusService {
@@ -9,7 +10,7 @@ class SelectionProcessStatusService {
     }
 
     async getAllStatus(): Promise<SelectionProcessStatus[]> {
-        const response = await apiInstance.get(`${this.apiUrl}/all`)
+        const response = await axios.get(`${API_BASE_URL}${this.apiUrl}/all`)
         return response.data;
     }
 }

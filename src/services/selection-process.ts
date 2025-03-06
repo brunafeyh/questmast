@@ -1,4 +1,5 @@
-import apiInstance from "../shared/api"
+import axios from "axios";
+import { API_BASE_URL } from "../shared/api"
 import { SelectionProcess, SelectionProcessList } from "../types/selection-process";
 
 class SelectionProcessService {
@@ -8,15 +9,15 @@ class SelectionProcessService {
         this.apiUrl = apiUrl;
     }
     async addSeletionProcess(form: SelectionProcess): Promise<void> {
-        await apiInstance.post(`${this.apiUrl}`, form)
+        await axios.post(`${API_BASE_URL}${this.apiUrl}`, form)
     }
     async getSeletionProcess(id: number): Promise<SelectionProcessList> {
-        const response = await apiInstance.get(`${this.apiUrl}/${id}`)
+        const response = await axios.get(`${API_BASE_URL}${this.apiUrl}/${id}`)
         return response.data
     }
 
     async listSeletionProcess(): Promise<SelectionProcessList[]> {
-        const response = await apiInstance.get(`${this.apiUrl}`)
+        const response = await axios.get(`${API_BASE_URL}${this.apiUrl}`)
         return response.data
     }
 }

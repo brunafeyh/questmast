@@ -1,15 +1,10 @@
-import apiInstance from "../shared/api";
+import axios from "axios";
+import  { API_BASE_URL } from "../shared/api";
 import { CityDTO } from "../types/selection-process";
 
 class CityService {
-    private apiUrl: string;
-
-    constructor(apiUrl: string = `/city/extern`) {
-        this.apiUrl = apiUrl;
-    }
-
     async getAllCityesfromUF(uf: string): Promise<CityDTO[]> {
-        const response = await apiInstance.get(`${this.apiUrl}/${uf}`)
+        const response = await axios.get(`${API_BASE_URL}/city/extern//${uf}`)
         return response.data
     }
 }
