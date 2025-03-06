@@ -72,7 +72,7 @@ export const SelectionProcessDetails: FC = () => {
                     <Button key="outroBotao" variant="text" onClick={() => console.log('Outro Botão Clicado')} startIcon={<Async style={{ width: 16, height: 16 }} />}>
                         Trocar status
                     </Button>,
-                    <Button key="adicionarProva" variant="contained" onClick={() => console.log('Adicionar Prova')} startIcon = {<Add style={{ width: 16, height: 16 }}/>}>
+                    <Button key="adicionarProva" variant="contained" onClick={() => navigate(`/add-test/${id}`)} startIcon={<Add style={{ width: 16, height: 16 }} />}>
                         Adicionar Prova
                     </Button>,
                     <IconButton key="menu" onClick={handleMenuOpen} sx={{ color: theme.palette.juicy.primary.c70 }}>

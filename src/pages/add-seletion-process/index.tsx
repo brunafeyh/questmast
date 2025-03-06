@@ -1,173 +1,170 @@
-import { useForm, useFieldArray } from 'react-hook-form';
-import {
-    Box,
-    Typography,
-    Button,
-    Grid,
-    MenuItem,
-    TextField,
-    useTheme,
-} from '@mui/material';
-import { Add } from '@carbon/icons-react';
-import { FONT_WEIGHTS } from '../../utils/constants/theme';
-import { PageLayout } from '../../layout';
-import { FormValues } from '../../types/test';
-import { ExamForm } from '../../components/forms/exam';
-import { FC } from 'react';
-import { useAtom } from 'jotai';
-import { isCollapsedAtom } from '../../contexts/is-sidebar-collapsed';
+import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { Box, Typography, Button, TextField, MenuItem } from "@mui/material";
+import { Add } from "@carbon/icons-react";
+import { PageLayout } from "../../layout";
+import { FC } from "react";
+import { AddTestFormData } from "../../types/test";
+import { useAuth } from "../../hooks/use-auth";
+import { useParams } from "react-router-dom";
+import { useProfessionalLevel } from "../../hooks/use-professional-level";
+import { useFunctions } from "../../hooks/use-functions-";
+import QuestionItem from "../../components/question-item";
 
-const AddSelectionProcess: FC = () => {
-    const theme = useTheme()
-    const [isCollapsed] = useAtom(isCollapsedAtom)
-    const { register, control, handleSubmit } = useForm<FormValues>({
+const AddTest: FC = () => {
+    const { user } = useAuth();
+    const { id } = useParams();
+
+    const { control, register, handleSubmit, setValue, formState: { errors } } = useForm<AddTestFormData>({
+       
         defaultValues: {
-            title: '',
-            institution: '',
-            year: new Date().getFullYear(),
-            status: '',
-            examBoard: '',
-            exams: [],
+            applicationDate: new Date().toISOString().split("T")[0],
+            name: "",
+            functionId: 0,
+            professionalLevelId: 0,
+            selectionProcessId: Number(id),
+            contentModeratorEmail: user?.email,
+            questionList: [],
         },
     });
 
-    const { fields: examsFields, append: appendExam, remove: removeExam } =
-        useFieldArray({
-            control,
-            name: 'exams',
-        });
+    const { professionalLevel, isLoading: isLoadingProfessionalLevel } = useProfessionalLevel();
+    const { functions, isLoading: isLoadingFunctions } = useFunctions();
 
-    const onSubmit = (data: FormValues) => {
-        console.log('Submitted Data:', data);
+    const { fields: questionFields, append: addQuestion, remove: removeQuestion } = useFieldArray({
+        control,
+        name: "questionList",
+    });
+
+    const onSubmit = (data: AddTestFormData) => {
+        console.log(data);
     };
 
     return (
-        <PageLayout title="Adicionar Processo Seletivo">
-            <Box
-                sx={{
-                    height: '90vh',
-                    overflowY: 'auto',
-                    width: isCollapsed ? 1393: 1205,
-                    '@media screen and (min-width:1800px)': {
-                        width: 1600,
-                    },
-                    overflowX: 'auto',
-                    "&::-webkit-scrollbar": {
-                        width: theme.spacing(1)
-                    },
-                    "&::-webkit-scrollbar-track": {
-                        backgroundColor: theme.palette.juicy.neutral.c30,
-                        borderRadius: theme.spacing(0.5),
-                    },
-                    "&::-webkit-scrollbar-thumb": {
-                        backgroundColor: theme.palette.juicy.neutral.c50,
-                        borderRadius: theme.spacing(0.5),
-                    },
-                    "&::-webkit-scrollbar-thumb:hover": {
-                        backgroundColor: theme.palette.juicy.neutral.c60,
-                    },
-                }}
-            >
-                <Box sx={{
-                    width: '100%',
-                    '@media screen and (min-width:1800px)': {
-                        maxWidth: '1560px'
-                    },
-                    maxWidth: '1200'
-                }}>
-                    <Typography fontWeight={FONT_WEIGHTS.light} mb={4}>
-                        Adicionar Processo Seletivo
-                    </Typography>
+        <PageLayout title="Adicionar Prova">
+            <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ width: 1591 }}>
+                <Typography sx={{ mb: 2 }} fontSize={18}>Adicionar Prova</Typography>
+                <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }} mr={2}>
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                        <TextField
+                            label="Nome da Prova"
+                            {...register("name")}
+                            variant="filled"
+                            error={!!errors.name}
+                            helperText={errors.name?.message}
+                            sx={{ mb: 2, width: 770 }}
+                        />
 
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            label="Data de Aplicação"
+                            type="date"
+                            variant="filled"
+                            {...register("applicationDate")}
+                            error={!!errors.applicationDate}
+                            helperText={errors.applicationDate?.message}
+                            sx={{ mb: 2, width: 770 }}
+                        />
+                    </Box>
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                        <Controller
+                            name="functionId"
+                            control={control}
+                            render={({ field }) => (
                                 <TextField
-                                    label="Título"
-                                    variant="filled"
                                     fullWidth
-                                    {...register('title')}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    label="Instituição"
-                                    variant="filled"
-                                    fullWidth
-                                    {...register('institution')}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    label="Ano"
-                                    variant="filled"
-                                    type="number"
-                                    fullWidth
-                                    {...register('year')}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    label="Status"
-                                    variant="filled"
                                     select
-                                    fullWidth
-                                    {...register('status')}
-                                >
-                                    <MenuItem value="Open">Open</MenuItem>
-                                    <MenuItem value="Closed">Closed</MenuItem>
-                                    <MenuItem value="Concluded">Concluded</MenuItem>
-                                </TextField>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    label="Banca"
+                                    label="Função"
+                                    {...field}
                                     variant="filled"
+                                    error={!!errors.functionId}
+                                    helperText={errors.functionId?.message}
+                                    sx={{ mb: 2, width: 770}}
+                                >
+                                    {isLoadingFunctions ? (
+                                        <MenuItem disabled>Carregando...</MenuItem>
+                                    ) : (
+                                        functions?.map((func) => (
+                                            <MenuItem key={func.id} value={func.id}>
+                                                {func.name}
+                                            </MenuItem>
+                                        ))
+                                    )}
+                                </TextField>
+                            )}
+                        />
+
+                        <Controller
+                            name="professionalLevelId"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
                                     fullWidth
-                                    {...register('examBoard')}
-                                />
-                            </Grid>
-                        </Grid>
+                                    select
+                                    label="Nível Profissional"
+                                    {...field}
+                                    variant="filled"
+                                    error={!!errors.professionalLevelId}
+                                    helperText={errors.professionalLevelId?.message}
+                                    sx={{ mb: 2, width: 770 }}
+                                >
+                                    {isLoadingProfessionalLevel ? (
+                                        <MenuItem disabled>Carregando...</MenuItem>
+                                    ) : (
+                                        professionalLevel?.map((level) => (
+                                            <MenuItem key={level.id} value={level.id}>
+                                                {level.name}
+                                            </MenuItem>
+                                        ))
+                                    )}
+                                </TextField>
+                            )}
+                        />
 
-                        <Box display="flex" flexDirection="column" gap={2} mt={2}>
-                            <Typography fontWeight={FONT_WEIGHTS.light}>
-                                Provas
-                            </Typography>
-                            {examsFields.map((item, index) => (
-                                <ExamForm
-                                    key={item.id}
-                                    nestIndex={index}
-                                    register={register}
-                                    control={control}
-                                    remove={removeExam}
-                                />
-                            ))}
-                            <Button
-                                variant="text"
-                                startIcon={<Add />}
-                                onClick={() =>
-                                    appendExam({
-                                        id: crypto.randomUUID(),
-                                        name: '',
-                                        position: '',
-                                        questions: [],
-                                    })
-                                }
-                            >
-                                Adicionar Provas
-                            </Button>
-                        </Box>
+                    </Box>
+                </Box>
 
-                        <Box mt={4}>
-                            <Button variant="contained" color="primary" type="submit">
-                                Salvar Processo Seletivo
-                            </Button>
-                        </Box>
-                    </form>
+                <Typography sx={{ mt: 4, mb: 2 }} fontSize={18}>Questões</Typography>
+
+                {questionFields.map((item, index) => (
+                    <QuestionItem
+                        key={item.id}
+                        index={index}
+                        control={control}
+                        register={register}
+                        setValue={setValue}
+                        errors={errors}
+                        removeQuestion={removeQuestion}
+                    />
+                ))}
+
+                <Button
+                    variant="text"
+                    startIcon={<Add />}
+                    onClick={() =>
+                        addQuestion({
+                            name: "",
+                            statement: "",
+                            statementImage: "",
+                            explanation: "",
+                            videoExplanationUrl: "",
+                            questionAlternativeList: [],
+                            questionDifficultyLevelId: 0,
+                            subjectId: 0,
+                            subjectTopicList: [],
+                        })
+                    }
+                >
+                    Adicionar Questão
+                </Button>
+
+                <Box mt={4}>
+                    <Button variant="contained" color="primary" type="submit">
+                        Salvar Prova
+                    </Button>
                 </Box>
             </Box>
         </PageLayout>
     )
 }
 
-export default AddSelectionProcess
+export default AddTest

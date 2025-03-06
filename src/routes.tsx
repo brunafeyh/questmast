@@ -8,11 +8,11 @@ import TestPage from './pages/test'
 import { RegisterPage } from './pages/register'
 import LoginPage from './pages/login'
 import { SelectionProcess } from './pages/selection-process'
-import AddSelectionProcess from './pages/add-seletion-process'
 import { SelectionProcessDetails } from './pages/selection-process-details'
 import VerificationPage from './pages/register-verification'
 import RecoverPasswordPage from './pages/recover-password'
 import ResetPasswordPage from './pages/reset-password'
+import AddTest from './pages/add-seletion-process'
 
 export const router = createBrowserRouter([
     {
@@ -31,8 +31,8 @@ export const router = createBrowserRouter([
                 element: <Performance />,
             },
             {
-                path: 'add-selection-process',
-                element: <AddSelectionProcess />,
+                path: 'add-test/:id',
+                element: <AddTest />,
             },
             {
                 path: 'login',

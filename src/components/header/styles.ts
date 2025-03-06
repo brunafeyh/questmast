@@ -8,4 +8,5 @@ export const MenuBox = styled(Box)<BoxProps>(({ theme }) => ({
 	left: theme.spacing(0),
 	right: theme.spacing(0),
 	height: theme.spacing(8),
+	zIndex: 1000 
 }))
