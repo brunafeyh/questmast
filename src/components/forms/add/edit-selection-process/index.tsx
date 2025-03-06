@@ -12,23 +12,25 @@ import {
 import {
   SelectionProcess,
   selectionProcessSchema,
-} from "../../../types/selection-process";
-import { FONT_WEIGHTS } from "../../../utils/constants/theme";
-import { useAuth } from "../../../hooks/use-auth";
-import { useStatus } from "../../../hooks/use-status";
-import { useInstitution } from "../../../hooks/use-institution";
-import { useBoardExaminer } from "../../../hooks/use-board-examiner";
-import { useFederateUnit } from "../../../hooks/use-federate-unit";
-import { useCityByUF } from "../../../hooks/use-cities-by-uf";
-import Loading from "../../loading";
-import { useSelectionProcessMutations } from "../../../hooks/selection-process/use-selection-process-mutations";
+} from "../../../../types/selection-process";
+import { FONT_WEIGHTS } from "../../../../utils/constants/theme";
+import { useAuth } from "../../../../hooks/use-auth";
+import { useStatus } from "../../../../hooks/use-status";
+import { useInstitution } from "../../../../hooks/use-institution";
+import { useBoardExaminer } from "../../../../hooks/use-board-examiner";
+import { useFederateUnit } from "../../../../hooks/use-federate-unit";
+import { useCityByUF } from "../../../../hooks/use-cities-by-uf";
+import Loading from "../../../loading";
+import { useSelectionProcessMutations } from "../../../../hooks/selection-process/use-selection-process-mutations";
 
 type SelectionProcessFormProps = {
-  handleCloseModal: () => void;
-};
+  handleCloseModal: () => void
+  id?: number
+}
 
 const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
   handleCloseModal,
+  id
 }) => {
   const { user } = useAuth();
   const email = user?.email || "";
@@ -64,7 +66,7 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
 
   const { cityes, refetch, isLoading } = useCityByUF(selectedUF, { enabled: false })
 
-  const { createSelectionProcess } = useSelectionProcessMutations()
+  const { createSelectionProcess, updateSelectionProcess } = useSelectionProcessMutations()
 
   useEffect(() => {
     if (selectedUF) {
@@ -74,7 +76,8 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
 
   const onSubmit = async (data: SelectionProcess) => {
     try {
-      await createSelectionProcess.mutateAsync(data)
+      if (id) await updateSelectionProcess.mutateAsync({ form: data, id })
+      else await createSelectionProcess.mutateAsync(data)
       handleCloseModal()
     } catch (error) {
       console.error('Erro ao criar processo de seleção:', error)
@@ -90,7 +93,7 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
       sx={{ display: "flex", flexDirection: "column", gap: 2, p: 2 }}
     >
       <Typography fontWeight={FONT_WEIGHTS.light}>
-        Adicionar Processo Seletivo
+        {id ? 'Editar Processo Seletivo' : ' Adicionar Processo Seletivo'}
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>

@@ -7,7 +7,7 @@ const service = new SelectionProcessService()
 
 export const useSelectionProcesses = () => {
     const { data: selectionProcesses, isLoading, error, refetch } = useQuery<SelectionProcessList[]>({
-        queryKey: ['ddis'],
+        queryKey: ['selection-processes'],
         queryFn: async () => {
             try {
                 return await service.listSeletionProcess();

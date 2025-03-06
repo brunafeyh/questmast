@@ -11,7 +11,7 @@ import { Add } from '@carbon/icons-react'
 import PagesHeader from '../../components/pages-header'
 import { Modal, useModal } from '../../components/modal'
 import { BoxModal } from '../../components/modal/styles'
-import SelectionProcessForm from '../../components/forms/add-selection-process'
+import SelectionProcessForm from '../../components/forms/add/edit-selection-process'
 import { useSelectionProcesses } from '../../hooks/selection-process/use-selection-process'
 import { transformSelectionProcesses } from '../../utils/selection-process-summary'
 import { useStatus } from '../../hooks/use-status'
@@ -102,7 +102,7 @@ export const SelectionProcess: FC = () => {
                         <TableCellBody>{row.original.year}</TableCellBody>
                         <TableCellBody>{row.original.state}</TableCellBody>
                         <TableCellBody>
-                            <StatusChip status={row.original.status} />
+                            <StatusChip status={row.original.status}/>
                         </TableCellBody>
                     </TableRowBody>}
             />

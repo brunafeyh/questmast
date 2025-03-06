@@ -22,12 +22,26 @@ export const useSelectionProcessMutations = () => {
         },
     })
 
+    const updateSelectionProcess = useMutation({
+        mutationFn: async ({ form, id }: { form: SelectionProcess, id: number }) => {
+            return service.updateSeletionProcess(form, id);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['selection-process'] });
+            toast.success('Processo Seletivo atualizado com sucesso!');
+        },
+        onError: (error) => {
+            console.error('Erro ao atualizar Processo Seletivo:', error);
+            toast.error('Erro ao atualizar Processo Seletivo.');
+        },
+    })
+
     const deleteSelectionProcess = useMutation({
         mutationFn: async (form: DeleteSelectionProcessForm) => {
             return service.deleteSeletionProcess(form);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['selection-process'] });
+            queryClient.invalidateQueries({ queryKey: ['selection-processes'] });
             toast.success('Processo Seletivo deletado com sucesso!');
         },
         onError: (error) => {
@@ -38,6 +52,7 @@ export const useSelectionProcessMutations = () => {
 
     return {
         createSelectionProcess,
-        deleteSelectionProcess
+        deleteSelectionProcess,
+        updateSelectionProcess
     }
 }

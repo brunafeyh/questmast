@@ -1,8 +1,11 @@
 import { FC, ReactNode } from 'react'
-import { Box, Chip, IconButton, Stack, Typography, useTheme } from '@mui/material'
+import { Box, IconButton, Stack, Typography, useTheme } from '@mui/material'
 import { FONT_WEIGHTS } from '../../utils/constants/theme'
 import { ArrowLeft } from '@carbon/icons-react'
 import { useNavigate } from 'react-router-dom'
+import { StatusChip } from '../chips/status-chip'
+import { useAtom } from 'jotai'
+import { isCollapsedAtom } from '../../contexts/is-sidebar-collapsed'
 
 type PagesHeaderProps = {
     title: string
@@ -13,9 +16,15 @@ type PagesHeaderProps = {
 const PagesDetailsHeader: FC<PagesHeaderProps> = ({ title, rightSideComponents, status }) => {
     const theme = useTheme()
     const navigate = useNavigate()
+    const [isCollapsed] = useAtom(isCollapsedAtom)
     return (
         <Stack
-            width={1223}
+            sx={{
+                width: isCollapsed ? 1407 : 1223,
+                '@media screen and (min-width: 1800px)': {
+                    width: isCollapsed ? 1792 : 1608
+                },
+            }}
             direction="row"
             alignItems="center"
             justifyContent="space-between"
@@ -32,7 +41,7 @@ const PagesDetailsHeader: FC<PagesHeaderProps> = ({ title, rightSideComponents, 
                 >
                     {title}
                 </Typography>
-                {status && (<Chip label={status} sx={{ ml: 2 }} />)}
+                {status && (<StatusChip status={status} header={true} />)}
             </Box>
             <Box>
                 {rightSideComponents && (
