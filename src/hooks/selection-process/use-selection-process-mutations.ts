@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import SelectionProcessService from '../../services/selection-process';
-import { SelectionProcess } from '../../types/selection-process';
+import { DeleteSelectionProcessForm, SelectionProcess } from '../../types/selection-process';
 
 const service = new SelectionProcessService();
 
@@ -22,7 +22,22 @@ export const useSelectionProcessMutations = () => {
         },
     })
 
+    const deleteSelectionProcess = useMutation({
+        mutationFn: async (form: DeleteSelectionProcessForm) => {
+            return service.deleteSeletionProcess(form);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['selection-process'] });
+            toast.success('Processo Seletivo deletado com sucesso!');
+        },
+        onError: (error) => {
+            console.error('Erro ao deletar Processo Seletivo:', error);
+            toast.error('Erro ao deletar Processo Seletivo.');
+        },
+    })
+
     return {
-        createSelectionProcess
+        createSelectionProcess,
+        deleteSelectionProcess
     }
 }

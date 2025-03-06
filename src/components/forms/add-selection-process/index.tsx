@@ -64,17 +64,22 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
 
   const { cityes, refetch, isLoading } = useCityByUF(selectedUF, { enabled: false })
 
-  const {createSelectionProcess} = useSelectionProcessMutations()
+  const { createSelectionProcess } = useSelectionProcessMutations()
 
   useEffect(() => {
     if (selectedUF) {
       refetch();
     }
-  }, [selectedUF, refetch]);
+  }, [selectedUF, refetch])
 
-  const onSubmit = (data: SelectionProcess) => {
-    createSelectionProcess.mutate(data)
-  };
+  const onSubmit = async (data: SelectionProcess) => {
+    try {
+      await createSelectionProcess.mutateAsync(data)
+      handleCloseModal()
+    } catch (error) {
+      console.error('Erro ao criar processo de seleção:', error)
+    }
+  }
 
   if (isLoading || createSelectionProcess.isPending) return <Loading />
 

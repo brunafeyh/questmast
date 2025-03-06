@@ -69,7 +69,7 @@ export const SelectionProcess: FC = () => {
         },
     ]
 
-    const { selectionProcesses } = useSelectionProcesses()
+    const { selectionProcesses, isLoading, error } = useSelectionProcesses()
 
     const data = transformSelectionProcesses(selectionProcesses)
 
@@ -93,8 +93,8 @@ export const SelectionProcess: FC = () => {
                 columns={columns}
                 data={paginatedData}
                 totalRows={data?.length || 0}
-                isLoading={false}
-                error={null}
+                isLoading={isLoading}
+                error={error}
                 renderData={(row) =>
                     <TableRowBody key={row.id} hover sx={{ cursor: 'grab' }} onClick={() => navigate(`details/${row.original.idSelectionProcess}`)}>
                         <TableCellBody>{row.original.title}</TableCellBody>

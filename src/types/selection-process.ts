@@ -50,4 +50,11 @@ export const selectionProcessListSchema = z.object({
   selectionProcessStatus: statusSchema
 })
 
-export type SelectionProcessList = z.infer<typeof selectionProcessListSchema>;
+export type SelectionProcessList = z.infer<typeof selectionProcessListSchema>
+
+export const deleteSelectionProcessSchema = z.object({
+  email: z.string(),
+  id: z.number()
+})
+
+export type DeleteSelectionProcessForm = z.infer<typeof deleteSelectionProcessSchema>;

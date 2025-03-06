@@ -110,8 +110,6 @@ const Table: FC<TableProps> = ({ columns, data, totalRows, renderData, isLoading
 		return false
 	}
 
-	console.log(getFilterVariantByAccessorKey(table))
-
 	const isAscActive = isActive() && !sorting[0].desc
 
 	const isDescActive = isActive() && !isAscActive
