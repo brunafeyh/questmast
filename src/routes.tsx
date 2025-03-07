@@ -71,7 +71,7 @@ export const router = createBrowserRouter([
                 element: <TestsPage />,
             },
             {
-                path: 'questions/:id',
+                path: 'details-test/:id',
                 element: <TestPage />,
             },
             {

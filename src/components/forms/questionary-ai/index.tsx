@@ -1,126 +1,175 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
-    Box,
-    Button,
-    Grid,
-    Typography,
-    Paper,
+  Box,
+  Button,
+  Grid,
+  Typography,
+  Paper,
 } from "@mui/material";
 import { FONT_WEIGHTS } from "../../../utils/constants/theme";
-import { Questao, QuestaoTipo } from "../../question";
+import { Question, QuestionType } from "../../question";
 
 type FormData = {
-    respostas: number[]
-}
+  responses: number[];
+};
 
-const questoesFicticias: QuestaoTipo[] = [
-    {
-        id: "q1",
-        ano: 2024,
-        banca: "Lorem",
-        orgao: "LoremOrg",
-        nivel: "Difícil",
-        categoria: "Inglês",
-        enunciado:
-            "O vírus do tipo worm faz parte de uma categoria específica de malware. Qual das características a seguir define melhor um vírus worm?",
-        opcoes: [
-            { texto: "Ele se replica sem precisar de hospedeiro" },
-            { texto: "Ele precisa ser executado manualmente" },
-            { texto: "Ele não se replica" },
-            { texto: "Ele não pode ser detectado por antivírus" },
-        ],
-        correta: 0,
+const fictitiousQuestions: QuestionType[] = [
+  {
+    id: 1,
+    applicationDate: "2024-01-01",
+    name: "Sample Exam",
+    statementImageUrl: "",
+    statement:
+      "Which of the following characteristics best defines a worm virus?",
+    quantityOfCorrectAnswers: 0,
+    quantityOfWrongAnswers: 0,
+    quantityOfTries: 0,
+    explanation:
+      "A worm virus can self-replicate and spread without user interaction.",
+    videoExplanationUrl: "",
+    questionAlternativeList: [
+      { id: 1, statement: "It replicates without needing a host", isCorrect: true },
+      { id: 2, statement: "It requires manual execution", isCorrect: false },
+      { id: 3, statement: "It cannot replicate", isCorrect: false },
+      { id: 4, statement: "It is undetectable by antivirus", isCorrect: false },
+    ],
+    questionDifficultyLevel: {
+      id: 1,
+      name: "Hard",
+      description: "Challenging question",
     },
-    {
-        id: "q2",
-        ano: 2024,
-        banca: "Lorem",
-        orgao: "LoremOrg",
-        nivel: "Médio",
-        categoria: "Informática",
-        enunciado:
-            "Qual das alternativas descreve melhor uma falha de segurança?",
-        opcoes: [
-            { texto: "Opção A" },
-            { texto: "Opção B" },
-            { texto: "Opção C" },
-            { texto: "Opção D" },
-        ],
-        correta: 2,
+    subject: {
+      id: 1,
+      name: "Computer Science",
+      description: "Study of computers",
     },
+    subjectTopicList: [
+      {
+        id: 1,
+        name: "Malware",
+        description: "Malicious software",
+        subject: {
+          id: 1,
+          name: "Computer Science",
+          description: "Study of computers",
+        },
+      },
+    ],
+  },
+  {
+    id: 2,
+    applicationDate: "2024-01-01",
+    name: "Sample Exam",
+    statementImageUrl: "",
+    statement:
+      "Which alternative best describes a security vulnerability?",
+    quantityOfCorrectAnswers: 0,
+    quantityOfWrongAnswers: 0,
+    quantityOfTries: 0,
+    explanation:
+      "A security vulnerability is a flaw that can be exploited by attackers.",
+    videoExplanationUrl: "",
+    questionAlternativeList: [
+      { id: 5, statement: "Option A", isCorrect: false },
+      { id: 6, statement: "Option B", isCorrect: false },
+      { id: 7, statement: "Option C", isCorrect: true },
+      { id: 8, statement: "Option D", isCorrect: false },
+    ],
+    questionDifficultyLevel: {
+      id: 2,
+      name: "Medium",
+      description: "Moderately challenging question",
+    },
+    subject: {
+      id: 2,
+      name: "Information Technology",
+      description: "Study of IT systems",
+    },
+    subjectTopicList: [
+      {
+        id: 2,
+        name: "Cybersecurity",
+        description: "Security in IT systems",
+        subject: {
+          id: 2,
+          name: "Information Technology",
+          description: "Study of IT systems",
+        },
+      },
+    ],
+  },
 ];
 
-export default function QuestionaryForm() {
-    const { register, handleSubmit, watch } = useForm<FormData>({
-        defaultValues: { respostas: Array(questoesFicticias.length).fill(-1) },
-    })
-    const [loading, setLoading] = useState(false)
-    const [foiSubmetido, setFoiSubmetido] = useState(false)
-    const respostasSelecionadas = watch("respostas")
+export default function QuestionnaireForm() {
+  const { register, handleSubmit, watch } = useForm<FormData>({
+    defaultValues: { responses: Array(fictitiousQuestions.length).fill(-1) },
+  });
+  const [loading, setLoading] = useState(false);
+  const [wasSubmitted, setWasSubmitted] = useState(false);
+  const responses = watch("responses");
 
-    const onSubmit = (data: FormData) => {
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-            setFoiSubmetido(true);
-            console.log("Respostas enviadas:", data.respostas)
-        }, 1000)
-    }
+  const onSubmit = (data: FormData) => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setWasSubmitted(true);
+      console.log("Submitted responses:", data.responses);
+    }, 1000);
+  };
 
-    return (
-        <Paper elevation={0} sx={{ width: "100%" }}>
-            {!loading && (
-                <>
-                    <Typography fontWeight={FONT_WEIGHTS.regular} sx={{ mb: 3 }}>
-                        Responda as questões abaixo:
-                    </Typography>
-                    <Box
-                        component="form"
-                        onSubmit={handleSubmit(onSubmit)}
-                    >
-                        {questoesFicticias.map((questao, index) => (
-                            <Questao
-                                key={questao.id}
-                                questao={questao}
-                                index={index}
-                                register={register}
-                                respostaSelecionada={respostasSelecionadas[index]}
-                                foiSubmetido={foiSubmetido}
-                            />
-                        ))}
+  return (
+    <Paper elevation={0} sx={{ width: "100%", p: 2 }}>
+      {!loading && (
+        <>
+          <Typography fontWeight={FONT_WEIGHTS.regular} sx={{ mb: 3 }}>
+            Answer the following questions:
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+            {fictitiousQuestions.map((question, index) => (
+              <Question
+                key={question.id}
+                question={question}
+                index={index}
+                register={register}
+                selectedAnswer={responses[index]}
+                wasSubmitted={wasSubmitted}
+              />
+            ))}
 
-                        <Grid container spacing={2} justifyContent="flex-end" mt={2} >
-                            <Grid item>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    disabled={foiSubmetido}
-                                >
-                                    {"Enviar Respostas"}
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </Box>
-                </>
-            )}
+            <Grid container spacing={2} justifyContent="flex-end" mt={2}>
+              <Grid item>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={wasSubmitted}
+                >
+                  Submit Answers
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        </>
+      )}
 
-            {foiSubmetido && !loading && (
-                <Box sx={{ mt: 4 }}>
-                    <Typography fontWeight={FONT_WEIGHTS.regular}>
-                        Resultado:
-                    </Typography>
-                    <Typography  fontWeight={FONT_WEIGHTS.light}>
-                        Você acertou{" "}
-                        {
-                            respostasSelecionadas.filter(
-                                (resposta, i) => resposta === questoesFicticias[i].correta
-                            ).length
-                        }{" "}
-                        de {questoesFicticias.length} questões.
-                    </Typography>
-                </Box>
-            )}
-        </Paper>
-    );
+      {wasSubmitted && !loading && (
+        <Box sx={{ mt: 4 }}>
+          <Typography fontWeight={FONT_WEIGHTS.regular}>Result:</Typography>
+          <Typography fontWeight={FONT_WEIGHTS.light}>
+            You answered{" "}
+            {
+              responses.filter(
+                (response, i) =>
+                  response ===
+                  fictitiousQuestions[i].questionAlternativeList.findIndex(
+                    (alt) => alt.isCorrect
+                  )
+              ).length
+            }{" "}
+            out of {fictitiousQuestions.length} questions correctly.
+          </Typography>
+        </Box>
+      )}
+    </Paper>
+  );
 }

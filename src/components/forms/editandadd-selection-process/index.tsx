@@ -43,7 +43,6 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
   const { boardExaminers } = useBoardExaminer();
   const { federateUnit } = useFederateUnit();
 
-  // Objeto padrão para criação
   const SELECTION_PROCESS: SelectionProcess = {
     name: "",
     openingDate: "",
@@ -58,7 +57,6 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
     selectionProcessStatusId: 0,
   };
 
-  // Se for edição, transforma o objeto recebido para o formato esperado
   const defaultValues = id
     ? getDefaultSelectionProcess(selectionProcess)
     : SELECTION_PROCESS;
@@ -73,9 +71,8 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
   } = useForm<SelectionProcess>({
     resolver: zodResolver(selectionProcessSchema),
     defaultValues,
-  });
+  })
 
-  // Atualiza os valores do formulário quando selectionProcess for carregado (modo edição)
   useEffect(() => {
     if (selectionProcess && id) {
       reset(getDefaultSelectionProcess(selectionProcess));
@@ -114,7 +111,6 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
         {id ? "Editar Processo Seletivo" : "Adicionar Processo Seletivo"}
       </Typography>
       <Grid container spacing={2}>
-        {/* Campo Nome */}
         <Grid item xs={12} sm={6}>
           <TextField
             label="Nome"
@@ -126,7 +122,6 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
             helperText={errors.name?.message}
           />
         </Grid>
-        {/* Campo Data de Abertura */}
         <Grid item xs={12} sm={6}>
           <TextField
             label="Data de Abertura"
@@ -140,7 +135,6 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
             helperText={errors.openingDate?.message}
           />
         </Grid>
-        {/* Campo URL */}
         <Grid item xs={12} sm={6}>
           <TextField
             label="URL"

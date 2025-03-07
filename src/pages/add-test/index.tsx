@@ -9,7 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useProfessionalLevel } from "../../hooks/use-professional-level";
 import { useFunctions } from "../../hooks/use-functions-";
 import QuestionItem from "../../components/forms/question-item-form";
-import { useSelectionProcessTestMutations } from "../../hooks/selection-process-test/use-selection-process-test";
+import { useSelectionProcessTestMutations } from "../../hooks/selection-process-test/use-selection-process-test-mutations";
 import Loading from "../../components/loading";
 
 const AddTest: FC = () => {
@@ -43,7 +43,7 @@ const AddTest: FC = () => {
     const onSubmit = async (data: AddTestFormData) => {
         try {
             await createSelectionProcessTest.mutateAsync(data)
-            navigate(`/selection-process/${id}`)
+            navigate(`/selection-process/details/${id}`)
         }
         catch(err){
             console.log(err)

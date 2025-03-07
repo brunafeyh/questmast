@@ -3,31 +3,30 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 
-export function RadioIcons(
-  foiSubmetido: boolean | undefined,
-  isCorreta: boolean,
-  isSelecionada: boolean
+export function getRadioIcons(
+  wasSubmitted: boolean | undefined,
+  isCorrect: boolean,
+  isSelected: boolean
 ) {
   let icon = <RadioButtonUncheckedIcon />;
   let checkedIcon = <RadioButtonCheckedIcon />;
 
-  if (foiSubmetido) {
-    if (isCorreta) {
-      if (isSelecionada) {
+  if (wasSubmitted) {
+    if (isCorrect) {
+      if (isSelected) {
         icon = <CheckCircleIcon style={{ color: "green" }} />;
         checkedIcon = <CheckCircleIcon style={{ color: "green" }} />;
       } else {
-        icon = <CheckCircleIcon style={{ color: "green", opacity: 0.5 }} />;
-        checkedIcon = <CheckCircleIcon style={{ color: "green", opacity: 0.5 }} />;
+        icon = (
+          <CheckCircleIcon style={{ color: "green", opacity: 0.5 }} />
+        );
+        checkedIcon = (
+          <CheckCircleIcon style={{ color: "green", opacity: 0.5 }} />
+        );
       }
-    } else {
-      if (isSelecionada) {
-        icon = <CancelIcon style={{ color: "red" }} />;
-        checkedIcon = <CancelIcon style={{ color: "red" }} />;
-      } else {
-        icon = <RadioButtonUncheckedIcon />;
-        checkedIcon = <RadioButtonCheckedIcon />;
-      }
+    } else if (isSelected) {
+      icon = <CancelIcon style={{ color: "red" }} />;
+      checkedIcon = <CancelIcon style={{ color: "red" }} />;
     }
   }
   return { icon, checkedIcon };

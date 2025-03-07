@@ -25,7 +25,7 @@ import { TableCellBody, TableRowBody } from "../../components/table/styles";
 export const SelectionProcessDetails: FC = () => {
     const { id } = useParams()
     const theme = useTheme()
-    const { selectionProcess, isLoading, error } = useSelectionProcessesById(Number(id))
+    const { selectionProcess, isLoading, error} = useSelectionProcessesById(Number(id))
 
     const { tests, isLoading: isLoadingTests } = useTestsById(Number(id))
 
@@ -39,13 +39,9 @@ export const SelectionProcessDetails: FC = () => {
     const modal = useModal()
 
     const editModal = useModal()
-    const { user } = useAuth()
+    const { user, isStudante, isModerator } = useAuth()
 
-    const isStudante = user?.role === 'ROLE_STUDENT'
-
-    const isModerator = user?.role === 'ROLE_CONTENT_MODERATOR'
-
-    const doestNotHaveAccess = isModerator && selectionProcess?.contentModerator.mainEmail !== user.email
+    const doestNotHaveAccess = isModerator && selectionProcess?.contentModerator.mainEmail !== user?.email
 
     const handleOpenModal = () => {
         handleMenuClose()
@@ -174,11 +170,20 @@ export const SelectionProcessDetails: FC = () => {
                 isLoading={isLoading}
                 error={error}
                 renderData={(row) =>
-                    <TableRowBody key={row.id} hover sx={{ cursor: 'grab' }} onClick={() => navigate(`/details-test/${row.original.idTest}`)}>
+
+                    <TableRowBody
+                        key={row.id}
+                        hover
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => {
+                            navigate(`/details-test/${row.original.idTest}`);
+                        }}
+                    >
                         <TableCellBody>{row.original.title}</TableCellBody>
                         <TableCellBody>{row.original.function}</TableCellBody>
                         <TableCellBody>{row.original.year}</TableCellBody>
                     </TableRowBody>}
+
             />
             <Modal ref={editModal}>
                 <SelectionProcessForm handleCloseModal={handleCloseEditModal} id={Number(id)} selectionProcess={selectionProcess} />

@@ -22,7 +22,7 @@ const PagesDetailsHeader: FC<PagesHeaderProps> = ({ title, rightSideComponents, 
             sx={{
                 width: isCollapsed ? 1407 : 1223,
                 '@media screen and (min-width: 1800px)': {
-                    width: isCollapsed ? 1792 : 1608
+                    width: isCollapsed ? 1792 : 1600
                 },
             }}
             direction="row"

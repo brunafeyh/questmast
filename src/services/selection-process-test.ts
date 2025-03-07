@@ -14,6 +14,19 @@ class SelectionProcessTestService {
         await axios.post(`${API_BASE_URL}${this.apiUrl}`, form)
     }
 
+    async getSeletionProcessTestById(id: number): Promise<Test> {
+        const response = await axios.get(`${API_BASE_URL}${this.apiUrl}/${id}`)
+        return response.data
+    }
+
+    async deleteSeletionProcessTestById(id: number, email: string): Promise<void> {
+        await axios.delete(`${API_BASE_URL}${this.apiUrl}/${id}`, {
+            params: {
+                email: email
+            }
+        })
+    }
+
     async getSeletionProcessTest(id: number): Promise<Test[]> {
         const response = await axios.get(`${API_BASE_URL}${this.apiUrl}`, {
             params: {

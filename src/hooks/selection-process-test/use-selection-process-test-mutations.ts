@@ -18,11 +18,26 @@ export const useSelectionProcessTestMutations = () => {
         },
         onError: (error) => {
             console.error('Erro ao criar Prova:', error);
-            toast.error('Erro ao criarProva.');
+            toast.error('Erro ao criar Prova.');
+        },
+    })
+
+    const deleteSelectionProcessTest = useMutation({
+        mutationFn: async ({ id, email }: { id: number, email: string }) => {
+            return service.deleteSeletionProcessTestById(id, email);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['test'] });
+            toast.success('Prova deletada com sucesso!');
+        },
+        onError: (error) => {
+            console.error('Erro ao deletar Prova:', error);
+            toast.error('Erro ao deletar Prova.');
         },
     })
 
     return {
         createSelectionProcessTest,
+        deleteSelectionProcessTest
     }
 }

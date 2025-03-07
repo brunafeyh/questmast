@@ -143,6 +143,9 @@ export const useAuth = () => {
     return accessToken && !isAccessTokenExpired()
   }, [accessToken, isAccessTokenExpired])
 
+  const isStudante = user?.role === 'ROLE_STUDENT'
+  const isModerator = user?.role === 'ROLE_CONTENT_MODERATOR'
+
   return {
     token: accessToken,
     accessToken,
@@ -157,6 +160,8 @@ export const useAuth = () => {
     verifyEmailMutation,
     getEmailsMutation,
     changePasswordMutation,
-    updatePasswordMutation
+    updatePasswordMutation,
+    isStudante,
+    isModerator
   }
 }

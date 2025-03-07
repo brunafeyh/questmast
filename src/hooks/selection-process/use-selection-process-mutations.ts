@@ -13,7 +13,7 @@ export const useSelectionProcessMutations = () => {
             return service.addSeletionProcess(form);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['selection-process'] });
+            queryClient.invalidateQueries({ queryKey: ['selection-processes'] });
             toast.success('Processo Seletivo criado com sucesso!');
         },
         onError: (error) => {
