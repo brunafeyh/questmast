@@ -10,7 +10,7 @@ class SelectionProcessStatusService {
     }
 
     async getAllStatus(): Promise<SelectionProcessStatus[]> {
-        const response = await axios.get(`${API_BASE_URL}${this.apiUrl}/all`)
+        const response = await axios.get(`${API_BASE_URL}${this.apiUrl}`)
         return response.data;
     }
 }

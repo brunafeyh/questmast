@@ -11,12 +11,23 @@ import { ConfirmationModal } from "../../components/confirmation-modal";
 import { useSelectionProcessMutations } from "../../hooks/selection-process/use-selection-process-mutations";
 import { useAuth } from "../../hooks/use-auth";
 import { FONT_WEIGHTS } from "../../utils/constants/theme";
-import SelectionProcessForm from "../../components/forms/add/edit-selection-process";
+import SelectionProcessForm from "../../components/forms/editandadd-selection-process";
+import { UpdateStatusForm } from "../../components/forms/status";
+import { useTestsById } from "../../hooks/selection-process-test/use-test-by-id";
+import { useFunctions } from "../../hooks/use-functions-";
+import { ColumnDef } from "@tanstack/react-table";
+import { YearOptions } from "../../utils/constants/year";
+import { usePaginateArray } from "../../hooks/use-paginate-array";
+import { transformTests } from "../../utils/selection-process-summary";
+import Table from "../../components/table";
+import { TableCellBody, TableRowBody } from "../../components/table/styles";
 
 export const SelectionProcessDetails: FC = () => {
     const { id } = useParams()
     const theme = useTheme()
     const { selectionProcess, isLoading, error } = useSelectionProcessesById(Number(id))
+
+    const { tests, isLoading: isLoadingTests } = useTestsById(Number(id))
 
     const { deleteSelectionProcess } = useSelectionProcessMutations()
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -48,6 +59,12 @@ export const SelectionProcessDetails: FC = () => {
 
     const handleCloseEditModal = () => editModal.current?.closeModal()
 
+    const editStatusModal = useModal()
+
+    const handleOpenEditStatusModal = () => editStatusModal.current?.openModal()
+
+    const handleCloseEditStatusModal = () => editStatusModal.current?.closeModal()
+
     const handleConfirmDelete = async () => {
         try {
             await deleteSelectionProcess.mutateAsync({ id: Number(id), email: user?.email || '' })
@@ -58,18 +75,46 @@ export const SelectionProcessDetails: FC = () => {
             console.log(err)
             handleCloseModal()
         }
-
     }
-    if (isLoading) return <Loading />
 
-    if (error || !selectionProcess) return <Typography>jkjkj</Typography>
+    const { functions } = useFunctions()
+
+    const functionsOptions = functions?.map(s => ({
+        value: s.name,
+        label: s.name
+    })) || []
+
+    const columns: ColumnDef<any, any>[] = [
+        {
+            accessorKey: 'title',
+            header: 'Título',
+        },
+        {
+            accessorKey: 'functions',
+            header: 'Cargo',
+            meta: { filterVariant: 'list', options: functionsOptions }
+        },
+        {
+            accessorKey: 'year',
+            header: 'Ano',
+            meta: { filterVariant: 'enum', options: YearOptions }
+        },
+
+    ]
+
+    const data = transformTests(tests)
+
+    const paginatedData = usePaginateArray(data || [])
+
+    if (isLoading || isLoadingTests) return <Loading />
+
     return (
         <PageLayout title={selectionProcess?.name || ''}>
             <PagesDetailsHeader
                 title={`Processo Seletivo - ${selectionProcess?.name}`}
                 status={selectionProcess?.selectionProcessStatus.description}
                 rightSideComponents={isStudante || doestNotHaveAccess ? undefined : [
-                    <Button key="outroBotao" variant="text" onClick={() => console.log('Outro Botão Clicado')} startIcon={<Async style={{ width: 16, height: 16 }} />}>
+                    <Button key="outroBotao" variant="text" onClick={handleOpenEditStatusModal} startIcon={<Async style={{ width: 16, height: 16 }} />}>
                         Trocar status
                     </Button>,
                     <Button key="adicionarProva" variant="contained" onClick={() => navigate(`/add-test/${id}`)} startIcon={<Add style={{ width: 16, height: 16 }} />}>
@@ -90,7 +135,7 @@ export const SelectionProcessDetails: FC = () => {
                     Editar
                 </MenuItem>
             </Menu>
-            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }} mr={2}>
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }} mr={2} mb={2}>
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                     <Typography >Título</Typography>
                     <Typography fontWeight={FONT_WEIGHTS.light} sx={{ mb: 2 }}>
@@ -122,11 +167,27 @@ export const SelectionProcessDetails: FC = () => {
                     </Typography>
                 </Box>
             </Box>
+            <Table
+                columns={columns}
+                data={paginatedData}
+                totalRows={data?.length || 0}
+                isLoading={isLoading}
+                error={error}
+                renderData={(row) =>
+                    <TableRowBody key={row.id} hover sx={{ cursor: 'grab' }} onClick={() => navigate(`/details-test/${row.original.idTest}`)}>
+                        <TableCellBody>{row.original.title}</TableCellBody>
+                        <TableCellBody>{row.original.function}</TableCellBody>
+                        <TableCellBody>{row.original.year}</TableCellBody>
+                    </TableRowBody>}
+            />
             <Modal ref={editModal}>
-                <SelectionProcessForm handleCloseModal={handleCloseEditModal} id={Number(id)} />
+                <SelectionProcessForm handleCloseModal={handleCloseEditModal} id={Number(id)} selectionProcess={selectionProcess} />
             </Modal>
             <Modal ref={modal}>
                 <ConfirmationModal text="Deseja realmente excluir Processo Seletivo?" onCancel={handleCloseModal} onConfirm={handleConfirmDelete} />
+            </Modal>
+            <Modal ref={editStatusModal}>
+                <UpdateStatusForm id={Number(id)} handleClose={handleCloseEditStatusModal} />
             </Modal>
         </PageLayout >
     )

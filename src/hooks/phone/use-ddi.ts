@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import DDIAddressService from '../services/ddi'
-import { DDIList } from '../types/phone'
+import DDIAddressService from '../../services/ddi'
+import { DDIList } from '../../types/phone'
 
 const service = new DDIAddressService()
 

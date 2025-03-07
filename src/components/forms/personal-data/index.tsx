@@ -4,8 +4,8 @@ import { Box, Button, Grid, MenuItem, TextField, IconButton, useTheme } from "@m
 import { Add } from "@mui/icons-material"
 import { TrashCan } from "@carbon/icons-react"
 import { PersonRegisterType } from "../../../types/person-register"
-import { useDDI } from "../../../hooks/use-ddi"
-import { useDDD } from "../../../hooks/use-ddd"
+import { useDDD } from "../../../hooks/phone/use-ddd"
+import { useDDI } from "../../../hooks/phone/use-ddi"
 
 const PersonalDataForm: FC = () => {
     const {
@@ -13,7 +13,7 @@ const PersonalDataForm: FC = () => {
         control,
         formState: { errors },
     } = useFormContext<PersonRegisterType>()
-    
+
     const theme = useTheme()
 
     const { ddds } = useDDD()

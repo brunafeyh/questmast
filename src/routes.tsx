@@ -12,7 +12,7 @@ import { SelectionProcessDetails } from './pages/selection-process-details'
 import VerificationPage from './pages/register-verification'
 import RecoverPasswordPage from './pages/recover-password'
 import ResetPasswordPage from './pages/reset-password'
-import AddTest from './pages/add-seletion-process'
+import AddTest from './pages/add-test'
 
 export const router = createBrowserRouter([
     {

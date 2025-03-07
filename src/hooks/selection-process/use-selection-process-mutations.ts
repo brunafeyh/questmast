@@ -36,6 +36,21 @@ export const useSelectionProcessMutations = () => {
         },
     })
 
+    const updateSelectionProcessStatus = useMutation({
+        mutationFn: async ({ id, selectionProcessStatusId }: { id: number, selectionProcessStatusId: number }) => {
+            return service.updateStatus(id, selectionProcessStatusId);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['selection-process'] });
+            toast.success('Status atualizado com sucesso!');
+        },
+        onError: (error) => {
+            console.error('Erro ao atualizar status do Processo Seletivo:', error);
+            toast.error('Erro ao atualizar Status do  Processo Seletivo.');
+        },
+    })
+
+
     const deleteSelectionProcess = useMutation({
         mutationFn: async (form: DeleteSelectionProcessForm) => {
             return service.deleteSeletionProcess(form);
@@ -53,6 +68,7 @@ export const useSelectionProcessMutations = () => {
     return {
         createSelectionProcess,
         deleteSelectionProcess,
-        updateSelectionProcess
+        updateSelectionProcess,
+        updateSelectionProcessStatus
     }
 }

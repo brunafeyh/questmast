@@ -17,7 +17,7 @@ import { TextField } from "../../components/table/styles";
 import { Add, TrashCan } from "@carbon/icons-react";
 import { JUICY_COLORS } from "../../themes/colors";
 import PagesHeader from "../../components/pages-header";
-import QuestionaryForm from "../../components/forms/questionary";
+import QuestionaryForm from "../../components/forms/questionary-ai";
 import Loading from "../../components/loading";
 
 type QuestionData = {

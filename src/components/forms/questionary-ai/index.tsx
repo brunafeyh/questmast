@@ -7,8 +7,8 @@ import {
     Typography,
     Paper,
 } from "@mui/material";
-import { Questao, QuestaoTipo } from "../../question";
 import { FONT_WEIGHTS } from "../../../utils/constants/theme";
+import { Questao, QuestaoTipo } from "../../question";
 
 type FormData = {
     respostas: number[]

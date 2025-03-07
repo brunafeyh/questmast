@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import DDDAddressService from '../services/ddd'
-import { DDDList } from '../types/phone'
+import DDDAddressService from '../../services/ddd'
+import { DDDList } from '../../types/phone'
 
 const service = new DDDAddressService()
 

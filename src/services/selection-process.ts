@@ -16,6 +16,14 @@ class SelectionProcessService {
         await axios.put(`${API_BASE_URL}${this.apiUrl}/${id}`, form)
     }
 
+    async updateStatus(id: number, selectionProcessStatusId: number): Promise<void> {
+        await axios.put(`${API_BASE_URL}${this.apiUrl}/${id}/status`, null, {
+            params: {
+                selectionProcessStatusId: selectionProcessStatusId
+            }
+        })
+    }
+
     async deleteSeletionProcess(form: DeleteSelectionProcessForm): Promise<void> {
         await axios.delete(`${API_BASE_URL}${this.apiUrl}/${form.id}`, {
             params: {

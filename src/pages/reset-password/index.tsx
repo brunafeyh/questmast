@@ -10,7 +10,7 @@ import { ConfirmationModal } from '../../components/confirmation-modal';
 import { useAuth } from '../../hooks/use-auth';
 import Loading from '../../components/loading';
 import { useForm } from 'react-hook-form';
-import { UpdatePasswordVerificationForm } from '../../types/verifiy';
+import { UpdatePasswordVerificationForm } from '../../types/verify';
 import { TextField } from '../../components/table/styles';
 
 const ResetPasswordPage: FC = () => {

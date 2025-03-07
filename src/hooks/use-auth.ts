@@ -10,7 +10,7 @@ import { AuthCredentials } from '../types/auth'
 import { accessTokenAtom, refreshTokenAtom } from '../contexts/auth'
 import { getExpirationTime, getUserFromToken } from '../utils/auth'
 import AuthService from '../services/auth'
-import { UpdatePasswordVerificationForm } from '../types/verifiy'
+import { UpdatePasswordVerificationForm } from '../types/verify'
 
 const authService = new AuthService()
 

@@ -2,7 +2,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../shared/api";
 import { AuthCredentials } from "../types/auth";
 import { PersonRegisterType } from "../types/person-register";
-import { UpdatePasswordVerificationForm, VerificationForm } from "../types/verifiy";
+import { UpdatePasswordVerificationForm, VerificationForm } from "../types/verify";
 import { UserEmails } from "../types/user-emails";
 
 class AuthService {
