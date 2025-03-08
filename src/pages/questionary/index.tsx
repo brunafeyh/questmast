@@ -263,6 +263,7 @@ export default function Questionary() {
 						flex: 1,
 						height: "85vh",
 						overflowY: "auto",
+						width: 770,
 						'@media screen and (min-width:1800px)': {
 							width: 1152,
 						},

@@ -13,6 +13,7 @@ import VerificationPage from './pages/register-verification'
 import RecoverPasswordPage from './pages/recover-password'
 import ResetPasswordPage from './pages/reset-password'
 import AddTest from './pages/add-test'
+import EditTest from './pages/edit-test'
 
 export const router = createBrowserRouter([
     {
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
             {
                 path: 'add-test/:id',
                 element: <AddTest />,
+            },
+            {
+                path: 'edit-test/:id',
+                element: <EditTest />,
             },
             {
                 path: 'login',

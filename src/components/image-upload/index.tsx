@@ -1,15 +1,19 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { Image, Upload, Close } from "@carbon/icons-react";
 
 interface ImageUploadProps {
     onImageUpload: (base64: string) => void;
+    defaultImage?: string;
 }
 
-const ImageUpload: FC<ImageUploadProps> = ({ onImageUpload }) => {
-    const [imagePreview, setImagePreview] = useState<string | null>(null)
+const ImageUpload: FC<ImageUploadProps> = ({ onImageUpload, defaultImage }) => {
+    const [imagePreview, setImagePreview] = useState<string | null>(defaultImage || null);
+    const theme = useTheme();
 
-    const theme = useTheme()
+    useEffect(() => {
+        setImagePreview(defaultImage || null);
+    }, [defaultImage]);
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -26,14 +30,13 @@ const ImageUpload: FC<ImageUploadProps> = ({ onImageUpload }) => {
 
     const handleRemoveImage = () => {
         setImagePreview(null);
-        onImageUpload("")
+        onImageUpload("");
     };
 
     return (
         <Box
             sx={{
                 border: "1px dashed #ccc",
-
                 padding: 3,
                 textAlign: "center",
                 borderRadius: 2,
@@ -51,7 +54,12 @@ const ImageUpload: FC<ImageUploadProps> = ({ onImageUpload }) => {
                         <img
                             src={imagePreview}
                             alt="Preview"
-                            style={{ width: "100%", maxHeight: 200, objectFit: "contain", borderRadius: 4 }}
+                            style={{
+                                width: "100%",
+                                maxHeight: 200,
+                                objectFit: "contain",
+                                borderRadius: 4,
+                            }}
                         />
                         <IconButton
                             onClick={handleRemoveImage}
@@ -73,21 +81,40 @@ const ImageUpload: FC<ImageUploadProps> = ({ onImageUpload }) => {
                         sx={{ mt: 2 }}
                     >
                         Trocar Imagem
-                        <input type="file" hidden accept="image/*" onChange={handleImageChange} />
+                        <input
+                            type="file"
+                            hidden
+                            accept="image/*"
+                            onChange={handleImageChange}
+                        />
                     </Button>
                 </>
             ) : (
                 <>
-                    <Image style={{ width: 24, height: 24, marginBottom: 2, color: theme.palette.juicy.neutral.c60}} />
-                    <Typography sx={{ mb: 1 }}>Arraste e solte a imagem aqui ou escolha um arquivo</Typography>
+                    <Image
+                        style={{
+                            width: 24,
+                            height: 24,
+                            marginBottom: 2,
+                            color: theme.palette.juicy.neutral.c60,
+                        }}
+                    />
+                    <Typography sx={{ mb: 1 }}>
+                        Arraste e solte a imagem aqui ou escolha um arquivo
+                    </Typography>
                     <Button startIcon={<Upload />} component="label" variant="text">
                         Faça upload
-                        <input type="file" hidden accept="image/*" onChange={handleImageChange} />
+                        <input
+                            type="file"
+                            hidden
+                            accept="image/*"
+                            onChange={handleImageChange}
+                        />
                     </Button>
                 </>
             )}
         </Box>
-    )
-}
+    );
+};
 
 export default ImageUpload;

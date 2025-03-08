@@ -13,65 +13,15 @@ import {
 import { getRadioIcons } from "./radio-icons";
 import { ArrowUpRight } from "@carbon/icons-react";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-
-export type QuestionType = {
-  id: number;
-  applicationDate: string;
-  name: string;
-  statementImageUrl?: string;
-  statement: string;
-  quantityOfCorrectAnswers: number;
-  quantityOfWrongAnswers: number;
-  quantityOfTries: number;
-  explanation: string;
-  videoExplanationUrl?: string;
-  questionAlternativeList: {
-    id: number;
-    statement: string;
-    isCorrect: boolean;
-  }[];
-  questionDifficultyLevel: {
-    id: number;
-    name: string;
-    description: string;
-  };
-  subject: {
-    id: number;
-    name: string;
-    description: string;
-  };
-  subjectTopicList: {
-    id: number;
-    name: string;
-    description: string;
-    subject: {
-      id: number;
-      name: string;
-      description: string;
-    };
-  }[];
-};
+import { Question as QuestionType } from "../../types/test-list";
+import { base64ToFile } from "../../utils/base64-to-file";
 
 export type QuestionProps = {
-  question: QuestionType;
+  question: QuestionType
   index: number;
   register: any;
   selectedAnswer?: number;
   wasSubmitted?: boolean;
-};
-
-function base64ToFile(dataurl: string, filename: string): File {
-  const arr = dataurl.split(",");
-  const mimeMatch = arr[0].match(/:(.*?);/);
-  if (!mimeMatch) throw new Error("Invalid dataURL");
-  const mime = mimeMatch[1];
-  const bstr = atob(arr[1]);
-  let n = bstr.length;
-  const u8arr = new Uint8Array(n);
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n);
-  }
-  return new File([u8arr], filename, { type: mime });
 }
 
 export const Question: React.FC<QuestionProps> = ({
@@ -136,7 +86,6 @@ export const Question: React.FC<QuestionProps> = ({
         </Typography>
       </Box>
 
-      {/* Se houver explicação, exibe o IconButton com o ícone de "?" */}
       <Box sx={{ display: "flex", alignItems: "center", p: 2 }}>
         <Typography sx={{ fontWeight: 500, flexGrow: 1 }}>
           {question.statement}

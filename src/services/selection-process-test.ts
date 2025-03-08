@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_BASE_URL } from "../shared/api"
-import { AddTestFormData } from "../types/test"
 import { Test } from "../types/test-list";
+import { TestFormData } from "../types/test";
 
 class SelectionProcessTestService {
     private apiUrl: string;
@@ -10,8 +10,12 @@ class SelectionProcessTestService {
         this.apiUrl = apiUrl;
     }
 
-    async addSeletionProcessTest(form: AddTestFormData): Promise<void> {
+    async addSeletionProcessTest(form: TestFormData): Promise<void> {
         await axios.post(`${API_BASE_URL}${this.apiUrl}`, form)
+    }
+
+    async updateSeletionProcessTest(form: TestFormData, id: number): Promise<void> {
+        await axios.put(`${API_BASE_URL}${this.apiUrl}/${id}`, form)
     }
 
     async getSeletionProcessTestById(id: number): Promise<Test> {

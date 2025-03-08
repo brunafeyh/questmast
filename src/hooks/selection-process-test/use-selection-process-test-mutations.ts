@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import { AddTestFormData } from '../../types/test';
+import { TestFormData } from '../../types/test';
 import SelectionProcessTestService from '../../services/selection-process-test';
 
 const service = new SelectionProcessTestService();
@@ -9,7 +9,7 @@ export const useSelectionProcessTestMutations = () => {
     const queryClient = useQueryClient()
 
     const createSelectionProcessTest = useMutation({
-        mutationFn: async (form: AddTestFormData) => {
+        mutationFn: async (form: TestFormData) => {
             return service.addSeletionProcessTest(form);
         },
         onSuccess: () => {
@@ -19,6 +19,20 @@ export const useSelectionProcessTestMutations = () => {
         onError: (error) => {
             console.error('Erro ao criar Prova:', error);
             toast.error('Erro ao criar Prova.');
+        },
+    })
+
+    const updateSelectionProcessTest = useMutation({
+        mutationFn: async ({ form, id }: { form: TestFormData, id: number }) => {
+            return service.updateSeletionProcessTest(form, id);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['test'] });
+            toast.success('Prova atualizada com sucesso!');
+        },
+        onError: (error) => {
+            console.error('Erro ao atualizar Prova:', error);
+            toast.error('Erro ao atualizar Prova.');
         },
     })
 
@@ -38,6 +52,7 @@ export const useSelectionProcessTestMutations = () => {
 
     return {
         createSelectionProcessTest,
-        deleteSelectionProcessTest
+        deleteSelectionProcessTest,
+        updateSelectionProcessTest
     }
 }

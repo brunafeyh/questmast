@@ -8,7 +8,8 @@ import {
   Paper,
 } from "@mui/material";
 import { FONT_WEIGHTS } from "../../../utils/constants/theme";
-import { Question, QuestionType } from "../../question";
+import { Question } from "../../question";
+import { Question as QuestionType } from "../../../types/test-list";
 
 type FormData = {
   responses: number[];

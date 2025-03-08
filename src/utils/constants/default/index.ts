@@ -1,4 +1,5 @@
 import { PersonRegisterType } from "../../../types/person-register";
+import { TestFormData } from "../../../types/test";
 
 export const PERSON_DEFAULT: PersonRegisterType = {
     password: "",
@@ -40,4 +41,14 @@ export const PERSON_CONTENT_MODERATOR: PersonRegisterType = {
     },
     mainEmail: "",
     phoneList: [{ number: "", dddNumber: 0, ddiNumber: 0 }],
+}
+
+export const emptyDefaults: TestFormData = {
+    applicationDate: "",
+    name: "",
+    functionId: 0,
+    professionalLevelId: 0,
+    selectionProcessId: 0,
+    contentModeratorEmail: "",
+    questionList: [],
 }

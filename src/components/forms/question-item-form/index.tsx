@@ -1,14 +1,5 @@
 import { FC, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  IconButton,
-  Grid,
-  MenuItem,
-  Radio,
-} from "@mui/material";
+import { Box, Typography, Button, TextField, MenuItem, IconButton, Grid, Radio } from "@mui/material";
 import { Add, TrashCan } from "@carbon/icons-react";
 import {
   UseFormRegister,
@@ -21,7 +12,7 @@ import {
   Controller,
 } from "react-hook-form";
 import ImageUpload from "../../image-upload";
-import { AddTestFormData } from "../../../types/test";
+import { TestFormData } from "../../../types/test";
 import { useQuestionDifficulty } from "../../../hooks/use-question-difficulty";
 import { useSubjects } from "../../../hooks/use-subject";
 import { useSubjectTopicsById } from "../../../hooks/use-subjects-topic-by-id";
@@ -29,10 +20,10 @@ import { FONT_WEIGHTS } from "../../../utils/constants/theme";
 
 interface QuestionItemProps {
   index: number;
-  control: Control<AddTestFormData>;
-  register: UseFormRegister<AddTestFormData>;
-  setValue: UseFormSetValue<AddTestFormData>;
-  errors: FieldErrors<AddTestFormData>;
+  control: Control<TestFormData>;
+  register: UseFormRegister<TestFormData>;
+  setValue: UseFormSetValue<TestFormData>;
+  errors: FieldErrors<TestFormData>;
   removeQuestion: UseFieldArrayRemove;
 }
 
@@ -44,18 +35,18 @@ const QuestionItem: FC<QuestionItemProps> = ({
   errors,
   removeQuestion,
 }) => {
-  const { questionDifficulty } = useQuestionDifficulty()
-  const { subjects } = useSubjects()
+  const { questionDifficulty } = useQuestionDifficulty();
+  const { subjects } = useSubjects();
 
   const selectedSubjectId = useWatch({
     control,
     name: `questionList.${index}.subjectId`,
-  })
+  });
 
   const { subjectsTopics, isLoading: isLoadingSubtopics, refetch } = useSubjectTopicsById(
     selectedSubjectId,
     { enabled: !!selectedSubjectId }
-  )
+  );
 
   useEffect(() => {
     setValue(`questionList.${index}.subjectTopicList`, []);
@@ -71,12 +62,12 @@ const QuestionItem: FC<QuestionItemProps> = ({
   } = useFieldArray({
     control,
     name: `questionList.${index}.questionAlternativeList` as const,
-  })
+  });
 
   const alternatives = useWatch({
     control,
     name: `questionList.${index}.questionAlternativeList`,
-  })
+  });
 
   return (
     <Box sx={{ mb: 3, p: 2, borderRadius: 2, border: "1px solid #ccc" }}>
@@ -126,31 +117,38 @@ const QuestionItem: FC<QuestionItemProps> = ({
       </Typography>
       <Grid container spacing={2} sx={{ mb: 2 }}>
         <Grid item xs={12} sm={4}>
-          <TextField
-            select
-            label="Nível de Dificuldade"
-            variant="filled"
-            fullWidth
-            defaultValue=""
-            {...register(`questionList.${index}.questionDifficultyLevelId` as const)}
-            error={!!errors.questionList?.[index]?.questionDifficultyLevelId}
-            helperText={errors.questionList?.[index]?.questionDifficultyLevelId?.message}
-          >
-            {questionDifficulty?.map((diff) => (
-              <MenuItem key={diff.id} value={diff.id}>
-                {diff.description}
-              </MenuItem>
-            ))}
-          </TextField>
+          <Controller
+            control={control}
+            name={`questionList.${index}.questionDifficultyLevelId`}
+            defaultValue={control._formValues?.questionList?.[index]?.questionDifficultyLevelId || ""}
+            render={({ field }) => (
+              <TextField
+                select
+                label="Nível de Dificuldade"
+                variant="filled"
+                fullWidth
+                {...field}
+                error={!!errors.questionList?.[index]?.questionDifficultyLevelId}
+                helperText={errors.questionList?.[index]?.questionDifficultyLevelId?.message}
+              >
+                {questionDifficulty?.map((diff) => (
+                  <MenuItem key={diff.id} value={diff.id}>
+                    {diff.description}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+          />
         </Grid>
         <Grid item xs={12} sm={4}>
           <Controller
             control={control}
             name={`questionList.${index}.subjectId`}
+            defaultValue={control._formValues?.questionList?.[index]?.subjectId || ""}
             render={({ field }) => (
               <TextField
                 select
-                label="Tópico"
+                label="Matéria"
                 variant="filled"
                 fullWidth
                 {...field}
@@ -170,7 +168,7 @@ const QuestionItem: FC<QuestionItemProps> = ({
           <Controller
             control={control}
             name={`questionList.${index}.subjectTopicList`}
-            defaultValue={[]}
+            defaultValue={control._formValues?.questionList?.[index]?.subjectTopicList || []}
             render={({ field }) => (
               <TextField
                 select
@@ -199,6 +197,12 @@ const QuestionItem: FC<QuestionItemProps> = ({
 
       <Typography sx={{ mb: 1 }}>Imagem da Questão</Typography>
       <ImageUpload
+        defaultImage={
+          control._formValues?.questionList?.[index]?.statementImage &&
+          control._formValues.questionList[index].statementImage !== ""
+            ? control._formValues.questionList[index].statementImage
+            : undefined
+        }
         onImageUpload={(base64) =>
           setValue(`questionList.${index}.statementImage`, base64)
         }
@@ -224,34 +228,23 @@ const QuestionItem: FC<QuestionItemProps> = ({
       {alternativeFields.map((alt, altIndex) => {
         const letter = String.fromCharCode(65 + altIndex);
         return (
-          <Box
-            key={alt.id}
-            sx={{ display: "flex", alignItems: "center", mb: 1 }}
-          >
+          <Box key={alt.id} sx={{ display: "flex", alignItems: "center", mb: 1 }}>
             <TextField
               fullWidth
               variant="filled"
               label={`Alternativa ${letter}`}
-              {...register(
-                `questionList.${index}.questionAlternativeList.${altIndex}.statement` as const
-              )}
+              {...register(`questionList.${index}.questionAlternativeList.${altIndex}.statement` as const)}
               sx={{ mr: 2 }}
             />
             <Radio
               checked={Boolean(alternatives?.[altIndex]?.isCorrect)}
               onChange={() => {
                 alternativeFields.forEach((_, i) => {
-                  setValue(
-                    `questionList.${index}.questionAlternativeList.${i}.isCorrect`,
-                    i === altIndex
-                  );
+                  setValue(`questionList.${index}.questionAlternativeList.${i}.isCorrect`, i === altIndex);
                 });
               }}
             />
-            <IconButton
-              color="error"
-              onClick={() => removeAlternative(altIndex)}
-            >
+            <IconButton color="error" onClick={() => removeAlternative(altIndex)}>
               <TrashCan />
             </IconButton>
           </Box>
@@ -267,7 +260,7 @@ const QuestionItem: FC<QuestionItemProps> = ({
         Adicionar Alternativa
       </Button>
     </Box>
-  )
-}
+  );
+};
 
 export default QuestionItem;
