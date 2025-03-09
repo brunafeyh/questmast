@@ -2,7 +2,19 @@ import { FC, ReactElement } from 'react'
 
 import Tooltip from '@mui/material/Tooltip'
 
-import { TooltipPlacement } from '@/types/tooltip'
+export type TooltipPlacement =
+  | 'bottom'
+  | 'bottom-end'
+  | 'bottom-start'
+  | 'left'
+  | 'left-end'
+  | 'left-start'
+  | 'right'
+  | 'right-end'
+  | 'right-start'
+  | 'top'
+  | 'top-end'
+  | 'top-start'
 
 interface ConditionalTooltipProps {
 	title: string
