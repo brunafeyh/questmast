@@ -23,6 +23,12 @@ class SelectionProcessTestService {
         return response.data
     }
 
+    async getMoreViewedSeletionProcessTest(): Promise<Test[]> {
+        const response = await axios.get(`${API_BASE_URL}${this.apiUrl}/view`)
+        return response.data
+    }
+
+
     async deleteSeletionProcessTestById(id: number, email: string): Promise<void> {
         await axios.delete(`${API_BASE_URL}${this.apiUrl}/${id}`, {
             params: {

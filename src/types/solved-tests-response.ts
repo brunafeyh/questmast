@@ -66,6 +66,3 @@ export const solvedTestResponseSchema = z.object({
     solvedQuestionList: z.array(solvedQuestionResponseSchema),
 });
 export type SolvedTestResponse = z.infer<typeof solvedTestResponseSchema>;
-
-export const solvedTestsResponseSchema = z.array(solvedTestResponseSchema);
-export type SolvedTestsResponse = z.infer<typeof solvedTestsResponseSchema>;

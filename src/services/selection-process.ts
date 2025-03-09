@@ -41,6 +41,11 @@ class SelectionProcessService {
         const response = await axios.get(`${API_BASE_URL}${this.apiUrl}`)
         return response.data
     }
+
+    async listMoreViewedProcess(): Promise<SelectionProcessList[]> {
+        const response = await axios.get(`${API_BASE_URL}${this.apiUrl}/view`)
+        return response.data
+    }
 }
 
 export default SelectionProcessService;

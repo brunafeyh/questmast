@@ -1,5 +1,4 @@
 import { SelectionProcessList } from "../types/selection-process";
-import { Test } from "../types/test-list";
 
 interface ProcessSummary {
     title: string;
@@ -31,15 +30,16 @@ export function transformSelectionProcesses(selectionProcesses: SelectionProcess
     })
 }
 
-export function transformTests(tests: Test[] | undefined): TestSummary[] {
+export function transformTests(tests: any): TestSummary[] {
     if (!tests) return [];
-    return tests.map(proc => {
-        const year = proc.applicationDate.substring(0, 4);
+    const testsArray = Array.isArray(tests) ? tests : [tests];
+    return testsArray.map(proc => {
+        const year = proc.applicationDate ? proc.applicationDate.substring(0, 4) : 'N/A';
         return {
             idTest: proc.id,
             title: proc.name,
-            function: proc.function.name,
+            function: proc.function?.name || '',
             year,
-        }
+        };
     })
 }

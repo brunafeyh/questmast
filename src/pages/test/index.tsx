@@ -1,6 +1,12 @@
 import { FC, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Box, Button, Chip, Typography, useTheme } from "@mui/material";
+import {
+    Box,
+    Button,
+    Chip,
+    Typography,
+    useTheme,
+} from "@mui/material";
 import { PageLayout } from "../../layout";
 import { Question } from "../../components/question";
 import PagesDetailsHeader from "../../components/page-details-header";
@@ -14,54 +20,67 @@ import { useSelectionProcessTestMutations } from "../../hooks/selection-process-
 import Loading from "../../components/loading";
 import { useSelectionProcessesTestById } from "../../hooks/selection-process-test/use-selection-process-test-by-id";
 import { useTestResponseById } from "../../hooks/selection-process-test/use-test-response";
-import { computeCorrectCount, createSolvedQuestionList, QuestionTime } from "../../utils/test";
+import { createSolvedQuestionList, computeCorrectCount, QuestionTime } from "../../utils/test";
 
-type FormData = { responses: number[] }
+type FormData = { responses: number[] };
 
 const TestPage: FC = () => {
     const theme = useTheme();
-    const { isStudante, isAuthenticated, user } = useAuth()
+    const { isStudante, isAuthenticated, user } = useAuth();
     const email = user?.email;
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const { id } = useParams()
 
-    const { selectionProcessTestResponse, isLoading: isLoadingResponse } = useTestResponseById(Number(id), email || '');
-    const solvedTest = (selectionProcessTestResponse && selectionProcessTestResponse.length > 0) ? selectionProcessTestResponse[0] : null
+    const { selectionProcessTestResponse, isLoading: isLoadingResponse, refetch } = useTestResponseById(Number(id), email || "");
+    const originalSolvedTest =
+        selectionProcessTestResponse
+            ? selectionProcessTestResponse
+            : null
 
-    const { selectionProcessTest, isLoading: isTestLoading } = useSelectionProcessesTestById(Number(id))
-    const { deleteSelectionProcessTest, respondSelectionProcessTest } = useSelectionProcessTestMutations()
+    const [isRedo, setIsRedo] = useState<boolean>(false);
+    const solvedTest = isRedo ? null : originalSolvedTest;
 
-    const defaultResponses = selectionProcessTest ? selectionProcessTest.questionList.map(() => -1) : []
+    const modal = useModal()
+    const { selectionProcessTest, isLoading: isTestLoading } = useSelectionProcessesTestById(Number(id));
+    const { deleteSelectionProcessTest, respondSelectionProcessTest } = useSelectionProcessTestMutations();
 
+    let defaultResponses: number[] = [];
+    if (selectionProcessTest) {
+        defaultResponses = selectionProcessTest.questionList.map(() => -1);
+    }
     const { register, handleSubmit, watch, reset } = useForm<FormData>({
         defaultValues: { responses: defaultResponses },
     })
 
-    const [testStartTime] = useState<string>(new Date().toISOString());
+    const [testStartTime, setTestStartTime] = useState<string>(new Date().toISOString());
 
-    const initialTimes = selectionProcessTest ? selectionProcessTest.questionList.map(() => ({ startDateTime: "", endDateTime: "" })) : []
+    let initialTimes: QuestionTime[] = [];
+    if (selectionProcessTest) {
+        initialTimes = selectionProcessTest.questionList.map(() => ({ startDateTime: "", endDateTime: "" }));
+    }
     const [questionTimes, setQuestionTimes] = useState<QuestionTime[]>(initialTimes);
 
     useEffect(() => {
         if (selectionProcessTest) {
             reset({ responses: selectionProcessTest.questionList.map(() => -1) });
             setQuestionTimes(selectionProcessTest.questionList.map(() => ({ startDateTime: "", endDateTime: "" })));
+            setTestStartTime(new Date().toISOString());
         }
-    }, [selectionProcessTest, reset])
+    }, [selectionProcessTest, reset]);
 
     const handleAnswerSelected = (questionIndex: number) => {
         setQuestionTimes((prev) => {
-            const newTimes = [...prev]
-            const now = new Date().toISOString()
+            const newTimes = [...prev];
+            const now = new Date().toISOString();
             if (!newTimes[questionIndex].startDateTime) {
-                newTimes[questionIndex].startDateTime = now
+                newTimes[questionIndex].startDateTime = now;
             }
-            newTimes[questionIndex].endDateTime = now
-            return newTimes
-        })
+            newTimes[questionIndex].endDateTime = now;
+            return newTimes;
+        });
     }
 
-    const onSubmit = (data: FormData) => {
+    const onSubmit = async (data: FormData) => {
         const testEndTime = new Date().toISOString();
         const solvedQuestionList = createSolvedQuestionList({
             questionList: selectionProcessTest!.questionList,
@@ -71,7 +90,6 @@ const TestPage: FC = () => {
             testEndTime,
             solvedTest,
         });
-
         const solvedPayload = {
             selectionProcessTestId: selectionProcessTest!.id,
             startDateTime: testStartTime,
@@ -79,13 +97,36 @@ const TestPage: FC = () => {
             studentMainEmail: email || "",
             solvedQuestionList,
         };
-
-        respondSelectionProcessTest.mutateAsync(solvedPayload);
+    
+        try {
+            await respondSelectionProcessTest.mutateAsync(solvedPayload);
+            await refetch();
+        } catch (error) {
+            console.error("Erro ao enviar o teste:", error);
+        }
     };
+    
 
     const deleteModal = useModal();
     const handleOpenDeleteModal = () => deleteModal.current?.openModal();
     const handleCloseDeleteModal = () => deleteModal.current?.closeModal();
+
+    useEffect(() => {
+        if (selectionProcessTestResponse) {
+            setIsRedo(false);
+        }
+    }, [selectionProcessTestResponse]);
+    
+
+    const handleRedoConfirm = () => {
+        setIsRedo(true);
+        if (selectionProcessTest) {
+            reset({ responses: selectionProcessTest.questionList.map(() => -1) });
+            setQuestionTimes(selectionProcessTest.questionList.map(() => ({ startDateTime: "", endDateTime: "" })));
+            setTestStartTime(new Date().toISOString());
+        }
+        modal.current?.closeModal();
+    };
 
     const isLoading =
         isTestLoading ||
@@ -95,7 +136,7 @@ const TestPage: FC = () => {
 
     const correctCount = computeCorrectCount(solvedTest);
 
-    if (isLoading) return <Loading />;
+    if (isLoading || isLoadingResponse) return <Loading />;
 
     return (
         <PageLayout title="Test">
@@ -120,26 +161,41 @@ const TestPage: FC = () => {
                 <PagesDetailsHeader
                     title={`Test - ${selectionProcessTest!.name}`}
                     rightSideComponents={
-                        isStudante || !isAuthenticated
+                        !isAuthenticated
                             ? undefined
                             : [
-                                <Button
-                                    key="editTest"
-                                    variant="text"
-                                    onClick={() => navigate(`/edit-test/${id}`)}
-                                    startIcon={<Edit style={{ width: 16, height: 16 }} />}
-                                >
-                                    Editar
-                                </Button>,
-                                <Button
-                                    key="deleteTest"
-                                    sx={{ color: theme.palette.juicy.error.c50 }}
-                                    variant="text"
-                                    onClick={handleOpenDeleteModal}
-                                    startIcon={<TrashCan style={{ width: 16, height: 16 }} />}
-                                >
-                                    Deletar Prova
-                                </Button>,
+                                isStudante && solvedTest && !isRedo ? (
+                                    <Button
+                                        key="redoTest"
+                                        variant="text"
+                                        onClick={() => modal.current?.openModal()}
+                                        startIcon={<Edit style={{ width: 16, height: 16 }} />}
+                                    >
+                                        Refazer Questionário
+                                    </Button>
+                                ) : null,
+                                !isStudante ? (
+                                    <>
+                                        <Button
+                                            key="editTest"
+                                            variant="text"
+                                            onClick={() => navigate(`/edit-test/${id}`)}
+                                            startIcon={<Edit style={{ width: 16, height: 16 }} />}
+                                        >
+                                            Editar
+                                        </Button>,
+                                        <Button
+                                            key="deleteTest"
+                                            sx={{ color: theme.palette.juicy.error.c50 }}
+                                            variant="text"
+                                            onClick={handleOpenDeleteModal}
+                                            startIcon={<TrashCan style={{ width: 16, height: 16 }} />}
+                                        >
+                                            Deletar Prova
+                                        </Button>,
+                                    </>
+                                ) : null
+
                             ]
                     }
                 />
@@ -180,8 +236,8 @@ const TestPage: FC = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     {selectionProcessTest!.questionList.map((question, i) => {
                         let selectedAnswer: number | undefined;
-                        if (solvedTest) {
-                            const solvedQuestion = solvedTest.solvedQuestionList.find((sq) => sq.question.id === question.id);
+                        if (solvedTest && !isRedo) {
+                            const solvedQuestion = solvedTest?.solvedQuestionList?.find((sq: any) => sq.question.id === question.id);
                             if (solvedQuestion && solvedQuestion.questionAlternative) {
                                 selectedAnswer = question.questionAlternativeList.findIndex(
                                     (alt) => alt.id === solvedQuestion.questionAlternative.id
@@ -197,7 +253,7 @@ const TestPage: FC = () => {
                                 index={i}
                                 register={register}
                                 selectedAnswer={selectedAnswer}
-                                wasSubmitted={!!solvedTest}
+                                wasSubmitted={!!solvedTest && !isRedo}
                                 onAnswerSelected={handleAnswerSelected}
                             />
                         );
@@ -223,8 +279,16 @@ const TestPage: FC = () => {
                     }
                 />
             </Modal>
-        </PageLayout>
-    )
-}
 
-export default TestPage
+            <Modal ref={modal}>
+                <ConfirmationModal
+                    text="Você realmente deseja refazer o questionário? Todos os dados anteriores serão descartados."
+                    onCancel={() => modal.current?.closeModal()}
+                    onConfirm={handleRedoConfirm}
+                />
+            </Modal>
+        </PageLayout>
+    );
+};
+
+export default TestPage;

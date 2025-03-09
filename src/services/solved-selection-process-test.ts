@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_BASE_URL } from "../shared/api"
 import { SolvedSelectionProcessTest } from "../types/solved-selection-process-test";
-import { SolvedTestsResponse } from "../types/solved-tests-response";
+import { SolvedTestResponse } from "../types/solved-tests-response";
 
 class SolvedSelectionProcessTestService {
     private apiUrl: string;
@@ -10,13 +10,13 @@ class SolvedSelectionProcessTestService {
         this.apiUrl = apiUrl;
     }
 
-    async resolveSeletionProcessTest(form: SolvedSelectionProcessTest): Promise<SolvedTestsResponse> {
+    async resolveSeletionProcessTest(form: SolvedSelectionProcessTest): Promise<SolvedTestResponse> {
         const response = await axios.post(`${API_BASE_URL}${this.apiUrl}`, form)
         return response.data
     }
 
-    async getresolvedSeletionProcessTest(id: number, studentMainEmail: string): Promise<SolvedTestsResponse> {
-        const response = await axios.get(`${API_BASE_URL}${this.apiUrl}`, {
+    async getresolvedSeletionProcessTest(id: number, studentMainEmail: string): Promise<SolvedTestResponse> {
+        const response = await axios.get(`${API_BASE_URL}${this.apiUrl}/last`, {
             params: {
                 selectionProcessTestId: id,
                 studentMainEmail: studentMainEmail

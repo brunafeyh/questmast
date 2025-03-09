@@ -3,7 +3,6 @@ import HomePage from './pages/home'
 import ErrorPage from './pages/error'
 import Questionary from './pages/questionary'
 import Performance from './pages/performance'
-import TestsPage from './pages/tests'
 import TestPage from './pages/test'
 import { RegisterPage } from './pages/register'
 import LoginPage from './pages/login'
@@ -70,10 +69,6 @@ export const router = createBrowserRouter([
             {
                 path: 'selection-process/details/:id',
                 element: <SelectionProcessDetails />,
-            },
-            {
-                path: 'tests/:id',
-                element: <TestsPage />,
             },
             {
                 path: 'details-test/:id',

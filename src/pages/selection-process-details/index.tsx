@@ -98,7 +98,7 @@ export const SelectionProcessDetails: FC = () => {
 
     ]
 
-    const data = transformTests(tests)
+    const data = tests ? transformTests(tests) : []
 
     const paginatedData = usePaginateArray(data || [])
 
