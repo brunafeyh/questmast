@@ -35,7 +35,6 @@ export const useAuth = () => {
       return response;
     },
     onSuccess: () => {
-      toast.success('Login successful!');
       navigate('/')
     },
     onError: (error) => {
@@ -120,7 +119,6 @@ export const useAuth = () => {
       setAccessToken(RESET);
       setRefreshToken(RESET);
       delete axios.defaults.headers.common['Authorization'];
-      toast.info('Logged out successfully.');
       navigate('/login');
     } catch (error) {
       toast.error('Error logging out.');
