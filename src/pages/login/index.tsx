@@ -60,7 +60,7 @@ export default function LoginPage() {
             >
                 <Stack spacing={2} alignItems="center" textAlign="center">
                     <img
-                        src="src/assets/images/logo-white.svg"
+                        src="logo-white.svg"
                         alt="QuestMast Logo"
                         style={{ width: "200px" }}
                     />
