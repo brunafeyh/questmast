@@ -17,12 +17,13 @@ import { Question as QuestionType } from "../../types/test-list";
 import { base64ToFile } from "../../utils/base64-to-file";
 
 export type QuestionProps = {
-  question: QuestionType
+  question: QuestionType;
   index: number;
   register: any;
   selectedAnswer?: number;
   wasSubmitted?: boolean;
-}
+  onAnswerSelected?: (questionIndex: number, selectedAlternativeId: number) => void;
+};
 
 export const Question: React.FC<QuestionProps> = ({
   question,
@@ -30,6 +31,7 @@ export const Question: React.FC<QuestionProps> = ({
   register,
   selectedAnswer,
   wasSubmitted,
+  onAnswerSelected,
 }) => {
   const theme = useTheme();
   const year = new Date(question.applicationDate).getFullYear();
@@ -122,6 +124,11 @@ export const Question: React.FC<QuestionProps> = ({
             alt="Question Illustration"
             style={{ maxWidth: "100%", height: "auto" }}
           />
+          {question.statementImageLegend && (
+            <Typography variant="caption" sx={{ mt: 1 }}>
+              {question.statementImageLegend}
+            </Typography>
+          )}
         </Box>
       )}
 
@@ -135,15 +142,26 @@ export const Question: React.FC<QuestionProps> = ({
             isSelected
           );
 
+          // Extract the onChange from register so we can wrap it.
+          const { onChange, ...rest } = register(`responses.${index}`, {
+            value: altIndex,
+          });
+
           return (
             <FormControlLabel
               key={alternative.id}
               control={
                 <Radio
-                  {...register(`responses.${index}`, { value: altIndex })}
+                  {...rest}
                   value={altIndex}
                   icon={icon}
                   checkedIcon={checkedIcon}
+                  onChange={(e) => {
+                    onChange(e);
+                    if (onAnswerSelected) {
+                      onAnswerSelected(index, alternative.id);
+                    }
+                  }}
                 />
               }
               label={alternative.statement}
@@ -170,5 +188,5 @@ export const Question: React.FC<QuestionProps> = ({
         </Box>
       )}
     </Box>
-  )
-}
+  );
+};

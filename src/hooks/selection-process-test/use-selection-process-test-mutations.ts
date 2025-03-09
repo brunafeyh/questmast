@@ -2,8 +2,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { TestFormData } from '../../types/test';
 import SelectionProcessTestService from '../../services/selection-process-test';
+import SolvedSelectionProcessTestService from '../../services/solved-selection-process-test';
+import { SolvedSelectionProcessTest } from '../../types/solved-selection-process-test';
 
-const service = new SelectionProcessTestService();
+const service = new SelectionProcessTestService()
+
+const serviceResponde = new SolvedSelectionProcessTestService();
 
 export const useSelectionProcessTestMutations = () => {
     const queryClient = useQueryClient()
@@ -36,6 +40,20 @@ export const useSelectionProcessTestMutations = () => {
         },
     })
 
+    const respondSelectionProcessTest = useMutation({
+        mutationFn: async (form: SolvedSelectionProcessTest) => {
+            return serviceResponde.resolveSeletionProcessTest(form);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['test'] });
+            toast.success('Prova respondida com sucesso!');
+        },
+        onError: (error) => {
+            console.error('Erro ao responder Prova:', error);
+            toast.error('Erro ao responder Prova.');
+        },
+    })
+
     const deleteSelectionProcessTest = useMutation({
         mutationFn: async ({ id, email }: { id: number, email: string }) => {
             return service.deleteSeletionProcessTestById(id, email);
@@ -53,6 +71,7 @@ export const useSelectionProcessTestMutations = () => {
     return {
         createSelectionProcessTest,
         deleteSelectionProcessTest,
-        updateSelectionProcessTest
+        updateSelectionProcessTest,
+        respondSelectionProcessTest
     }
 }

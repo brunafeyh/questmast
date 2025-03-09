@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useRef } from "react";
 import { Box, Typography, Button, TextField, MenuItem, IconButton, Grid, Radio } from "@mui/material";
 import { Add, TrashCan } from "@carbon/icons-react";
 import {
@@ -36,8 +36,8 @@ const QuestionItem: FC<QuestionItemProps> = ({
   removeQuestion,
 }) => {
   const { questionDifficulty } = useQuestionDifficulty();
-  const { subjects } = useSubjects();
-
+  const { subjects } = useSubjects()
+  
   const selectedSubjectId = useWatch({
     control,
     name: `questionList.${index}.subjectId`,
@@ -46,10 +46,18 @@ const QuestionItem: FC<QuestionItemProps> = ({
   const { subjectsTopics, isLoading: isLoadingSubtopics, refetch } = useSubjectTopicsById(
     selectedSubjectId,
     { enabled: !!selectedSubjectId }
-  );
+  )
+
+  const prevSubjectIdRef = useRef<number | undefined>(selectedSubjectId);
 
   useEffect(() => {
-    setValue(`questionList.${index}.subjectTopicList`, []);
+    if (
+      prevSubjectIdRef.current !== undefined &&
+      selectedSubjectId !== prevSubjectIdRef.current
+    ) {
+      setValue(`questionList.${index}.subjectTopicList`, []);
+    }
+    prevSubjectIdRef.current = selectedSubjectId;
     if (selectedSubjectId) {
       refetch();
     }
@@ -206,6 +214,16 @@ const QuestionItem: FC<QuestionItemProps> = ({
         onImageUpload={(base64) =>
           setValue(`questionList.${index}.statementImage`, base64)
         }
+      />
+
+      <TextField
+        fullWidth
+        variant="filled"
+        label="Legenda da Imagem"
+        {...register(`questionList.${index}.statementImageLegend` as const)}
+        error={!!errors.questionList?.[index]?.statementImageLegend}
+        helperText={errors.questionList?.[index]?.statementImageLegend?.message}
+        sx={{ mb: 2, mt: 2 }}
       />
 
       <TextField

@@ -62,6 +62,7 @@ export const questionSchema = z.object({
     applicationDate: z.string(),
     name: z.string(),
     statementImageUrl: z.string(),
+    statementImageLegend: z.string(),
     statement: z.string(),
     quantityOfCorrectAnswers: z.number(),
     quantityOfWrongAnswers: z.number(),

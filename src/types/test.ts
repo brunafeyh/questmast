@@ -10,6 +10,7 @@ export const questionSchema = z.object({
     id: z.number().optional(),
     name: z.string().min(1, "O nome da questão é obrigatório"),
     statementImage: z.string().optional(),
+    statementImageLegend: z.string().optional(),
     statement: z.string().min(1, "O enunciado é obrigatório"),
     explanation: z.string().optional(),
     videoExplanationUrl: z.string().optional(),

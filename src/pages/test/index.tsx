@@ -1,12 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import {
-  Box,
-  Button,
-  Chip,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, Button, Chip, Typography, useTheme } from "@mui/material";
 import { PageLayout } from "../../layout";
 import { Question } from "../../components/question";
 import PagesDetailsHeader from "../../components/page-details-header";
@@ -19,197 +13,218 @@ import { ConfirmationModal } from "../../components/confirmation-modal";
 import { useSelectionProcessTestMutations } from "../../hooks/selection-process-test/use-selection-process-test-mutations";
 import Loading from "../../components/loading";
 import { useSelectionProcessesTestById } from "../../hooks/selection-process-test/use-selection-process-test-by-id";
+import { useTestResponseById } from "../../hooks/selection-process-test/use-test-response";
+import { computeCorrectCount, createSolvedQuestionList, QuestionTime } from "../../utils/test";
 
-type FormData = {
-  responses: number[];
-};
+type FormData = { responses: number[] }
 
 const TestPage: FC = () => {
-  const theme = useTheme();
-  const { isStudante, isAuthenticated, user } = useAuth();
-  const email = user?.email;
-  const navigate = useNavigate();
-  const { id } = useParams();
+    const theme = useTheme();
+    const { isStudante, isAuthenticated, user } = useAuth()
+    const email = user?.email;
+    const navigate = useNavigate()
+    const { id } = useParams()
 
-  const { selectionProcessTest } = useSelectionProcessesTestById(Number(id));
-  const { deleteSelectionProcessTest } = useSelectionProcessTestMutations();
-  const [wasSubmitted, setWasSubmitted] = useState(false);
-  const [score, setScore] = useState<number | null>(null)
+    const { selectionProcessTestResponse, isLoading: isLoadingResponse } = useTestResponseById(Number(id), email || '');
+    const solvedTest = (selectionProcessTestResponse && selectionProcessTestResponse.length > 0) ? selectionProcessTestResponse[0] : null
 
-  const { register, handleSubmit, watch, reset } = useForm<FormData>({
-    defaultValues: {
-      responses: selectionProcessTest
-        ? selectionProcessTest.questionList.map(() => -1)
-        : [],
-    },
-  });
+    const { selectionProcessTest, isLoading: isTestLoading } = useSelectionProcessesTestById(Number(id))
+    const { deleteSelectionProcessTest, respondSelectionProcessTest } = useSelectionProcessTestMutations()
 
-  const deleteModal = useModal();
+    const defaultResponses = selectionProcessTest ? selectionProcessTest.questionList.map(() => -1) : []
 
-  useEffect(() => {
-    if (selectionProcessTest) {
-      reset({ responses: selectionProcessTest.questionList.map(() => -1) });
+    const { register, handleSubmit, watch, reset } = useForm<FormData>({
+        defaultValues: { responses: defaultResponses },
+    })
+
+    const [testStartTime] = useState<string>(new Date().toISOString());
+
+    const initialTimes = selectionProcessTest ? selectionProcessTest.questionList.map(() => ({ startDateTime: "", endDateTime: "" })) : []
+    const [questionTimes, setQuestionTimes] = useState<QuestionTime[]>(initialTimes);
+
+    useEffect(() => {
+        if (selectionProcessTest) {
+            reset({ responses: selectionProcessTest.questionList.map(() => -1) });
+            setQuestionTimes(selectionProcessTest.questionList.map(() => ({ startDateTime: "", endDateTime: "" })));
+        }
+    }, [selectionProcessTest, reset])
+
+    const handleAnswerSelected = (questionIndex: number) => {
+        setQuestionTimes((prev) => {
+            const newTimes = [...prev]
+            const now = new Date().toISOString()
+            if (!newTimes[questionIndex].startDateTime) {
+                newTimes[questionIndex].startDateTime = now
+            }
+            newTimes[questionIndex].endDateTime = now
+            return newTimes
+        })
     }
-  }, [selectionProcessTest, reset]);
 
-  if (!selectionProcessTest) return <Loading />;
+    const onSubmit = (data: FormData) => {
+        const testEndTime = new Date().toISOString();
+        const solvedQuestionList = createSolvedQuestionList({
+            questionList: selectionProcessTest!.questionList,
+            responses: data.responses,
+            questionTimes,
+            testStartTime,
+            testEndTime,
+            solvedTest,
+        });
 
-  const onSubmit = (data: FormData) => {
-    let correctCount = 0;
-    data.responses.forEach((response, index) => {
-      const correctIndex = selectionProcessTest.questionList[index].questionAlternativeList.findIndex(
-        (alt) => alt.isCorrect
-      );
-      if (response === correctIndex) {
-        correctCount++;
-      }
-    });
-    setScore(correctCount);
-    setWasSubmitted(true);
-  };
+        const solvedPayload = {
+            selectionProcessTestId: selectionProcessTest!.id,
+            startDateTime: testStartTime,
+            endDateTime: testEndTime,
+            studentMainEmail: email || "",
+            solvedQuestionList,
+        };
 
-  const handleOpenDeleteModal = () => deleteModal.current?.openModal();
-  const handleCloseDeleteModal = () => deleteModal.current?.closeModal();
-  const selectedResponses = watch("responses");
+        respondSelectionProcessTest.mutateAsync(solvedPayload);
+    };
 
-  const handleDelete = async () => {
-    try {
-      await deleteSelectionProcessTest.mutateAsync({ id: Number(id), email: email || "" });
-      navigate("/selection-process");
-    } catch (err) {
-      handleCloseDeleteModal();
-      console.log(err);
-    }
-  };
+    const deleteModal = useModal();
+    const handleOpenDeleteModal = () => deleteModal.current?.openModal();
+    const handleCloseDeleteModal = () => deleteModal.current?.closeModal();
 
-  if (deleteSelectionProcessTest.isPending) return <Loading />;
+    const isLoading =
+        isTestLoading ||
+        deleteSelectionProcessTest.isPending ||
+        respondSelectionProcessTest.isPending ||
+        isLoadingResponse;
 
-  return (
-    <PageLayout title="Test">
-      <Box
-        sx={{
-          maxHeight: "80vh",
-          "&::-webkit-scrollbar": {
-            width: theme.spacing(1),
-          },
-          "&::-webkit-scrollbar-track": {
-            backgroundColor: theme.palette.grey[300],
-            borderRadius: theme.spacing(0.5),
-          },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: theme.palette.grey[500],
-            borderRadius: theme.spacing(0.5),
-          },
-          "&::-webkit-scrollbar-thumb:hover": {
-            backgroundColor: theme.palette.grey[600],
-          },
-        }}
-      >
-        <PagesDetailsHeader
-          title={`Test - ${selectionProcessTest?.name}`}
-          rightSideComponents={
-            isStudante || !isAuthenticated
-              ? undefined
-              : [
-                  <Button
-                    key="editTest"
-                    variant="text"
-                    onClick={() => navigate(`/edit-test/${id}`)}
-                    startIcon={<Edit style={{ width: 16, height: 16 }} />}
-                  >
-                    Editar
-                  </Button>,
-                  <Button
-                    key="deleteTest"
-                    sx={{ color: theme.palette.juicy.error.c50 }}
-                    variant="text"
-                    onClick={handleOpenDeleteModal}
-                    startIcon={<TrashCan style={{ width: 16, height: 16 }} />}
-                  >
-                    Deletar Prova
-                  </Button>,
-                ]
-          }
-        />
+    const correctCount = computeCorrectCount(solvedTest);
 
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }} mb={2} mr={2}>
-          <Box sx={{ flexDirection: "column" }}>
-            <Typography>Data de aplicação</Typography>
-            <Typography fontWeight={FONT_WEIGHTS.light} sx={{ mb: 2 }}>
-              {selectionProcessTest.applicationDate}
-            </Typography>
-          </Box>
-          <Box sx={{ flexDirection: "column" }}>
-            <Typography>Cargo</Typography>
-            <Typography fontWeight={FONT_WEIGHTS.light}>
-              {selectionProcessTest.function.name}
-            </Typography>
-            <Typography sx={{ mb: 2 }} fontWeight={FONT_WEIGHTS.light}>
-              {selectionProcessTest.function.description}
-            </Typography>
-          </Box>
-          <Box sx={{ flexDirection: "column" }}>
-            <Typography>Nível Institucional</Typography>
-            <Typography fontWeight={FONT_WEIGHTS.light}>
-              {selectionProcessTest.professionalLevel.name}
-            </Typography>
-            <Typography sx={{ mb: 2 }} fontWeight={FONT_WEIGHTS.light}>
-              {selectionProcessTest.professionalLevel.description}
-            </Typography>
-          </Box>
-        </Box>
+    if (isLoading) return <Loading />;
 
-        {wasSubmitted && score !== null && (
-          <Chip
-            sx={{ mb: 2 }}
-            label={`You answered ${score} out of ${selectionProcessTest.questionList.length} questions correctly.`}
-            color="primary"
-            variant="outlined"
-          />
-        )}
+    return (
+        <PageLayout title="Test">
+            <Box
+                sx={{
+                    maxHeight: "80vh",
+                    width: 1200,
+                    "&::-webkit-scrollbar": { width: theme.spacing(1) },
+                    "&::-webkit-scrollbar-track": {
+                        backgroundColor: theme.palette.grey[300],
+                        borderRadius: theme.spacing(0.5),
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                        backgroundColor: theme.palette.grey[500],
+                        borderRadius: theme.spacing(0.5),
+                    },
+                    "&::-webkit-scrollbar-thumb:hover": {
+                        backgroundColor: theme.palette.grey[600],
+                    },
+                }}
+            >
+                <PagesDetailsHeader
+                    title={`Test - ${selectionProcessTest!.name}`}
+                    rightSideComponents={
+                        isStudante || !isAuthenticated
+                            ? undefined
+                            : [
+                                <Button
+                                    key="editTest"
+                                    variant="text"
+                                    onClick={() => navigate(`/edit-test/${id}`)}
+                                    startIcon={<Edit style={{ width: 16, height: 16 }} />}
+                                >
+                                    Editar
+                                </Button>,
+                                <Button
+                                    key="deleteTest"
+                                    sx={{ color: theme.palette.juicy.error.c50 }}
+                                    variant="text"
+                                    onClick={handleOpenDeleteModal}
+                                    startIcon={<TrashCan style={{ width: 16, height: 16 }} />}
+                                >
+                                    Deletar Prova
+                                </Button>,
+                            ]
+                    }
+                />
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {selectionProcessTest.questionList.map((question, i) => {
-            const userAnswer = selectedResponses[i];
-            return (
-              <Question
-                key={question.id}
-                question={question}
-                index={i}
-                register={register}
-                selectedAnswer={userAnswer}
-                wasSubmitted={wasSubmitted}
-              />
-            );
-          })}
+                <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }} mb={2} mr={2}>
+                    <Box sx={{ flexDirection: "column" }}>
+                        <Typography>Data de aplicação</Typography>
+                        <Typography fontWeight={FONT_WEIGHTS.light} sx={{ mb: 2 }}>
+                            {selectionProcessTest!.applicationDate}
+                        </Typography>
+                    </Box>
+                    <Box sx={{ flexDirection: "column" }}>
+                        <Typography>Cargo</Typography>
+                        <Typography fontWeight={FONT_WEIGHTS.light}>
+                            {selectionProcessTest!.function.name}
+                        </Typography>
+                        <Typography sx={{ mb: 2 }} fontWeight={FONT_WEIGHTS.light}>
+                            {selectionProcessTest!.function.description}
+                        </Typography>
+                    </Box>
+                    <Box sx={{ flexDirection: "column" }}>
+                        <Typography>Nível Institucional</Typography>
+                        <Typography fontWeight={FONT_WEIGHTS.light}>
+                            {selectionProcessTest!.professionalLevel.name}
+                        </Typography>
+                        <Typography sx={{ mb: 2 }} fontWeight={FONT_WEIGHTS.light}>
+                            {selectionProcessTest!.professionalLevel.description}
+                        </Typography>
+                    </Box>
+                </Box>
 
-          <Box
-            sx={{
-              display: "flex",
-              gap: 2,
-              mt: 2,
-              justifyContent: "flex-end",
-            }}
-          >
-            <Button variant="outlined" type="button" onClick={() => console.log("Cancel")}>
-              Cancelar
-            </Button>
-            <Button variant="contained" type="submit">
-              Concluir
-            </Button>
-          </Box>
-        </form>
-      </Box>
+                {correctCount !== null && (
+                    <Box sx={{ mb: 2, textAlign: "center" }}>
+                        <Chip label={`Você acertou ${correctCount} de ${selectionProcessTest!.questionList.length} questões.`} />
+                    </Box>
+                )}
 
-      <Modal ref={deleteModal}>
-        <ConfirmationModal
-          text="Você tem cereteza que deseja excluir a prova?"
-          onCancel={handleCloseDeleteModal}
-          onConfirm={handleDelete}
-        />
-      </Modal>
-    </PageLayout>
-  );
-};
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    {selectionProcessTest!.questionList.map((question, i) => {
+                        let selectedAnswer: number | undefined;
+                        if (solvedTest) {
+                            const solvedQuestion = solvedTest.solvedQuestionList.find((sq) => sq.question.id === question.id);
+                            if (solvedQuestion && solvedQuestion.questionAlternative) {
+                                selectedAnswer = question.questionAlternativeList.findIndex(
+                                    (alt) => alt.id === solvedQuestion.questionAlternative.id
+                                );
+                            }
+                        } else {
+                            selectedAnswer = watch("responses")[i];
+                        }
+                        return (
+                            <Question
+                                key={question.id}
+                                question={question}
+                                index={i}
+                                register={register}
+                                selectedAnswer={selectedAnswer}
+                                wasSubmitted={!!solvedTest}
+                                onAnswerSelected={handleAnswerSelected}
+                            />
+                        );
+                    })}
 
-export default TestPage;
+                    <Box sx={{ display: "flex", gap: 2, mt: 2, justifyContent: "flex-end" }}>
+                        <Button variant="outlined" type="button" onClick={() => console.log("Cancel")}>
+                            Cancelar
+                        </Button>
+                        <Button variant="contained" type="submit">
+                            Concluir
+                        </Button>
+                    </Box>
+                </form>
+            </Box>
+
+            <Modal ref={deleteModal}>
+                <ConfirmationModal
+                    text="Você tem cereteza que deseja excluir a prova?"
+                    onCancel={handleCloseDeleteModal}
+                    onConfirm={() =>
+                        deleteSelectionProcessTest.mutateAsync({ id: Number(id), email: email || "" })
+                    }
+                />
+            </Modal>
+        </PageLayout>
+    )
+}
+
+export default TestPage

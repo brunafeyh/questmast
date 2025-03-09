@@ -201,6 +201,7 @@ const EditTest: FC = () => {
                             name: "",
                             statement: "",
                             statementImage: "",
+                            statementImageLegend: "",
                             explanation: "",
                             videoExplanationUrl: "",
                             questionAlternativeList: [],

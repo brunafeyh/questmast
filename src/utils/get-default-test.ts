@@ -14,6 +14,7 @@ export const getDefaultSelectionProcessTest = (selectionProcessTest: Test) => {
             name: q.name,
             statementImage: q.statementImageUrl,
             statement: q.statement,
+            statementImageLegend: q.statementImageLegend,
             explanation: q.explanation,
             videoExplanationUrl: q.videoExplanationUrl,
             questionAlternativeList: q.questionAlternativeList.map((alt) => ({
