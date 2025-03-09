@@ -18,9 +18,12 @@ import { useStatus } from '../../hooks/use-status'
 import { useInstitution } from '../../hooks/use-institution'
 import { useFederateUnit } from '../../hooks/use-federate-unit'
 import { YearOptions } from '../../utils/constants/year'
+import { useAuth } from '../../hooks/use-auth'
 
 export const SelectionProcess: FC = () => {
     const navigate = useNavigate()
+
+    const { isModerator, isAuthenticated } = useAuth()
 
     const { status } = useStatus()
     const { institutions } = useInstitution()
@@ -86,7 +89,9 @@ export const SelectionProcess: FC = () => {
             <PagesHeader
                 title={'Processos Seletivos'}
                 rightSideComponent={
-                    <Button startIcon={<Add />} onClick={handleOpenModal}>Adicionar</Button>
+                    isModerator && isAuthenticated() && (
+                        <Button startIcon={<Add />} onClick={handleOpenModal}>Adicionar</Button>
+                    )
                 }
             />
             <Table
@@ -102,7 +107,7 @@ export const SelectionProcess: FC = () => {
                         <TableCellBody>{row.original.year}</TableCellBody>
                         <TableCellBody>{row.original.state}</TableCellBody>
                         <TableCellBody>
-                            <StatusChip status={row.original.status}/>
+                            <StatusChip status={row.original.status} />
                         </TableCellBody>
                     </TableRowBody>}
             />

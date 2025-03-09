@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom'
 
 
 const TestsMoreViewed: FC = () => {
-    const { selectionProcessesTest } = useMoreViewedTests()
+    const { selectionProcessesTest, isLoading, error } = useMoreViewedTests()
     const navigate = useNavigate()
     const { functions } = useFunctions()
 
@@ -47,8 +47,8 @@ const TestsMoreViewed: FC = () => {
             columns={columns}
             data={paginatedData}
             totalRows={data.length}
-            isLoading={false}
-            error={null}
+            isLoading={isLoading}
+            error={error}
             renderData={(row) =>
 
                 <TableRowBody
