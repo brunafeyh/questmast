@@ -97,7 +97,7 @@ const TestPage: FC = () => {
             studentMainEmail: email || "",
             solvedQuestionList,
         };
-    
+
         try {
             await respondSelectionProcessTest.mutateAsync(solvedPayload);
             await refetch();
@@ -105,7 +105,7 @@ const TestPage: FC = () => {
             console.error("Erro ao enviar o teste:", error);
         }
     };
-    
+
 
     const deleteModal = useModal();
     const handleOpenDeleteModal = () => deleteModal.current?.openModal();
@@ -116,7 +116,7 @@ const TestPage: FC = () => {
             setIsRedo(false);
         }
     }, [selectionProcessTestResponse]);
-    
+
 
     const handleRedoConfirm = () => {
         setIsRedo(true);
@@ -282,7 +282,10 @@ const TestPage: FC = () => {
 
             <Modal ref={modal}>
                 <ConfirmationModal
-                    text="Você realmente deseja refazer o questionário? Todos os dados anteriores serão descartados."
+                    header='Confirmação'
+                    text="Você realmente deseja refazer o questionário?"
+                    description="Todos os dados anteriores serão descartados!"
+                    conclusionText={'Prosseguir'}
                     onCancel={() => modal.current?.closeModal()}
                     onConfirm={handleRedoConfirm}
                 />
