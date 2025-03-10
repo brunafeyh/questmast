@@ -21,6 +21,8 @@ import Loading from "../../components/loading";
 import { useSelectionProcessesTestById } from "../../hooks/selection-process-test/use-selection-process-test-by-id";
 import { useTestResponseById } from "../../hooks/selection-process-test/use-test-response";
 import { createSolvedQuestionList, computeCorrectCount, QuestionTime } from "../../utils/test";
+import { useAtom } from "jotai";
+import { isCollapsedAtom } from "../../contexts/is-sidebar-collapsed";
 
 type FormData = { responses: number[] };
 
@@ -30,6 +32,8 @@ const TestPage: FC = () => {
     const email = user?.email;
     const navigate = useNavigate();
     const { id } = useParams()
+
+    const [isCollapsed] = useAtom(isCollapsedAtom)
 
     const { selectionProcessTestResponse, isLoading: isLoadingResponse, refetch } = useTestResponseById(Number(id), email || "");
     const originalSolvedTest =
@@ -143,7 +147,7 @@ const TestPage: FC = () => {
             <Box
                 sx={{
                     maxHeight: "80vh",
-                    width: 1200,
+                    width: isCollapsed ? 1400 : 1222,
                     "&::-webkit-scrollbar": { width: theme.spacing(1) },
                     "&::-webkit-scrollbar-track": {
                         backgroundColor: theme.palette.grey[300],
