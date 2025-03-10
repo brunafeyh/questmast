@@ -3,7 +3,7 @@ import { Filter } from '@carbon/icons-react'
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
-import { Box, Button, MenuItem, Table as MuiTable, Paper, Skeleton, TableBody } from '@mui/material'
+import { Box, Button, MenuItem, Table as MuiTable, Paper, Skeleton, TableBody, useTheme } from '@mui/material'
 import {
 	ColumnDef,
 	Row,
@@ -24,6 +24,7 @@ import { DESCEND } from '../../utils/constants/tables'
 import { Direction } from '../../types/filter'
 import { EmptyTableTitle, TableCellBody, TableCellHead, TableHead, TablePagination, TableRowBody, TableRowHead } from './styles'
 import { isEmptyData, isValidHeader } from '../../utils/filter'
+import { isFiltered } from '../../utils/table'
 
 type TableProps = {
 	columns: ColumnDef<any, any>[]
@@ -57,6 +58,8 @@ const Table: FC<TableProps> = ({ columns, data, totalRows, renderData, isLoading
 
 	const popoverFilter = usePopover()
 	const popoverSort = usePopover()
+
+	const theme = useTheme()
 
 	const table = useReactTable({
 		data,
@@ -166,7 +169,9 @@ const Table: FC<TableProps> = ({ columns, data, totalRows, renderData, isLoading
 													},
 												})}
 											>
-												<Filter style={{ width: 18, height: 18 }} />
+												<Filter style={{ width: 18, height: 18,  color: isFiltered(header.column.getFilterValue())
+															? theme.palette.juicy.primary.c60
+															: theme.palette.juicy.neutral.c60,}} />
 											</Button>
 										</Box>
 									)}
