@@ -17,7 +17,7 @@ const AddTest: FC = () => {
     const { id } = useParams();
 
     const { control, register, handleSubmit, setValue, formState: { errors } } = useForm<TestFormData>({
-       
+
         defaultValues: {
             applicationDate: new Date().toISOString().split("T")[0],
             name: "",
@@ -33,7 +33,7 @@ const AddTest: FC = () => {
     const { functions, isLoading: isLoadingFunctions } = useFunctions()
     const navigate = useNavigate()
 
-    const {createSelectionProcessTest} = useSelectionProcessTestMutations()
+    const { createSelectionProcessTest } = useSelectionProcessTestMutations()
 
     const { fields: questionFields, append: addQuestion, remove: removeQuestion } = useFieldArray({
         control,
@@ -45,21 +45,21 @@ const AddTest: FC = () => {
             await createSelectionProcessTest.mutateAsync(data)
             navigate(`/selection-process/details/${id}`)
         }
-        catch(err){
+        catch (err) {
             console.log(err)
         }
     }
-    if(createSelectionProcessTest.isPending || isLoadingProfessionalLevel || isLoadingFunctions) return <Loading/>
+    if (createSelectionProcessTest.isPending || isLoadingProfessionalLevel || isLoadingFunctions) return <Loading />
 
     return (
         <PageLayout title="Adicionar Prova">
-            <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ 
-                 width: 1224,
-                 '@media screen and (min-width: 1800px)': {
-                     width: 1591
-                 },
+            <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{
+                width: 1224,
+                '@media screen and (min-width: 1800px)': {
+                    width: 1591
+                },
             }}
-            
+
             >
                 <Typography sx={{ mb: 2 }} fontSize={18}>Adicionar Prova</Typography>
                 <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
@@ -70,11 +70,12 @@ const AddTest: FC = () => {
                             variant="filled"
                             error={!!errors.name}
                             helperText={errors.name?.message}
-                            sx={{ mb: 2, width: 595,
+                            sx={{
+                                mb: 2, width: 595,
                                 '@media screen and (min-width: 1800px)': {
                                     width: 770
                                 },
-                             }}
+                            }}
                         />
 
                         <TextField
@@ -85,10 +86,12 @@ const AddTest: FC = () => {
                             {...register("applicationDate")}
                             error={!!errors.applicationDate}
                             helperText={errors.applicationDate?.message}
-                            sx={{ mb: 2, width: 595,
+                            sx={{
+                                mb: 2, width: 595,
                                 '@media screen and (min-width: 1800px)': {
                                     width: 770
-                                },}}
+                                },
+                            }}
                         />
                     </Box>
                     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -104,10 +107,12 @@ const AddTest: FC = () => {
                                     variant="filled"
                                     error={!!errors.functionId}
                                     helperText={errors.functionId?.message}
-                                    sx={{ mb: 2, width: 595,
+                                    sx={{
+                                        mb: 2, width: 595,
                                         '@media screen and (min-width: 1800px)': {
                                             width: 770
-                                        }}}
+                                        }
+                                    }}
                                 >
                                     {isLoadingFunctions ? (
                                         <MenuItem disabled>Carregando...</MenuItem>
@@ -134,10 +139,12 @@ const AddTest: FC = () => {
                                     variant="filled"
                                     error={!!errors.professionalLevelId}
                                     helperText={errors.professionalLevelId?.message}
-                                    sx={{ mb: 2, width: 595,
+                                    sx={{
+                                        mb: 2, width: 595,
                                         '@media screen and (min-width: 1800px)': {
                                             width: 770
-                                        },}}
+                                        },
+                                    }}
                                 >
                                     {isLoadingProfessionalLevel ? (
                                         <MenuItem disabled>Carregando...</MenuItem>
@@ -169,28 +176,29 @@ const AddTest: FC = () => {
                     />
                 ))}
 
-                <Button
-                    variant="text"
-                    startIcon={<Add />}
-                    onClick={() =>
-                        addQuestion({
-                            name: "",
-                            statement: "",
-                            statementImage: "",
-                            explanation: "",
-                            videoExplanationUrl: "",
-                            questionAlternativeList: [],
-                            questionDifficultyLevelId: 0,
-                            subjectId: 0,
-                            subjectTopicList: [],
-                        })
-                    }
-                >
-                    Adicionar Questão
-                </Button>
-
+                <Box display="flex" justifyContent="center" my={2}>
+                    <Button
+                        variant="text"
+                        startIcon={<Add />}
+                        onClick={() =>
+                            addQuestion({
+                                name: "",
+                                statement: "",
+                                statementImage: "",
+                                explanation: "",
+                                videoExplanationUrl: "",
+                                questionAlternativeList: [],
+                                questionDifficultyLevelId: 0,
+                                subjectId: 0,
+                                subjectTopicList: [],
+                            })
+                        }
+                    >
+                        Adicionar Questão
+                    </Button>
+                </Box>
                 <Box mt={4} >
-                    <Button variant="contained" color="primary" type="submit" sx={{mb: 2}}>
+                    <Button variant="contained" color="primary" type="submit" sx={{ mb: 2 }}>
                         Salvar Prova
                     </Button>
                 </Box>

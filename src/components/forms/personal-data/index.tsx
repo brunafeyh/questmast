@@ -1,6 +1,7 @@
 import { FC } from "react"
-import { useFormContext, useFieldArray } from "react-hook-form"
-import { Box, Button, Grid, MenuItem, TextField, IconButton, useTheme } from "@mui/material"
+import { useFormContext, useFieldArray, Controller } from "react-hook-form"
+import { Box, Button, Grid, TextField, IconButton, useTheme, MenuItem } from "@mui/material"
+import Autocomplete from "@mui/material/Autocomplete"
 import { Add } from "@mui/icons-material"
 import { TrashCan } from "@carbon/icons-react"
 import { PersonRegisterType } from "../../../types/person-register"
@@ -103,36 +104,66 @@ const PersonalDataForm: FC = () => {
                         gap={2}
                         mb={1}
                     >
-                        <TextField
-                            select
-                            label="DDI"
-                            {...register(`phoneList.${index}.ddiNumber`, { valueAsNumber: true })}
-                            variant="filled"
-                            error={!!errors.phoneList?.[index]?.ddiNumber}
-                            helperText={errors.phoneList?.[index]?.ddiNumber?.message}
-                            sx={{ width: 120 }}
-                        >
-                            {ddis?.map((ddi) => (
-                                <MenuItem key={ddi.ddi} value={ddi.ddi}>
-                                    {ddi.ddi}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                        <TextField
-                            select
-                            label="DDD"
-                            {...register(`phoneList.${index}.dddNumber`, { valueAsNumber: true })}
-                            variant="filled"
-                            error={!!errors.phoneList?.[index]?.dddNumber}
-                            helperText={errors.phoneList?.[index]?.dddNumber?.message}
-                            sx={{ width: 120 }}
-                        >
-                            {ddds?.map((ddd) => (
-                                <MenuItem key={ddd?.ddd} value={ddd?.ddd}>
-                                    {ddd?.ddd}
-                                </MenuItem>
-                            ))}
-                        </TextField>
+                        <Controller
+                            name={`phoneList.${index}.ddiNumber`}
+                            control={control}
+                            defaultValue={field.ddiNumber}
+                            render={({ field: { value, onChange } }) => (
+                                <Autocomplete
+                                    options={ddis || []}
+                                    getOptionLabel={(option) => option.ddi.toString()}
+                                    isOptionEqualToValue={(option, value) =>
+                                        option.ddi === value.ddi
+                                    }
+                                    onChange={(_event, newValue) =>
+                                        onChange(newValue ? newValue.ddi : 0)
+                                    }
+                                    value={
+                                        ddis?.find((ddi) => ddi.ddi === value) || null
+                                    }
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="DDI"
+                                            variant="filled"
+                                            error={!!errors.phoneList?.[index]?.ddiNumber}
+                                            helperText={errors.phoneList?.[index]?.ddiNumber?.message}
+                                            sx={{ width: 120 }}
+                                        />
+                                    )}
+                                />
+                            )}
+                        />
+                        <Controller
+                            name={`phoneList.${index}.dddNumber`}
+                            control={control}
+                            defaultValue={field.dddNumber}
+                            render={({ field: { value, onChange } }) => (
+                                <Autocomplete
+                                    options={ddds || []}
+                                    getOptionLabel={(option) => option.ddd.toString()}
+                                    isOptionEqualToValue={(option, value) =>
+                                        option.ddd === value.ddd
+                                    }
+                                    onChange={(_event, newValue) =>
+                                        onChange(newValue ? newValue.ddd : 0)
+                                    }
+                                    value={
+                                        ddds?.find((ddd) => ddd.ddd === value) || null
+                                    }
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="DDD"
+                                            variant="filled"
+                                            error={!!errors.phoneList?.[index]?.dddNumber}
+                                            helperText={errors.phoneList?.[index]?.dddNumber?.message}
+                                            sx={{ width: 120 }}
+                                        />
+                                    )}
+                                />
+                            )}
+                        />
                         <TextField
                             fullWidth
                             label={`Telefone ${index + 1}`}

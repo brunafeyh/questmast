@@ -53,10 +53,10 @@ export const UpdateStatusForm: FC<UpdateStatusFormProps> = ({ id, handleClose })
                     ))}
                 </TextField>
                 <Box display="flex" justifyContent="space-between" mt={2} gap={2}>
-                    <Button variant="outlined" onClick={handleClose}>
+                    <Button variant="outlined" onClick={handleClose} fullWidth>
                         Cancelar
                     </Button>
-                    <Button type="submit" variant="contained">
+                    <Button type="submit" variant="contained" fullWidth>
                         Atualizar Status
                     </Button>
                 </Box>

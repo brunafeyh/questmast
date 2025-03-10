@@ -6,9 +6,9 @@ import {
   Button,
   Typography,
   Grid,
-  MenuItem,
   TextField,
 } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
 import {
   SelectionProcess,
   SelectionProcessList,
@@ -71,7 +71,7 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
   } = useForm<SelectionProcess>({
     resolver: zodResolver(selectionProcessSchema),
     defaultValues,
-  })
+  });
 
   useEffect(() => {
     if (selectionProcess && id) {
@@ -105,12 +105,12 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
     <Box
       component="form"
       onSubmit={handleSubmit(onSubmit)}
-      sx={{ display: "flex", flexDirection: "column", gap: 2, p: 2 }}
+      sx={{ display: "flex", flexDirection: "column", gap: 2, p: 2, width: 600 }}
     >
       <Typography fontWeight={FONT_WEIGHTS.light}>
         {id ? "Editar Processo Seletivo" : "Adicionar Processo Seletivo"}
       </Typography>
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         <Grid item xs={12} sm={6}>
           <TextField
             label="Nome"
@@ -151,22 +151,28 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
             name="cityFormDTO.federateUnit"
             control={control}
             defaultValue={defaultValues.cityFormDTO.federateUnit}
-            render={({ field }) => (
-              <TextField
-                select
-                label="Unidade Federativa"
-                variant="filled"
-                fullWidth
-                {...field}
-                error={!!errors.cityFormDTO?.federateUnit}
-                helperText={errors.cityFormDTO?.federateUnit?.message}
-              >
-                {federateUnit?.map((unit) => (
-                  <MenuItem key={unit.acronym} value={unit.acronym}>
-                    {unit.name}
-                  </MenuItem>
-                ))}
-              </TextField>
+            render={({ field: { value, onChange } }) => (
+              <Autocomplete
+                options={federateUnit || []}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.acronym === value.acronym}
+                onChange={(_event, newValue) => {
+                  onChange(newValue ? newValue.acronym : "");
+                }}
+                value={
+                  federateUnit?.find((unit) => unit.acronym === value) || null
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Unidade Federativa"
+                    variant="filled"
+                    fullWidth
+                    error={!!errors.cityFormDTO?.federateUnit}
+                    helperText={errors.cityFormDTO?.federateUnit?.message}
+                  />
+                )}
+              />
             )}
           />
         </Grid>
@@ -175,22 +181,28 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
             name="cityFormDTO.city"
             control={control}
             defaultValue={defaultValues.cityFormDTO.city}
-            render={({ field }) => (
-              <TextField
-                select
-                label="Cidade"
-                variant="filled"
-                fullWidth
-                {...field}
-                error={!!errors.cityFormDTO?.city}
-                helperText={errors.cityFormDTO?.city?.message}
-              >
-                {cityes?.map((city) => (
-                  <MenuItem key={city.city} value={city.city}>
-                    {city.city}
-                  </MenuItem>
-                ))}
-              </TextField>
+            render={({ field: { value, onChange } }) => (
+              <Autocomplete
+                options={cityes || []}
+                getOptionLabel={(option) => option.city}
+                isOptionEqualToValue={(option, value) => option.city === value.city}
+                onChange={(_event, newValue) => {
+                  onChange(newValue ? newValue.city : "");
+                }}
+                value={
+                  cityes?.find((city) => city.city === value) || null
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Cidade"
+                    variant="filled"
+                    fullWidth
+                    error={!!errors.cityFormDTO?.city}
+                    helperText={errors.cityFormDTO?.city?.message}
+                  />
+                )}
+              />
             )}
           />
         </Grid>
@@ -199,22 +211,28 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
             name="boardExaminerId"
             control={control}
             defaultValue={defaultValues.boardExaminerId}
-            render={({ field }) => (
-              <TextField
-                select
-                label="Banca"
-                variant="filled"
-                fullWidth
-                {...field}
-                error={!!errors.boardExaminerId}
-                helperText={errors.boardExaminerId?.message}
-              >
-                {boardExaminers?.map((examiner) => (
-                  <MenuItem key={examiner.id} value={examiner.id}>
-                    {examiner.name}
-                  </MenuItem>
-                ))}
-              </TextField>
+            render={({ field: { value, onChange } }) => (
+              <Autocomplete
+                options={boardExaminers || []}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                onChange={(_event, newValue) => {
+                  onChange(newValue ? newValue.id : 0);
+                }}
+                value={
+                  boardExaminers?.find((examiner) => examiner.id === value) || null
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Banca"
+                    variant="filled"
+                    fullWidth
+                    error={!!errors.boardExaminerId}
+                    helperText={errors.boardExaminerId?.message}
+                  />
+                )}
+              />
             )}
           />
         </Grid>
@@ -223,22 +241,28 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
             name="institutionId"
             control={control}
             defaultValue={defaultValues.institutionId}
-            render={({ field }) => (
-              <TextField
-                select
-                label="Instituição"
-                variant="filled"
-                fullWidth
-                {...field}
-                error={!!errors.institutionId}
-                helperText={errors.institutionId?.message}
-              >
-                {institutions?.map((inst) => (
-                  <MenuItem key={inst.id} value={inst.id}>
-                    {inst.name}
-                  </MenuItem>
-                ))}
-              </TextField>
+            render={({ field: { value, onChange } }) => (
+              <Autocomplete
+                options={institutions || []}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                onChange={(_event, newValue) => {
+                  onChange(newValue ? newValue.id : 0);
+                }}
+                value={
+                  institutions?.find((inst) => inst.id === value) || null
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Instituição"
+                    variant="filled"
+                    fullWidth
+                    error={!!errors.institutionId}
+                    helperText={errors.institutionId?.message}
+                  />
+                )}
+              />
             )}
           />
         </Grid>
@@ -247,22 +271,28 @@ const SelectionProcessForm: FC<SelectionProcessFormProps> = ({
             name="selectionProcessStatusId"
             control={control}
             defaultValue={defaultValues.selectionProcessStatusId}
-            render={({ field }) => (
-              <TextField
-                select
-                label="Status"
-                variant="filled"
-                fullWidth
-                {...field}
-                error={!!errors.selectionProcessStatusId}
-                helperText={errors.selectionProcessStatusId?.message}
-              >
-                {status?.map((s) => (
-                  <MenuItem key={s.id} value={s.id}>
-                    {s.description}
-                  </MenuItem>
-                ))}
-              </TextField>
+            render={({ field: { value, onChange } }) => (
+              <Autocomplete
+                options={status || []}
+                getOptionLabel={(option) => option.description}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                onChange={(_event, newValue) => {
+                  onChange(newValue ? newValue.id : 0);
+                }}
+                value={
+                  status?.find((s) => s.id === value) || null
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Status"
+                    variant="filled"
+                    fullWidth
+                    error={!!errors.selectionProcessStatusId}
+                    helperText={errors.selectionProcessStatusId?.message}
+                  />
+                )}
+              />
             )}
           />
         </Grid>

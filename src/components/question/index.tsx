@@ -140,9 +140,8 @@ export const Question: React.FC<QuestionProps> = ({
             wasSubmitted,
             isCorrect,
             isSelected
-          );
-
-          // Extract the onChange from register so we can wrap it.
+          )
+          
           const { onChange, ...rest } = register(`responses.${index}`, {
             value: altIndex,
           });

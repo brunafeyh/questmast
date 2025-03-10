@@ -1,5 +1,6 @@
 import { FC, useEffect, useRef } from "react";
 import { Box, Typography, Button, TextField, MenuItem, IconButton, Grid, Radio } from "@mui/material";
+import Chip from "@mui/material/Chip";
 import { Add, TrashCan } from "@carbon/icons-react";
 import {
   UseFormRegister,
@@ -35,32 +36,28 @@ const QuestionItem: FC<QuestionItemProps> = ({
   errors,
   removeQuestion,
 }) => {
-  const { questionDifficulty } = useQuestionDifficulty();
+  const { questionDifficulty } = useQuestionDifficulty()
   const { subjects } = useSubjects()
-  
+
   const selectedSubjectId = useWatch({
     control,
     name: `questionList.${index}.subjectId`,
-  });
+  })
 
   const { subjectsTopics, isLoading: isLoadingSubtopics, refetch } = useSubjectTopicsById(
     selectedSubjectId,
     { enabled: !!selectedSubjectId }
   )
 
-  const prevSubjectIdRef = useRef<number | undefined>(selectedSubjectId);
+  const prevSubjectIdRef = useRef<number | undefined>(selectedSubjectId)
 
   useEffect(() => {
     if (
       prevSubjectIdRef.current !== undefined &&
       selectedSubjectId !== prevSubjectIdRef.current
-    ) {
-      setValue(`questionList.${index}.subjectTopicList`, []);
-    }
+    ) setValue(`questionList.${index}.subjectTopicList`, [])
     prevSubjectIdRef.current = selectedSubjectId;
-    if (selectedSubjectId) {
-      refetch();
-    }
+    if (selectedSubjectId) refetch()
   }, [selectedSubjectId, setValue, refetch, index]);
 
   const {
@@ -70,12 +67,12 @@ const QuestionItem: FC<QuestionItemProps> = ({
   } = useFieldArray({
     control,
     name: `questionList.${index}.questionAlternativeList` as const,
-  });
+  })
 
   const alternatives = useWatch({
     control,
     name: `questionList.${index}.questionAlternativeList`,
-  });
+  })
 
   return (
     <Box sx={{ mb: 3, p: 2, borderRadius: 2, border: "1px solid #ccc" }}>
@@ -109,11 +106,12 @@ const QuestionItem: FC<QuestionItemProps> = ({
         helperText={errors.questionList?.[index]?.name?.message}
         sx={{ mb: 2 }}
       />
-
       <TextField
         fullWidth
         variant="filled"
         label="Enunciado"
+        multiline
+        rows={4} 
         {...register(`questionList.${index}.statement` as const)}
         error={!!errors.questionList?.[index]?.statement}
         helperText={errors.questionList?.[index]?.statement?.message}
@@ -183,7 +181,17 @@ const QuestionItem: FC<QuestionItemProps> = ({
                 label="Subtópico"
                 variant="filled"
                 fullWidth
-                SelectProps={{ multiple: true }}
+                SelectProps={{
+                  multiple: true,
+                  renderValue: (selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {(selected as number[]).map((value) => {
+                        const subtopic = subjectsTopics?.find((s) => s.id === value);
+                        return <Chip key={value} label={subtopic?.description} />;
+                      })}
+                    </Box>
+                  ),
+                }}
                 {...field}
                 error={!!errors.questionList?.[index]?.subjectTopicList}
                 helperText={errors.questionList?.[index]?.subjectTopicList?.message}
@@ -258,7 +266,10 @@ const QuestionItem: FC<QuestionItemProps> = ({
               checked={Boolean(alternatives?.[altIndex]?.isCorrect)}
               onChange={() => {
                 alternativeFields.forEach((_, i) => {
-                  setValue(`questionList.${index}.questionAlternativeList.${i}.isCorrect`, i === altIndex);
+                  setValue(
+                    `questionList.${index}.questionAlternativeList.${i}.isCorrect`,
+                    i === altIndex
+                  );
                 });
               }}
             />
@@ -278,7 +289,7 @@ const QuestionItem: FC<QuestionItemProps> = ({
         Adicionar Alternativa
       </Button>
     </Box>
-  );
-};
+  )
+}
 
-export default QuestionItem;
+export default QuestionItem

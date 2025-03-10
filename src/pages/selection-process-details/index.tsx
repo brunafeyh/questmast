@@ -21,6 +21,7 @@ import { usePaginateArray } from "../../hooks/use-paginate-array";
 import { transformTests } from "../../utils/selection-process-summary";
 import Table from "../../components/table";
 import { TableCellBody, TableRowBody } from "../../components/table/styles";
+import { getYearFromDate } from "../../utils/get-year";
 
 export const SelectionProcessDetails: FC = () => {
     const { id } = useParams()
@@ -159,7 +160,7 @@ export const SelectionProcessDetails: FC = () => {
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                     <Typography> Ano</Typography>
                     <Typography fontWeight={FONT_WEIGHTS.light} >
-                        {selectionProcess?.openingDate}
+                        {getYearFromDate(selectionProcess?.openingDate || '')}
                     </Typography>
                 </Box>
             </Box>
