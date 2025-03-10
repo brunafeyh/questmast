@@ -2,7 +2,6 @@ import { FC, useState } from 'react';
 import { Checkmark, ViewFilled, ViewOffFilled } from '@carbon/icons-react';
 import { Box, Button, IconButton, InputAdornment, Stack, Typography, useTheme } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import ErrorContainer from '../../layout/error';
 import { FONT_WEIGHTS } from '../../utils/constants/theme';
 import Header from '../../components/header';
 import { Modal, useModal } from '../../components/modal';
@@ -12,6 +11,7 @@ import Loading from '../../components/loading';
 import { useForm } from 'react-hook-form';
 import { UpdatePasswordVerificationForm } from '../../types/verify';
 import { TextField } from '../../components/table/styles';
+import VerificationContainer from '../../layout/verification';
 
 const ResetPasswordPage: FC = () => {
     const navigate = useNavigate();
@@ -52,7 +52,7 @@ const ResetPasswordPage: FC = () => {
     if (updatePasswordMutation.isPending) return <Loading />;
 
     return (
-        <ErrorContainer>
+        <VerificationContainer>
             <Header
                 projectAbbreviation="QuestMast"
                 projectName="Sistema de Preparação de Processos Seletivos"
@@ -147,7 +147,7 @@ const ResetPasswordPage: FC = () => {
                     onConfirm={() => navigate('/login')}
                 />
             </Modal>
-        </ErrorContainer>
+        </VerificationContainer>
     )
 }
 

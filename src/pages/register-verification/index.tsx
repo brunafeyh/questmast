@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { Checkmark } from '@carbon/icons-react'
-import { Box, Button, Stack, Typography, useTheme } from '@mui/material'
+import { Box, Button, Paper, Stack, Typography, useTheme } from '@mui/material'
 import { useNavigate, useParams } from 'react-router-dom'
 import { FONT_WEIGHTS } from '../../utils/constants/theme'
 import Header from '../../components/header'
@@ -28,42 +28,49 @@ const VerificationPage: FC = () => {
 
     if (verifyEmailMutation.isPending) return <Loading />
     return (
-        <VerificationContainer  paddingLeft={75}>
-            <Header
-                projectAbbreviation="QuestMast"
-                projectName='Sistema de Preparação de Processos Seletivos' />
-            <Stack
-                sx={{
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-            >
-                <Typography
-                    color={theme.palette.juicy.primary.c60}
-                    fontWeight={FONT_WEIGHTS.bold}
-                    marginBottom={theme.spacing(1)}
-                    fontSize={theme.spacing(4)}
+        <VerificationContainer paddingLeft={75}>
+            <Paper sx={{
+                padding: 3,
+                '@media screen and (min-width: 1800px)': {
+                    ml: 10
+                }
+            }}>
+                <Header
+                    projectAbbreviation="QuestMast"
+                    projectName='Sistema de Preparação de Processos Seletivos' />
+                <Stack
+                    sx={{
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                    }}
                 >
-                    Verificação de Email
-                </Typography>
-                <Typography
-                    color={theme.palette.juicy.neutral.c70}
-                    fontWeight={FONT_WEIGHTS.regular}
-                    marginBottom={theme.spacing(2)}
-                    fontSize={theme.spacing(2)}
-                >
-                    Para validar o seu email clique no botão abaixo:
-                </Typography>
-                <Box justifyContent={'space-between'} flexDirection={'row'}>
-                    <Button variant="outlined" onClick={handleOpenModal}>
-                        Cancelar
-                    </Button>
-                    <Button startIcon={<Checkmark />} variant="text" onClick={handleConfirm}>
-                        Confirmar
-                    </Button>
-                </Box>
-            </Stack>
+                    <Typography
+                        color={theme.palette.juicy.primary.c60}
+                        fontWeight={FONT_WEIGHTS.bold}
+                        marginBottom={theme.spacing(1)}
+                        fontSize={theme.spacing(3.5)}
+                    >
+                        Verificação de Email
+                    </Typography>
+                    <Typography
+                        color={theme.palette.juicy.neutral.c70}
+                        fontWeight={FONT_WEIGHTS.regular}
+                        marginBottom={theme.spacing(2)}
+                        fontSize={theme.spacing(2)}
+                    >
+                        Para validar o seu email clique no botão abaixo:
+                    </Typography>
+                    <Box justifyContent={'space-between'} flexDirection={'row'} display={'flex'} gap={2}>
+                        <Button variant="outlined" onClick={handleOpenModal} fullWidth>
+                            Cancelar
+                        </Button>
+                        <Button startIcon={<Checkmark />} variant="contained" onClick={handleConfirm} fullWidth>
+                            Confirmar
+                        </Button>
+                    </Box>
+                </Stack>
+            </Paper>
+
             <Modal ref={modal}>
                 <ConfirmationModal text='Tem certeza? Sem confirmação não há como entrar no sistema!' onCancel={handleCloseModal} onConfirm={() => navigate('/login')} />
             </Modal>
