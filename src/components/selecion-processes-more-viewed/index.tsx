@@ -75,7 +75,7 @@ export const SelectionProcessMoreViewed: FC = () => {
             isLoading={isLoading}
             error={error}
             renderData={(row) =>
-                <TableRowBody key={row.id} hover sx={{ cursor: 'pointer' }} onClick={() => navigate(`details/${row.original.idSelectionProcess}`)}>
+                <TableRowBody key={row.id} hover sx={{ cursor: 'pointer' }} onClick={() => navigate(`/selection-process/details/${row.original.idSelectionProcess}`)}>
                     <TableCellBody>{row.original.title}</TableCellBody>
                     <TableCellBody>{row.original.institution}</TableCellBody>
                     <TableCellBody>{row.original.year}</TableCellBody>

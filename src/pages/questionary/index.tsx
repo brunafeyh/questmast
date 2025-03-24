@@ -19,6 +19,7 @@ import { JUICY_COLORS } from "../../themes/colors";
 import PagesHeader from "../../components/pages-header";
 import QuestionaryForm from "../../components/forms/questionary-ai";
 import Loading from "../../components/loading";
+import QuestionnaireForm from "../../components/forms/questionary";
 
 type QuestionData = {
 	disciplina: string;
@@ -74,6 +75,7 @@ export default function Questionary() {
 
 	return (
 		<PageLayout title="Questionário">
+			<QuestionnaireForm/>
 			<Box
 				sx={{
 					display: "flex",

@@ -4,8 +4,11 @@ import { TestFormData } from '../../types/test';
 import SelectionProcessTestService from '../../services/selection-process-test';
 import SolvedSelectionProcessTestService from '../../services/solved-selection-process-test';
 import { SolvedSelectionProcessTest } from '../../types/solved-selection-process-test';
+import TestIaService from '../../services/read-ia';
 
 const service = new SelectionProcessTestService()
+
+const serviceIA = new TestIaService()
 
 const serviceResponde = new SolvedSelectionProcessTestService();
 
@@ -23,6 +26,20 @@ export const useSelectionProcessTestMutations = () => {
         onError: (error) => {
             console.error('Erro ao criar Prova:', error);
             toast.error('Erro ao criar Prova.');
+        },
+    })
+
+    const createSelectionProcessTestIA = useMutation({
+        mutationFn: async (file: File) => {
+            return serviceIA.getQuestionsWithIa(file);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['test'] });
+            toast.success('Prova lida com sucesso!');
+        },
+        onError: (error) => {
+            console.error('Erro ao ler Prova:', error);
+            toast.error('Erro ao ler Prova.');
         },
     })
 
@@ -72,6 +89,7 @@ export const useSelectionProcessTestMutations = () => {
         createSelectionProcessTest,
         deleteSelectionProcessTest,
         updateSelectionProcessTest,
-        respondSelectionProcessTest
+        respondSelectionProcessTest,
+        createSelectionProcessTestIA
     }
 }

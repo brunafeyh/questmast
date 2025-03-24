@@ -13,6 +13,7 @@ import RecoverPasswordPage from './pages/recover-password'
 import ResetPasswordPage from './pages/reset-password'
 import AddTest from './pages/add-test'
 import EditTest from './pages/edit-test'
+import AddTestIA from './pages/add-test-ia'
 
 export const router = createBrowserRouter([
     {
@@ -73,6 +74,10 @@ export const router = createBrowserRouter([
             {
                 path: 'details-test/:id',
                 element: <TestPage />,
+            },
+            {
+                path: 'create-test-ia/:id',
+                element: <AddTestIA />,
             },
             {
                 path: '*',
