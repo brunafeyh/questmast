@@ -14,6 +14,7 @@ import ResetPasswordPage from './pages/reset-password'
 import AddTest from './pages/add-test'
 import EditTest from './pages/edit-test'
 import AddTestIA from './pages/add-test-ia'
+import { QuestionaryRespond } from './pages/questionnary-respond'
 
 export const router = createBrowserRouter([
     {
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
             {
                 path: 'questionary',
                 element: <Questionary />,
+            },
+            {
+                path: 'questionary/respond',
+                element: <QuestionaryRespond />,
             },
             {
                 path: 'performance',

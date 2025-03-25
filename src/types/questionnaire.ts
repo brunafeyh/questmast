@@ -16,13 +16,6 @@ export const questionnaireFormSchema = z.object({
     boardExaminerIds: z.array(z.number()),
     institutionIds: z.array(z.number()),
     functionIds: z.array(z.number()),
-    questionDifficultyLevelIds: z.array(z.number()),
-    subjectFilterDTOList: z.array(
-      z.object({
-        subjectId: z.number(),
-        subjectTopicIds: z.array(z.number()),
-      })
-    ),
   }),
 });
 
