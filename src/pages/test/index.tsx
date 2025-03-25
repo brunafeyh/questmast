@@ -41,6 +41,7 @@ const TestPage: FC = () => {
             ? selectionProcessTestResponse
             : null
 
+
     const [isRedo, setIsRedo] = useState<boolean>(false);
     const solvedTest = isRedo ? null : originalSolvedTest;
 
@@ -52,7 +53,7 @@ const TestPage: FC = () => {
     if (selectionProcessTest) {
         defaultResponses = selectionProcessTest.questionList.map(() => -1);
     }
-    const { register, handleSubmit, watch, reset } = useForm<FormData>({
+    const { register, handleSubmit, reset } = useForm<FormData>({
         defaultValues: { responses: defaultResponses },
     })
 
@@ -81,8 +82,36 @@ const TestPage: FC = () => {
             }
             newTimes[questionIndex].endDateTime = now;
             return newTimes;
-        });
+        })
     }
+    useEffect(() => {
+        if (selectionProcessTest) {
+            let defaultResponses: number[] = [];
+            if (solvedTest) {
+                defaultResponses = selectionProcessTest.questionList.map((question) => {
+                    const solvedQuestion = solvedTest.solvedQuestionList?.find(
+                        (sq: any) => sq.question.id === question.id
+                    );
+                    if (solvedQuestion && solvedQuestion.questionAlternative) {
+                        const altIndex = question.questionAlternativeList.findIndex(
+                            (alt: any) => alt.id === solvedQuestion.questionAlternative.id
+                        );
+                        return altIndex >= 0 ? altIndex : -1;
+                    }
+                    return -1;
+                })
+            } else {
+                defaultResponses = selectionProcessTest.questionList.map(() => -1);
+            }
+
+            reset({ responses: defaultResponses });
+            setQuestionTimes(
+                selectionProcessTest.questionList.map(() => ({ startDateTime: "", endDateTime: "" }))
+            );
+            setTestStartTime(new Date().toISOString());
+        }
+    }, [selectionProcessTest, solvedTest, reset]);
+
 
     const onSubmit = async (data: FormData) => {
         const testEndTime = new Date().toISOString();
@@ -92,8 +121,8 @@ const TestPage: FC = () => {
             questionTimes,
             testStartTime,
             testEndTime,
-            solvedTest,
-        });
+        })
+
         const solvedPayload = {
             selectionProcessTestId: selectionProcessTest!.id,
             startDateTime: testStartTime,
@@ -240,16 +269,18 @@ const TestPage: FC = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     {selectionProcessTest!.questionList.map((question, i) => {
                         let selectedAnswer: number | undefined;
-                        if (solvedTest && !isRedo) {
-                            const solvedQuestion = solvedTest?.solvedQuestionList?.find((sq: any) => sq.question.id === question.id);
+
+                        if (
+                            selectionProcessTestResponse &&
+                            Array.isArray(selectionProcessTestResponse.solvedQuestionList) &&
+                            selectionProcessTestResponse.solvedQuestionList.length > i
+                        ) {
+                            const solvedQuestion = selectionProcessTestResponse.solvedQuestionList[i];
                             if (solvedQuestion && solvedQuestion.questionAlternative) {
-                                selectedAnswer = question.questionAlternativeList.findIndex(
-                                    (alt) => alt.id === solvedQuestion.questionAlternative.id
-                                );
+                                selectedAnswer = solvedQuestion.questionAlternative.id;
                             }
-                        } else {
-                            selectedAnswer = watch("responses")[i];
                         }
+
                         return (
                             <Question
                                 key={question.id}
@@ -262,6 +293,7 @@ const TestPage: FC = () => {
                             />
                         );
                     })}
+
 
                     <Box sx={{ display: "flex", gap: 2, mt: 2, justifyContent: "flex-end" }}>
                         <Button variant="outlined" type="button" onClick={() => console.log("Cancel")}>

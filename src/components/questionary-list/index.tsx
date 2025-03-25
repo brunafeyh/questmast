@@ -6,6 +6,8 @@ import { ArrowUpRight } from "@carbon/icons-react"
 import { FC } from "react"
 import { usePaginateArray } from "../../hooks/use-paginate-array"
 import Table from "../table"
+import { useQuestionnaries } from "../../hooks/use-questionnaruies"
+import { useAuth } from "../../hooks/use-auth"
 
 const columns: ColumnDef<any, any>[] = [
     {
@@ -71,6 +73,15 @@ function renderData(row: Row<any>) {
 }
 
 export const QuestionaryTable: FC = () => {
+    const { user } = useAuth()
+
+    const filter = {
+        studentMainEmail: user?.email || ''
+    }
+
+    const { data: questionnaries, isLoading, error, refetch } = useQuestionnaries(filter)
+
+    console.log(questionnaries)
     const paginatedData = usePaginateArray(data)
     return (
         <Table

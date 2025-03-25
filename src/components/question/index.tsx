@@ -33,7 +33,11 @@ export const Question: React.FC<QuestionProps> = ({
   wasSubmitted,
   onAnswerSelected,
 }) => {
-  const theme = useTheme();
+  const theme = useTheme()
+
+  console.log(question)
+  console.log(selectedAnswer)
+  console.log(wasSubmitted)
   const year = new Date(question.applicationDate).getFullYear();
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -133,17 +137,17 @@ export const Question: React.FC<QuestionProps> = ({
       )}
 
       <RadioGroup sx={{ p: 2 }}>
-        {question.questionAlternativeList.map((alternative, altIndex) => {
-          const isCorrect = alternative.isCorrect;
-          const isSelected = altIndex === Number(selectedAnswer);
+        {question.questionAlternativeList.map((alternative) => {
+          // Compara usando alternative.id
+          const isSelected = alternative.id === selectedAnswer;
           const { icon, checkedIcon } = getRadioIcons(
             wasSubmitted,
-            isCorrect,
+            alternative.isCorrect,
             isSelected
-          )
-          
+          );
+          // Registra o valor como alternative.id
           const { onChange, ...rest } = register(`responses.${index}`, {
-            value: altIndex,
+            value: alternative.id,
           });
 
           return (
@@ -152,7 +156,7 @@ export const Question: React.FC<QuestionProps> = ({
               control={
                 <Radio
                   {...rest}
-                  value={altIndex}
+                  value={alternative.id}
                   icon={icon}
                   checkedIcon={checkedIcon}
                   onChange={(e) => {
