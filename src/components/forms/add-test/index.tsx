@@ -10,18 +10,18 @@ import { useFunctions } from "../../../hooks/use-functions-";
 import { useSelectionProcessTestMutations } from "../../../hooks/selection-process-test/use-selection-process-test-mutations";
 import QuestionItem from "../question-item-form";
 import Loading from "../../loading"
-import { QuestionReturnIa } from "../../../types/question-return-ia";
-import { convertQuestionsReturnIaToTestFormData } from "../../../utils/convert-test-to-test-form-data";
+import { convertTestToTestFormData } from "../../../utils/convert-test-to-test-form-data";
+import { Test } from "../../../types/test-list";
 
 export type AddTestFormProps = {
-    defaultTest?: QuestionReturnIa[]
+    defaultTest?: Test
 }
 
 const AddTestForm: FC<AddTestFormProps> = ({ defaultTest }) => {
     const { user } = useAuth()
-    const defaultForm = convertQuestionsReturnIaToTestFormData(defaultTest || [], user?.email || '')
     const { id } = useParams()
 
+    const defaultForm = convertTestToTestFormData(user?.email || '', Number(id), defaultTest)
     const { control, register, handleSubmit, setValue, formState: { errors } } = useForm<TestFormData>({
 
         defaultValues: defaultTest ? defaultForm : {

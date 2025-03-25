@@ -1,34 +1,42 @@
 import { TestFormData } from "../types/test";
-import { QuestionReturnIa } from "../types/question-return-ia";
+import { Test } from "../types/test-list";
 
-export function convertQuestionsReturnIaToTestFormData(
-    questions: QuestionReturnIa[], user: string
-): TestFormData {
+export function convertTestToTestFormData(userEmail: string,  id: number, test?: Test): TestFormData {
+  if (!test) {
     return {
-        applicationDate: new Date().toISOString().split("T")[0],
-        name: "",
-        functionId: 1,
-        professionalLevelId: 1,
-        selectionProcessId: 1,
-        contentModeratorEmail: user,
-        questionList: questions.map((q, index) => ({
-            id: q.id ?? undefined,
-            name: q.name || `Question ${index + 1}`,
-            statementImage: q.statementImage || "",
-            statement: q.statement || "No statement provided",
-            explanation: q.explanation || "",
-            videoExplanationUrl: q.videoExplanationUrl || "",
-            questionAlternativeList: q.questionAlternativeList.map((alt) => ({
-                id: alt.id ?? undefined,
-                statement: alt.statement || "No alternative statement",
-                isCorrect: alt.isCorrect ?? false,
-            })),
-            questionDifficultyLevelId: 0,
-            subjectId: 0,
-            subjectTopicList: [],
-            quantityOfCorrectAnswers: 0,
-            quantityOfWrongAnswers: 0,
-            quantityOfTries: 0,
-        })),
-    }
+      applicationDate: "",
+      name: "",
+      functionId: 0,
+      professionalLevelId: 0,
+      selectionProcessId: id,
+      contentModeratorEmail: userEmail,
+      questionList: [],
+    };
+  }
+
+  return {
+    applicationDate: test.applicationDate,
+    name: test.name,
+    functionId: test.function?.id ?? 0,
+    professionalLevelId: test.professionalLevel?.id ?? 0,
+    selectionProcessId: test.selectionProcess?.id || id ||  0,
+    contentModeratorEmail: test.selectionProcess?.contentModerator?.mainEmail || userEmail,
+    questionList: test.questionList?.map((question) => ({
+      id: question.id,
+      name: question.name,
+      statementImage: question.statementImageUrl || undefined,
+      statementImageLegend: question.statementImageLegend || undefined,
+      statement: question.statement,
+      explanation: question.explanation || undefined,
+      videoExplanationUrl: question.videoExplanationUrl || undefined,
+      questionAlternativeList: question.questionAlternativeList.map((alt) => ({
+        id: alt.id,
+        statement: alt.statement,
+        isCorrect: alt.isCorrect,
+      })),
+      questionDifficultyLevelId: question.questionDifficultyLevel?.id ?? 0,
+      subjectId: question.subject?.id ?? 0,
+      subjectTopicList: question.subjectTopicList?.map((topic) => topic.id) ?? [],
+    })) ?? [],
+  };
 }

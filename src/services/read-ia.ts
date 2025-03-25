@@ -1,9 +1,9 @@
 import axios from "axios";
 import { API_BASE_URL } from "../shared/api";
-import { QuestionReturnIa } from "../types/question-return-ia";
+import { Test } from "../types/test-list";
 
 class TestIaService {
-  async getQuestionsWithIa(file: File): Promise<QuestionReturnIa[]> {
+  async getQuestionsWithIa(file: File): Promise<Test> {
     const formData = new FormData()
     formData.append("file", file)
 

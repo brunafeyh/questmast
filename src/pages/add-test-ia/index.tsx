@@ -4,13 +4,13 @@ import CustomPDFInput from '../../components/pdf-upload'
 import { PageLayout } from '../../layout'
 import PagesDetailsHeader from '../../components/page-details-header'
 import AddTestForm from '../../components/forms/add-test'
-import { QuestionReturnIa } from '../../types/question-return-ia'
 import { useSelectionProcessTestMutations } from '../../hooks/selection-process-test/use-selection-process-test-mutations'
 import Loading from '../../components/loading'
+import { Test } from '../../types/test-list'
 
 const AddTestIA = () => {
     const [file, setFile] = useState<File | null>(null)
-    const [test, setTest] = useState<QuestionReturnIa[]>([])
+    const [test, setTest] = useState<Test>()
 
     console.log(test)
 
@@ -39,7 +39,7 @@ const AddTestIA = () => {
     return (
         <PageLayout title="Adicionar Teste com IA">
             <PagesDetailsHeader title="Adicionar Teste com IA" />
-            {test.length == 0  ? (
+            {!test ? (
                 <Box component="form" onSubmit={handleSubmit}>
                     <CustomPDFInput onFileChange={handleFileChange} initialFile={file} />
                     <Button type="submit" variant="contained" sx={{ mt: 2 }}>
