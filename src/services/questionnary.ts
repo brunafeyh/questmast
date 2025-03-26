@@ -2,6 +2,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../shared/api";
 import { QuestionnaireList } from "../types/questionarry-list";
 import { QuestionnaireForm } from "../types/questionnaire";
+import { SolvedQuestionnaireResponse } from "../types/questionnary-solved-list";
 
 export type SolvedQuestionnaireFilterDTO = {
     questionnaireId?: number;
@@ -15,7 +16,7 @@ class QuestionnaryService {
 
     async listQuestionnaries(
         filter: SolvedQuestionnaireFilterDTO
-    ): Promise<QuestionnaireList[]> {
+    ): Promise<SolvedQuestionnaireResponse> {
         const response = await axios.get(`${API_BASE_URL}/solved-questionnaire`, {
             params: {
                 questionnaireId: filter.questionnaireId,

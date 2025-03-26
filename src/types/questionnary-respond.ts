@@ -53,7 +53,7 @@ const SolvedQuestionSchema = z.object({
   question: QuestionSchema,
 });
 
-const QuestionnaireSchema = z.object({
+export const QuestionnaireSchema = z.object({
   id: z.number(),
   startDateTime: z.string(),
   endDateTime: z.string(), 

@@ -5,7 +5,8 @@ import { usePaginateArray } from "../../hooks/use-paginate-array"
 import Table from "../table"
 import { useQuestionnaries } from "../../hooks/use-questionnaruies"
 import { useAuth } from "../../hooks/use-auth"
-import { mapQuestionnairesToTableData } from "../../utils/convert-to-columns"
+import { useNavigate } from "react-router-dom"
+import Loading from "../loading"
 
 const columns: ColumnDef<any, any>[] = [
     {
@@ -15,39 +16,52 @@ const columns: ColumnDef<any, any>[] = [
 ]
 
 
-function renderData(row: Row<any>) {
-    return (
-        <TableRowBody key={row.id}>
-            <TableCellBody>{row.getValue('title')}</TableCellBody>
-        </TableRowBody>
-    )
-}
-
 export const QuestionaryTable: FC = () => {
-    const { user } = useAuth()
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
-    const filter = {
-        studentMainEmail: user?.email || ''
-    }
+  const filter = {
+    studentMainEmail: user?.email || "",
+  };
 
-    const { data: questionnaries } = useQuestionnaries(filter)
+  const { data: questionnaries = [], isLoading } = useQuestionnaries(filter)
 
-    console.log(questionnaries)
+  const tableData = questionnaries.map((item, index) => ({
+    id: item.questionnaire.id.toString(),
+    title: item.questionnaire.name,
+    viewCounter: String(item.questionnaire.viewCounter),
+    rawIndex: index, 
+  }));
 
-    const responseData = mapQuestionnairesToTableData(questionnaries || [])
 
-    const paginatedData = usePaginateArray(responseData || [])
+  const paginatedData = usePaginateArray(tableData);
 
-    console.log(paginatedData)
-
-    return (
-        <Table
-            columns={columns}
-            data={paginatedData}
-            totalRows={responseData?.length || 0}
-            isLoading={false}
-            error={null}
-            renderData={renderData}
-        />
-    )
-}
+ if (isLoading) return <Loading/>
+  return (
+    <Table
+      columns={columns}
+      data={paginatedData}
+      totalRows={tableData.length}
+      isLoading={false}
+      error={null}
+      renderData={(row: Row<any>) => {
+        const index = row.original.rawIndex;
+        const questionnaire = questionnaries[index]
+        return (
+          <TableRowBody
+            key={row.id}
+            hover
+            onClick={() =>
+                navigate("/questionary/respond", {
+                  state: { questionnaire: questionnaire },
+                })
+              }
+           
+          >
+            <TableCellBody>{row.getValue("title")}</TableCellBody>
+          </TableRowBody>
+        );
+      }}
+    />
+  );
+};

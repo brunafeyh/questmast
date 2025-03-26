@@ -15,7 +15,7 @@ import Loading from "../../components/loading";
 export const QuestionaryRespond: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate()
-
+    
     const theme = useTheme()
     const questionnaire = (location.state as { questionnaire: QuestionnaireList })?.questionnaire;
 

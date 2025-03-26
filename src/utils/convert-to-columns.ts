@@ -1,17 +1,17 @@
-import { QuestionnaireList } from "../types/questionarry-list"
+import { SolvedQuestionnaireResponse } from "../types/questionnary-solved-list";
 
 type TableRowData = {
-    id: string;
-    title: string;
-    viewCounter: string;
-}
+  id: string;
+  title: string;
+  viewCounter: string;
+};
 
-export function mapQuestionnairesToTableData(
-    list: QuestionnaireList[]
+export function mapSolvedQuestionnairesToTableData(
+  list: SolvedQuestionnaireResponse
 ): TableRowData[] {
-    return list.map((q) => ({
-        id: q.id.toString(),
-        title: q.name,
-        viewCounter: String(q.viewCounter) || "-",
-    }))
+  return list.map((item) => ({
+    id: item.questionnaire.id.toString(),
+    title: item.questionnaire.name,
+    viewCounter: String(item.questionnaire.viewCounter),
+  }));
 }
